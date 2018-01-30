@@ -1,9 +1,71 @@
-body {
-    font-family: arial, sans-serif;
-    margin: 0;
-}
-
 html, body {
     height: 100%;
+    font-family: arial, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
+div#main {
+    position: absolute;
+}
+
+#main section {
+    width: 800px;
+}
+
+#main p {
+    font-size: 30pt;
+}
+
+div#main img, #artwork {
+    position: fixed;
+}
+
+#rectangle_jaune {
+    top: 703px;
+}
+
+#cercle_central {
+    top: 101px;
+    left: 931px;
+    z-index: 3;
+}
+
+#pilule {
+    top: 538px;
+    left: 759px;
+    z-index: 4;
+}
+
+#demi_cercle_haut {
+    left: 1200px;
+    z-index: 4;
+}
+
+#rectangle_centre {
+    top: 440px;
+    left: 580px;
+    z-index: 2;
+}
+
+#rectangle_orange {
+    top: 47px;
+    left: 1174px;
+    z-index: 5;
+}
+
+#rectangle_cuir {
+    top: 746px;
+    left: 1282px;
+    z-index: 3;
+}
+
+#rectangle_bicolore {
+    top: 617px;
+    left: 540px;
+    z-index: 2;
+}
+
+#rc-rb {
+    position: absolute;
+}
