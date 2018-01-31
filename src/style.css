@@ -17,15 +17,20 @@ div#main {
     font-size: 30pt;
 }
 
-div#main img, #artwork {
-    position: fixed;
+div#main img {
+    position: absolute;
 }
 
-#rectangle_jaune {
+#artwork {
+    position: fixed;
+    left: 100px;
+}
+
+#rectangle-jaune {
     top: 703px;
 }
 
-#cercle_central {
+#cercle-central {
     top: 101px;
     left: 931px;
     z-index: 3;
@@ -37,30 +42,30 @@ div#main img, #artwork {
     z-index: 4;
 }
 
-#demi_cercle_haut {
+#demi-cercle-haut {
     left: 1200px;
     z-index: 4;
 }
 
-#rectangle_centre {
+#rectangle-centre {
     top: 440px;
     left: 580px;
     z-index: 2;
 }
 
-#rectangle_orange {
+#rectangle-orange {
     top: 47px;
     left: 1174px;
     z-index: 5;
 }
 
-#rectangle_cuir {
+#rectangle-cuir {
     top: 746px;
     left: 1282px;
     z-index: 3;
 }
 
-#rectangle_bicolore {
+#rectangle-bicolore {
     top: 617px;
     left: 540px;
     z-index: 2;
