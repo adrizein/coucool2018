@@ -1,3 +1,4 @@
 *.zip
 *.iml
 node_modules
+dist

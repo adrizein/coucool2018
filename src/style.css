@@ -5,25 +5,76 @@ html, body {
     padding: 0;
 }
 
-div#main {
-    position: absolute;
+header {
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    width: 100%;
+    background-color: white;
+}
+
+header .flex {
+    display: flex;
+    margin: 0 20px;
+}
+
+
+header .flex h1 {
+    flex: 1;
+}
+
+#language {
+    margin: auto;
+    font-weight: bold;
+    font-size: larger;
+}
+
+header nav {
+    display: flex;
+    text-align: center;
+    background: #ea5b59;
+}
+
+nav div {
+    flex: 1;
+    font-size: xx-large;
+    padding: 15px;
+    color: white;
+    border: white solid 1px;
+}
+
+#main {
+    text-align: center;
+    padding-top: 1200px;
 }
 
 #main section {
-    width: 800px;
+    width: 1000px;
+    margin: auto;
+    margin-bottom: 1000px;
 }
 
 #main p {
-    font-size: 30pt;
+    font-size: x-large;
+    margin: 20px;
+    padding: 0;
 }
 
-div#main img {
-    position: absolute;
+#main p:last-child {
+    background-color: lightblue;
+    padding: 40px;
+    margin-top: 60px;
 }
 
 #artwork {
+    top: 150px;
     position: fixed;
-    left: 100px;
+    width: 100%;
+    height: 100%;
+}
+
+#artwork img {
+    position: absolute;
 }
 
 #rectangle-jaune {
