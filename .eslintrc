@@ -128,8 +128,7 @@
         "before": true,
         "Buffer": true,
         "inject": true,
-        "module": true,
-        "require": true
+        "Waypoint": true
     },
 
     "parserOptions": {

@@ -18,8 +18,19 @@ header .flex {
     margin: 0 20px;
 }
 
-
 header .flex h1 {
+    flex: 1;
+}
+
+footer {
+    display: flex;
+}
+
+footer div {
+    margin: 10px 20px;
+}
+
+footer div:first-child {
     flex: 1;
 }
 
@@ -35,23 +46,23 @@ header nav {
     background: #ea5b59;
 }
 
-nav div {
+nav h2 {
     flex: 1;
-    font-size: xx-large;
     padding: 15px;
     color: white;
     border: white solid 1px;
+    margin: 0;
+    font-weight: normal;
 }
 
 #main {
     text-align: center;
-    padding-top: 1200px;
 }
 
 #main section {
     width: 1000px;
     margin: auto;
-    margin-bottom: 1000px;
+    margin-top: 1200px;
 }
 
 #main p {
@@ -64,13 +75,15 @@ nav div {
     background-color: lightblue;
     padding: 40px;
     margin-top: 60px;
+    line-height: 1.5em;
 }
 
 #artwork {
-    top: 150px;
+    top: 146px;
     position: fixed;
     width: 100%;
     height: 100%;
+    pointer-events: none;
 }
 
 #artwork img {

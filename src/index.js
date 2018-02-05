@@ -1,8 +1,10 @@
 'use strict';
 
 import * as _ from 'lodash';
+import 'waypoints/lib/noframework.waypoints.min';
 
 import './style.css';
+import {MovingImage, Trajectory, Composition} from "./composition";
 import * as images from './images';
 
 
@@ -17,12 +19,16 @@ window.onload = () => {
         pilule: {x: -300, y: 1000},
         rectangleBicolore: {y: 910},
         rectangleCentre: {x: 2000, y: -200},
-        rectangleCuir: {x: -50, y: -50},
+        rectangleCuir: {x: -100, y: -120},
         rectangleJaune: {x: 2000},
         rectangleOrange: {x: 1500, y: 947},
         triangleRouge: {x: -1300},
     };
 
+    const elements = _.mapValues(targets, (end, name) => {
+
+
+    });
     const elements = _.mapValues(targets, (end, name) => {
         const image = new Image();
         image.src = images[name];
@@ -38,7 +44,7 @@ window.onload = () => {
             trajectory: makeLineTrajectory(
                 start,
                 _.defaults(end, start),
-                0.13,
+                0.15,
             ),
         };
     });
@@ -50,6 +56,13 @@ window.onload = () => {
         _.forEach(elements, (element) => {
             element.trajectory(t);
         });
+    });
+
+    const waypoint = new Waypoint({
+        element: document.getElementById('ethos'),
+        handler(direction) {
+            console.log('fin de ethos', direction);
+        },
     });
 };
 
