@@ -4,14 +4,15 @@ import * as _ from 'lodash';
 import 'waypoints/lib/noframework.waypoints.min';
 
 import './style.css';
-import {MovingImage, Trajectory, Composition} from "./composition";
 import * as images from './images';
+import {Composition, MovingImage, Trajectory} from './composition';
 
 
 window.onload = () => {
     const
-        artwork = document.getElementById('artwork'),
-        {left, top} = artwork.getBoundingClientRect();
+        artwork = document.getElementById('artwork');
+
+    const composition = new Composition(artwork, 650, 1730);
 
     const targets = {
         cercleCentral: {y: -700, x: 300},
@@ -25,36 +26,28 @@ window.onload = () => {
         triangleRouge: {x: -1300},
     };
 
-    const elements = _.mapValues(targets, (end, name) => {
+    _.forEach(targets, (end, name) => {
+        const image = new MovingImage(
+            {
+                id: _.kebabCase(name),
+                src: images[name],
+            },
+            new Trajectory()
+        );
 
-
-    });
-    const elements = _.mapValues(targets, (end, name) => {
-        const image = new Image();
-        image.src = images[name];
-        image.id = _.kebabCase(name);
-
-        artwork.appendChild(image);
-        const
-            {x, y} = image.getBoundingClientRect(),
-            start = {x: x - left, y: y - top};
-
-        return {
-            image,
-            trajectory: makeLineTrajectory(
-                start,
-                _.defaults(end, start),
-                0.15,
-            ),
-        };
+        composition.add(image);
     });
 
     const maxScrollY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 
     document.addEventListener('scroll', () => {
         const t = window.scrollY / maxScrollY;
-        _.forEach(elements, (element) => {
-            element.trajectory(t);
+        composition.animate(t);
+    });
+
+    window.addEventListener('resize', () => {
+        window.requestAnimationFrame(() => {
+            composition.rescale();
         });
     });
 
@@ -65,20 +58,3 @@ window.onload = () => {
         },
     });
 };
-
-
-function makeLineTrajectory(start, end, stop = 1) {
-    return function trajectory(t) {
-        if (t > stop) {
-            t = stop;
-        }
-            const
-                x = (end.x - start.x) * t / stop + start.x,
-                y = (end.y - start.y) * t / stop + start.y;
-
-            window.requestAnimationFrame(() => {
-                this.image.style.left = `${x}px`;
-                this.image.style.top = `${y}px`;
-            });
-    };
-}

@@ -12,7 +12,7 @@ class BaseTrajectory {
 
     position(t) {
         if (t < 0) {
-            return this.position(0);
+            return this._func(0);
         }
         else if (t <= this.length) {
             return this._func(t / this.length);
@@ -77,17 +77,19 @@ class Trajectory {
         return _.sum(this._trajectories.map(({duration}) => duration)) || 0;
     }
 
-    *points() {
-        let pos = 0;
-        for (const trajectory of this._trajectories) {
-            pos += trajectory.length;
-            yield pos;
-        }
+    get points() {
+        return this._trajectories
+            .map((trajectory) => trajectory.length)
+            .reduce((lengths, length) => [...lengths, length + (lengths[lengths.length - 1] || 0)], []);
     }
 
     position(t) {
+        if (!this._trajectories.length) {
+            return {x: null, y: null};
+        }
+
         let n = 0;
-        for (const point of this.points()) {
+        for (const point of this.points) {
             if (t <= point) {
                 break;
             }
@@ -103,68 +105,88 @@ class Trajectory {
 class MovingImage {
 
     constructor({id, src}, trajectory) {
-        this._image = new Image();
-        this._image.src = src;
-        this._image.id = id;
-        this._image.
+        this.element = new Image();
+        this.element.src = src;
+        this.element.id = id;
 
         this._trajectory = trajectory;
+        this.element.onload = () => {
+            this._height = this.height;
+            this._width = this.width;
+            this._top = this.element.offsetTop;
+            this._left = this.element.offsetLeft;
+            this.element.onload = null;
+        };
     }
 
     get height() {
-        return this._image.height;
+        return this.element.height;
     }
 
     get width() {
-        return this._image.width;
+        return this.element.width;
     }
 
     get id() {
-        return this._image.id;
+        return this.element.id;
     }
 
     get image() {
-        return this._image.src;
+        return this.element.src;
     }
 
     set image(src) {
-        this._image.src = _.get(src, 'src') || src;
+        this.element.src = _.get(src, 'src') || src;
     }
 
     move(t) {
         const {x, y} = this._trajectory.position(t);
 
-        this._image.style.top = y;
-        this._image.style.left = x;
+        this.element.style.top = `${y}px`;
+        this.element.style.left = `${x}px`;
     }
 
     resize(scale) {
-        this._image.style.top *= scale;
-        this._image.style.left *= scale;
-        this._image.height *= scale;
-        this._image.width *= scale;
+        this.element.height = scale * this._height;
+        this.element.width = scale * this._width;
+        this.element.style.top = `${scale * this._top}px`;
+        this.element.style.left = `${scale * this._left}px`;
     }
-
-    insertOn(element) {
-        element.appendChild(this._image);
-    }
-
 }
 
 class Composition {
 
-    constructor(anchor, scale = 1) {
+    constructor(anchor, height_, width_) {
+        this._images = [];
+        this._anchor = anchor;
+        this._height = height_;
+        this._width = width_;
     }
 
     animate(t) {
         window.requestAnimationFrame(() => {
-            this.images.forEach((image) => {
+            this._images.forEach((image) => {
                 image.move(t);
             });
         });
     }
 
-    add()
+    add(image) {
+        this._anchor.appendChild(image.element);
+        this._images.push(image);
+        image.element.addEventListener('load', () => image.resize(this.scale));
+    }
+
+    get scale() {
+        const {height, width} = this._anchor.getBoundingClientRect();
+
+        return _.min([height / this._height, width / this._width]);
+    }
+
+    rescale() {
+        const scale = this.scale;
+        this._images.forEach((image) => image.resize(scale));
+    }
 }
 
 export {

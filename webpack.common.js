@@ -1,7 +1,6 @@
 const
     path = require('path'),
     CleanWebpackPlugin = require('clean-webpack-plugin'),
-    //{EnvironmentPlugin} = require('webpack'),
     HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
