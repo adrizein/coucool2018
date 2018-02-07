@@ -8,7 +8,7 @@ import * as images from './images';
 import {Composition, MovingImage, Trajectory} from './composition';
 
 
-window.onload = () => {
+window.onload = async () => {
     const
         artwork = document.getElementById('artwork');
 
@@ -26,7 +26,7 @@ window.onload = () => {
         triangleRouge: {x: -1300},
     };
 
-    _.forEach(targets, (end, name) => {
+    await Promise.props(_.mapValues(targets, (end, name) => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
@@ -35,8 +35,10 @@ window.onload = () => {
             new Trajectory()
         );
 
-        composition.add(image);
-    });
+        return composition.add(image);
+    }));
+
+    composition.rescale();
 
     const maxScrollY = document.documentElement.scrollHeight - document.documentElement.clientHeight;
 
@@ -51,10 +53,15 @@ window.onload = () => {
         });
     });
 
+    // eslint-disable-next-line no-unused-vars
     const waypoint = new Waypoint({
         element: document.getElementById('ethos'),
         handler(direction) {
             console.log('fin de ethos', direction);
         },
     });
+};
+
+window.goToPart = function goToPart(arg) {
+    console.log(arg);
 };

@@ -108,23 +108,15 @@ class MovingImage {
         this.element = new Image();
         this.element.src = src;
         this.element.id = id;
-
         this._trajectory = trajectory;
-        this.element.onload = () => {
-            this._height = this.height;
-            this._width = this.width;
-            this._top = this.element.offsetTop;
-            this._left = this.element.offsetLeft;
-            this.element.onload = null;
-        };
     }
 
     get height() {
-        return this.element.height;
+        return this.element.naturalHeight;
     }
 
     get width() {
-        return this.element.width;
+        return this.element.naturalWidth;
     }
 
     get id() {
@@ -139,42 +131,51 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    move(t) {
+    move(t, scale) {
         const {x, y} = this._trajectory.position(t);
 
-        this.element.style.top = `${y}px`;
-        this.element.style.left = `${x}px`;
+        this.element.style.top = `${y * scale}px`;
+        this.element.style.left = `${x * scale}px`;
     }
 
-    resize(scale) {
-        this.element.height = scale * this._height;
-        this.element.width = scale * this._width;
-        this.element.style.top = `${scale * this._top}px`;
-        this.element.style.left = `${scale * this._left}px`;
+    resize(scale, t) {
+        this.element.height = scale * this.height;
+        this.element.width = scale * this.width;
+
+        const {x, y} = this._trajectory.position(t);
+        this.element.style.top = `${scale * x}px`;
+        this.element.style.left = `${scale * y}px`;
     }
 }
 
 class Composition {
 
     constructor(anchor, height_, width_) {
-        this._images = [];
+        this.images = [];
         this._anchor = anchor;
         this._height = height_;
         this._width = width_;
+        this._t = 0;
     }
 
     animate(t) {
+        this._t = t;
         window.requestAnimationFrame(() => {
-            this._images.forEach((image) => {
-                image.move(t);
+            this.images.forEach((image) => {
+                image.move(t, this.scale);
             });
         });
     }
 
-    add(image) {
+    async add(image) {
         this._anchor.appendChild(image.element);
-        this._images.push(image);
-        image.element.addEventListener('load', () => image.resize(this.scale));
+        this.images.push(image);
+
+        return new Promise((resolve) => image.element.addEventListener('load', resolve));
+    }
+
+    get size() {
+        return _.pick(this._anchor.getBoundingClientRect(), ['width', 'height']);
     }
 
     get scale() {
@@ -185,7 +186,14 @@ class Composition {
 
     rescale() {
         const scale = this.scale;
-        this._images.forEach((image) => image.resize(scale));
+        this.images.forEach((image) => image.resize(scale, this._t));
+    }
+
+    clear() {
+        while (this.images.length) {
+            const image = this.images.pop();
+            this._anchor.removeChild(image.element);
+        }
     }
 }
 

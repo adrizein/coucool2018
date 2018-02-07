@@ -125,8 +125,10 @@
     "globals": {
         "__dirname": true,
         "after": true,
+        "require": true,
         "before": true,
         "Buffer": true,
+        "module": true,
         "inject": true,
         "Waypoint": true
     },

@@ -29,4 +29,4 @@ On peut maintenant se connecter sur l'url disponible dans webpack et ngrok pour 
 
 Toute modification faite dans le code entrainera le rechargement automatique du site dans le navigateur.
 
-On peut également partager l'url ngrok à d'autres personnes sur Internet, mais la machine de dev doit être active et connectée à Internet
+On peut également partager l'url ngrok à d'autres personnes sur Internet, mais la machine de dev doit être active et connectée à Internet.
