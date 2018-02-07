@@ -9,21 +9,24 @@ import * as images from './images';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
+function scrollProgressivelyToTop(element){
+    element.scrollTop = 0; 
+}
+
 window.goToSection = function(section) {
 
     // TO DO
     // Voici le comportement souhaité 
     // Fadeout des anciens fonds fadein des nouveaux
-    // On remonte le scroll du #main (ce qui fait revenir l'artwork avec les bons fonds) et fade out
-
+    // On remonte le scroll progressivement du #main (ce qui fait revenir l'artwork avec les bons fonds) et fade out
+    scrollProgressivelyToTop(document.getElementById("main"))
     // On change la section qui est en display block
     var pouet =  document.getElementById("main").getElementsByTagName("section")   
     console.log(pouet);
     for (var i = 0; i < pouet.length; i++) {
-      pouet[i].style.display = 'none';        
+      pouet[i].classList.remove("visible");       
     }
-    document.getElementById(section).style.display = "block";
-
+    document.getElementById(section).classList.add("visible");
 }
 
 window.onload = () => {
@@ -61,12 +64,17 @@ window.onload = () => {
         });
     });
 
-    const maxScrollY = 50;
+    const maxScrollY = document.getElementById("main").clientHeight / 2;
 
     main: document.getElementById('main');
     main.addEventListener('scroll', () => {
         const t = main.scrollTop / maxScrollY;
         composition.animate(t);
+        var visible_section = document.getElementById("main").getElementsByClassName("visible");
+        console.log(visible_section)
+        visible_section[0].style.opacity = t;
+        visible_section[0].style.filter = 'alpha(opacity=' + t * 100 + ")";
+
         // TO DO 
         // Faire un fade in et un fade de la section visible 
         //(la choper en la selectionnant par le tag section et le display à block) 

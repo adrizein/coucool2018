@@ -66,11 +66,16 @@ nav h2 {
 }
 
 #main section {
+    padding-top: 146px;
+    opacity: 0;
     width: 100%;
     min-height: 100%;
     margin: auto;
-    margin-top: 50px;
     display: none;
+}
+
+#main section.visible {
+    display:block;
 }
 
 #main p {
