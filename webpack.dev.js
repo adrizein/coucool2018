@@ -21,7 +21,7 @@ module.exports = merge(common, {
         compress: true,
         host: '0.0.0.0',
         allowedHosts: [
-            '.eu.ngrok.io',
+            '.ngrok.io',
         ],
         public: httpsTunnels[0].public_url,
     },

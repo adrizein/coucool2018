@@ -3,118 +3,36 @@
 import * as _ from 'lodash';
 
 
-class BaseTrajectory {
 
-    constructor(func, length) {
-        this._func = func;
-        this.length = _.max([0, _.min([length, 1])]);
+class LinearTrajectory {
+
+    constructor(x_i, y_i, x_f, y_f) {
+        this._xi = x_i;
+        this._yi = y_i;
+        this._xf = x_f;
+        this._yf = y_f;
     }
 
-    position(t) {
-        if (t < 0) {
-            return this._func(0);
+    position(scale, t) {
+        return {
+            x:scale * (this._xi + t * (this._xf - this._xi)),
+            y:scale * (this._yi + t * (this._yf - this._yi)),
         }
-        else if (t <= this.length) {
-            return this._func(t / this.length);
-        }
-        else {
-            return this._func(1);
-        }
-    }
-}
-
-
-class Trajectory {
-
-    constructor() {
-        this._trajectories = [];
-    }
-
-    static Line(vx, vy) {
-
-        const
-            trajectory = new Trajectory();
-
-        trajectory.append((t) => ({x: vx * t, y: vy * t}));
-
-        return trajectory;
-    }
-
-    static compose(...trajectories) {
-
-        return trajectories.reduce((t1, t2) => t1.append(t2), new Trajectory());
-    }
-
-    append(trajectory, length = 1) {
-        if (trajectory instanceof BaseTrajectory) {
-            if (this.length) {
-                const newLength = trajectory.length + this.length;
-                trajectory.length /= newLength;
-                this._trajectories.forEach((traj) => {
-                    traj.length /= newLength;
-                });
-
-                this._trajectories.push(trajectory);
-            }
-            else {
-                this._trajectories.push(trajectory);
-            }
-        }
-        else if (trajectory instanceof Trajectory) {
-            trajectory._trajectories.forEach((traj) => {
-                this.append(traj);
-            });
-        }
-        else if (_.isFunction(trajectory)) {
-            return this.append(new BaseTrajectory(trajectory, length));
-        }
-        else {
-            throw new TypeError('trajectory must either be a function or a Trajectory');
-        }
-    }
-
-    get length() {
-        return _.sum(this._trajectories.map(({duration}) => duration)) || 0;
-    }
-
-    get points() {
-        return this._trajectories
-            .map((trajectory) => trajectory.length)
-            .reduce((lengths, length) => [...lengths, length + (lengths[lengths.length - 1] || 0)], []);
-    }
-
-    position(t) {
-        if (!this._trajectories.length) {
-            return {x: null, y: null};
-        }
-
-        let n = 0;
-        for (const point of this.points) {
-            if (t <= point) {
-                break;
-            }
-            else {
-                ++n;
-            }
-        }
-
-        return this._trajectories[n].position(t);
     }
 }
 
 class MovingImage {
 
-    constructor({id, src}, trajectory) {
+    constructor({id, src, z_index, trajectory}) {
         this.element = new Image();
         this.element.src = src;
         this.element.id = id;
-
+        this.element.style.zIndex = z_index;
         this._trajectory = trajectory;
+
         this.element.onload = () => {
             this._height = this.height;
             this._width = this.width;
-            this._top = this.element.offsetTop;
-            this._left = this.element.offsetLeft;
             this.element.onload = null;
         };
     }
@@ -139,9 +57,8 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    move(t) {
-        const {x, y} = this._trajectory.position(t);
-
+    move(scale, t) {
+        const {x, y} = this._trajectory.position(scale, t);
         this.element.style.top = `${y}px`;
         this.element.style.left = `${x}px`;
     }
@@ -149,8 +66,11 @@ class MovingImage {
     resize(scale) {
         this.element.height = scale * this._height;
         this.element.width = scale * this._width;
-        this.element.style.top = `${scale * this._top}px`;
-        this.element.style.left = `${scale * this._left}px`;
+    }
+
+    rescale(scale, t) {
+        this.resize(scale);
+        this.move(scale, t);
     }
 }
 
@@ -161,12 +81,14 @@ class Composition {
         this._anchor = anchor;
         this._height = height_;
         this._width = width_;
+        this._t = 0;
     }
 
     animate(t) {
+        this._t = t;
         window.requestAnimationFrame(() => {
             this._images.forEach((image) => {
-                image.move(t);
+                image.move(this.scale, t);
             });
         });
     }
@@ -174,23 +96,26 @@ class Composition {
     add(image) {
         this._anchor.appendChild(image.element);
         this._images.push(image);
-        image.element.addEventListener('load', () => image.resize(this.scale));
+        image.element.addEventListener('load', () => {
+            image.rescale(this.scale, this._t);
+        });
     }
 
     get scale() {
         const {height, width} = this._anchor.getBoundingClientRect();
-
         return _.min([height / this._height, width / this._width]);
     }
 
     rescale() {
         const scale = this.scale;
-        this._images.forEach((image) => image.resize(scale));
+        this._images.forEach((image) => {
+            image.rescale(this.scale, this._t);
+        });
     }
 }
 
 export {
     MovingImage,
     Composition,
-    Trajectory,
+    LinearTrajectory,
 };
