@@ -9,8 +9,9 @@ import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
 window.onload = async () => {
-    const artwork = document.getElementById('artwork');
-    const composition = new Composition(artwork, 830, 1730);
+    const
+        artwork = document.getElementById('artwork'),
+        composition = new Composition(artwork, 830, 1730);
 
     const movingImages = {
         cercleCentral: {zIndex: 3, startX: 931, startY: 101, endX: 300, endY: -700},
@@ -37,15 +38,24 @@ window.onload = async () => {
         return composition.add(image);
     }));
 
-    const ethos = document.getElementById('ethos');
+    const ethos = document.querySelector('section.ethos');
     composition.rescale();
+
     let
         maxScrollY = composition.height,
         paddingTop = _.max([window.innerHeight, artwork.parentElement.offsetHeight]);
+
     ethos.style.paddingTop = `${paddingTop}px`;
 
     document.addEventListener('scroll', () => {
-        const t = window.scrollY / maxScrollY;
+        const scroll = window.scrollY;
+        let t;
+        if (window.scrollY > maxScrollY) {
+            t = 2 - scroll / maxScrollY;
+        }
+        else {
+            t = scroll / maxScrollY;
+        }
         composition.animate(t);
     });
 
@@ -58,12 +68,29 @@ window.onload = async () => {
         });
     });
 
-    const waypoint = new Waypoint({
-        element: document.getElementById('ethos'),
-        handler(direction) {
-            console.log('fin de ethos', direction);
-        },
+    const root = $('html, body');
+    const headerHeight = $('header').height();
+
+    $('nav h2').on('click', function h() {
+        const part = _.filter(this.classList, (cls) => cls !== 'active')[0];
+
+        const origin = root.scrollTop();
+        let target = $(`section.${part} p:first-child`).offset().top - headerHeight - 20;
+        if (origin > target) {
+            target -= 2;
+        }
+        root.animate({scrollTop: target}, 1000);
     });
 
-
+    const waypoints = _.map(document.querySelectorAll('section p:first-child'), (element) => {
+        const part = element.parentElement.classList[0];
+        return new Waypoint({
+            element,
+            handler() {
+                $('h2').removeClass('active');
+                $(`.${part}`).addClass('active');
+            },
+            offset: `${headerHeight + 20}px`,
+        });
+    });
 };

@@ -4,6 +4,7 @@ html, body {
     font-family: arial, sans-serif;
     margin: 0;
     padding: 0;
+    min-width: 500px;
 }
 
 div.fixed {
@@ -13,6 +14,7 @@ div.fixed {
     display: flex;
     flex-flow: column;
     align-items: center;
+    pointer-events: none;
 }
 
 header {
@@ -21,6 +23,7 @@ header {
     background-color: white;
     overflow: hidden;
     flex: 0 1 auto;
+    pointer-events: all;
 }
 
 header .flex {
@@ -37,7 +40,6 @@ header .flex h1 {
     width: 100%;
     position: relative;
     flex: 1 0 auto;
-    pointer-events: none;
 }
 
 #artwork img {
@@ -75,6 +77,12 @@ nav h2 {
     border: white solid 1px;
     margin: 0;
     font-weight: normal;
+    cursor: pointer;
+    transition: text-shadow 200ms linear;
+}
+
+nav h2.active {
+    text-shadow: 0 0 4px white;
 }
 
 #main {
@@ -100,4 +108,3 @@ nav h2 {
     margin-top: 60px;
     line-height: 1.5em;
 }
-

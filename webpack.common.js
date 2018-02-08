@@ -18,6 +18,7 @@ module.exports = {
         }),
         new webpack.ProvidePlugin({
             Promise: 'bluebird',
+            $: 'jquery',
         }),
         new CleanWebpackPlugin(['./dist']),
     ],
