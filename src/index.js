@@ -86,7 +86,7 @@ window.onload = async () => {
 
     _.forEach(document.querySelectorAll('section p:first-child'), (element) => {
         const part = element.parentElement.classList[0];
-        return new Waypoint.Inview({
+        return new Waypoint({
             element,
             handler() {
                 $('h2, section').removeClass('active');
