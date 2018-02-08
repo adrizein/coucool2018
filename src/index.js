@@ -79,7 +79,7 @@ window.onload = async () => {
         if (origin > target) {
             target -= 2;
         }
-        root.animate({scrollTop: target}, 1000);
+        root.animate({scrollTop: target}, Math.abs(origin - target));
     });
 
     const waypoints = _.map(document.querySelectorAll('section p:first-child'), (element) => {
