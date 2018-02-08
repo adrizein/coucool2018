@@ -2,10 +2,12 @@
 
 import * as _ from 'lodash';
 import 'waypoints/lib/noframework.waypoints.min';
+import 'waypoints/lib/shortcuts/inview.min';
 
 import './style.css';
 import * as images from './images';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
+
 
 
 window.onload = async () => {
@@ -39,15 +41,11 @@ window.onload = async () => {
     }));
 
     const ethos = document.querySelector('section.ethos');
-    composition.rescale();
+    const headerHeight = $('header').height();
+    const root = $('html, body');
+    let maxScrollY, paddingTop;
 
-    let
-        maxScrollY = composition.height,
-        paddingTop = _.max([window.innerHeight, artwork.parentElement.offsetHeight]);
-
-    ethos.style.paddingTop = `${paddingTop}px`;
-
-    document.addEventListener('scroll', () => {
+    function onScroll() {
         const scroll = window.scrollY;
         let t;
         if (window.scrollY > maxScrollY) {
@@ -56,22 +54,25 @@ window.onload = async () => {
         else {
             t = scroll / maxScrollY;
         }
+
+        console.log(t);
         composition.animate(t);
-    });
+    }
 
-    window.addEventListener('resize', () => {
-        window.requestAnimationFrame(() => {
-            composition.rescale();
-            maxScrollY = composition.height;
-            paddingTop = _.max([window.innerHeight, artwork.parentElement.offsetHeight]);
-            ethos.style.paddingTop = `${paddingTop}px`;
-        });
-    });
+    function onResize() {
+        composition.rescale();
+        maxScrollY = composition.height;
+        paddingTop = maxScrollY + headerHeight;
+        ethos.style.paddingTop = `${paddingTop}px`;
+    }
 
-    const root = $('html, body');
-    const headerHeight = $('header').height();
+    onResize(); onScroll();
 
-    $('nav h2').on('click', function h() {
+    document.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()));
+    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()));
+
+
+    $('nav h2').on('click', function onClick() {
         const part = _.filter(this.classList, (cls) => cls !== 'active')[0];
 
         const origin = root.scrollTop();
@@ -82,15 +83,17 @@ window.onload = async () => {
         root.animate({scrollTop: target}, Math.abs(origin - target));
     });
 
-    const waypoints = _.map(document.querySelectorAll('section p:first-child'), (element) => {
+
+    _.forEach(document.querySelectorAll('section p:first-child'), (element) => {
         const part = element.parentElement.classList[0];
-        return new Waypoint({
+        return new Waypoint.Inview({
             element,
             handler() {
-                $('h2').removeClass('active');
+                $('h2, section').removeClass('active');
                 $(`.${part}`).addClass('active');
             },
-            offset: `${headerHeight + 20}px`,
+            offset: `${headerHeight + 200}px`,
         });
     });
+
 };

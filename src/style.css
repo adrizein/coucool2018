@@ -7,13 +7,12 @@ html, body {
     min-width: 500px;
 }
 
-div.fixed {
+body > .fixed {
     position: fixed;
     width: 100%;
     height: 100%;
     display: flex;
     flex-flow: column;
-    align-items: center;
     pointer-events: none;
 }
 
@@ -94,6 +93,12 @@ nav h2.active {
     padding-top: 140px;
     width: 100%;
     margin: auto;
+    opacity: 0;
+    transition: opacity 1000ms linear;
+}
+
+#main section.active {
+    opacity: 1;
 }
 
 #main p {
