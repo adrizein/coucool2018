@@ -17,8 +17,7 @@ module.exports = {
             template: './src/index.html',
         }),
         new webpack.ProvidePlugin({
-            Promise: 'bluebird',
-            $: 'jquery',
+            Velocity: 'velocity-animate',
         }),
         new CleanWebpackPlugin(['./dist']),
     ],

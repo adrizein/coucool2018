@@ -1,99 +1,174 @@
 'use strict';
 
 import * as _ from 'lodash';
-import 'waypoints/lib/noframework.waypoints.min';
-import 'waypoints/lib/shortcuts/inview.min';
 
 import './style.css';
 import * as images from './images';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
+const movingImages = {
+    cercleCentral: {zIndex: 3, startX: 931, startY: 101, endX: 300, endY: -700},
+    demiCercleHaut: {zIndex: 4, startX: 1200, startY: 0, endX: 1726, endY: 1400},
+    pilule: {zIndex: 4, startX: 759, startY: 538, endX: -400, endY: 1500},
+    rectangleBicolore: {zIndex: 2, startX: 540, startY: 617, endX: 540, endY: 1400},
+    rectangleCentre: {zIndex: 2, startX: 580, startY: 440, endX: 2000, endY: -200},
+    rectangleCuir: {zIndex: 3, startX: 1282, startY: 746, endX: -100, endY: -120},
+    rectangleJaune: {zIndex: 1, startX: 0, startY: 703, endX: 2000, endY: 703},
+    rectangleOrange: {zIndex: 5, startX: 1174, startY: 47, endX: 1700, endY: 1447},
+    triangleRouge: {zIndex: 1, startX: 0, startY: 0, endX: -1300, endY: 0},
+};
+
+
+function getVerticalPosition(element) {
+    const
+        {top, bottom} = element.getBoundingClientRect(),
+        paddingTop = parseInt(element.style.paddingTop);
+
+    return {realTop: top + paddingTop, realBottom: bottom};
+}
+
 
 window.onload = async () => {
     const
         artwork = document.getElementById('artwork'),
-        composition = new Composition(artwork, 830, 1730);
+        composition = new Composition(artwork, 415, 865);
 
-    const movingImages = {
-        cercleCentral: {zIndex: 3, startX: 931, startY: 101, endX: 300, endY: -700},
-        demiCercleHaut: {zIndex: 4, startX: 1200, startY: 0, endX: 1526, endY: 900},
-        pilule: {zIndex: 4, startX: 759, startY: 538, endX: -300, endY: 1000},
-        rectangleBicolore: {zIndex: 2, startX: 540, startY: 617, endX: 540, endY: 1400},
-        rectangleCentre: {zIndex: 2, startX: 580, startY: 440, endX: 2000, endY: -200},
-        rectangleCuir: {zIndex: 3, startX: 1282, startY: 746, endX: -100, endY: -120},
-        rectangleJaune: {zIndex: 1, startX: 0, startY: 703, endX: 2000, endY: 703},
-        rectangleOrange: {zIndex: 5, startX: 1174, startY: 47, endX: 1500, endY: 947},
-        triangleRouge: {zIndex: 1, startX: 0, startY: 0, endX: -1300, endY: 0},
-    };
-
-    await Promise.props(_.mapValues(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
+    const p = [];
+    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
                 src: images[name],
                 zIndex,
-                trajectory: new LinearTrajectory(startX, startY, endX, endY),
+                trajectory: new LinearTrajectory(startX / 2, startY / 2, endX / 2, endY / 2),
             },
         );
 
-        return composition.add(image);
-    }));
+        p.push(composition.add(image));
+    });
 
-    const ethos = document.querySelector('section.ethos');
-    const headerHeight = $('header').height();
-    const root = $('html, body');
-    let maxScrollY, paddingTop;
+    await Promise.all(p);
+
+    const
+        sections = _.map(document.querySelectorAll('section'), (element, index) => {
+            const
+                name = element.classList[0],
+                title = document.querySelector(`nav h2.${name}`);
+
+            return {
+                index,
+                name,
+                title,
+                element,
+                activate() {
+                    this.element.classList.add('active');
+                    this.title.classList.add('active');
+                    // TODO: create new composition (depending on name)
+                },
+                deactivate() {
+                    this.element.classList.remove('active');
+                    this.title.classList.remove('active');
+                    // TODO: clear composition
+                },
+            };
+        }),
+        {height: headerHeight} = document.querySelector('header').getBoundingClientRect();
+
+    let compositionBottom, compositionHeight, activeSection, lastScroll = window.scrollY;
+
 
     function onScroll() {
-        const scroll = window.scrollY;
-        let t;
-        if (window.scrollY > maxScrollY) {
-            t = 2 - scroll / maxScrollY;
+        const
+            scroll = window.scrollY,
+            direction = scroll - lastScroll;
+
+        lastScroll = scroll;
+
+        composition.animate(_.clamp(scroll / compositionHeight, 0, 1));
+
+        const section = activeSection || sections[0];
+        const {realTop, realBottom} = getVerticalPosition(section.element);
+
+        section.element.style.opacity = _.clamp((compositionBottom - realTop) / composition.height, 0, 1);
+
+        if (direction > 0) {
+            if (realTop < compositionBottom) {
+                if (!activeSection) {
+                    section.activate();
+                    activeSection = section;
+                }
+            }
+
+            if (realBottom < headerHeight) {
+                section.deactivate();
+                activeSection = sections[section.index + 1];
+                activeSection.activate();
+            }
         }
         else {
-            t = scroll / maxScrollY;
-        }
+            if (realBottom > headerHeight) {
+                if (!activeSection) {
+                    section.activate();
+                    activeSection = section;
+                }
+            }
 
-        console.log(t);
-        composition.animate(t);
+            if (realTop > compositionBottom) {
+                section.deactivate();
+                activeSection = sections[section.index - 1] || null;
+                if (activeSection) {
+                    activeSection.activate();
+                }
+            }
+        }
     }
 
     function onResize() {
         composition.rescale();
-        maxScrollY = composition.height;
-        paddingTop = maxScrollY + headerHeight;
-        ethos.style.paddingTop = `${paddingTop}px`;
+        compositionHeight = composition.height;
+        compositionBottom = compositionHeight + headerHeight;
+
+        sections.forEach((section) => {
+            section.element.style.paddingTop = `${Math.ceil(compositionBottom) + 5}px`;
+            if (!section.element.nextElementSibling) {
+                section.element.style.paddingBottom = `${Math.ceil(compositionBottom)}px`;
+            }
+        });
     }
+
+    window.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
+    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
 
     onResize(); onScroll();
 
-    document.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()));
-    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()));
+    activeSection = null;
 
+    sections.forEach((section) => {
+        const {realTop, realBottom} = getVerticalPosition(section.element);
 
-    $('nav h2').on('click', function onClick() {
-        const part = _.filter(this.classList, (cls) => cls !== 'active')[0];
-
-        const origin = root.scrollTop();
-        let target = $(`section.${part} p:first-child`).offset().top - headerHeight - 20;
-        if (origin > target) {
-            target -= 2;
+        if (realTop < compositionBottom && realBottom < window.innerHeight) {
+            section.activate();
+            activeSection = section;
         }
-        root.animate({scrollTop: target}, Math.abs(origin - target));
+        else {
+            section.deactivate();
+        }
     });
 
+    sections.forEach(({element, title}) => {
+        title.addEventListener('click', () => {
+            const {realTop} = getVerticalPosition(element);
 
-    _.forEach(document.querySelectorAll('section p:first-child'), (element) => {
-        const part = element.parentElement.classList[0];
-        return new Waypoint({
-            element,
-            handler() {
-                $('h2, section').removeClass('active');
-                $(`.${part}`).addClass('active');
-            },
-            offset: `${headerHeight + 200}px`,
+            Velocity(element, 'scroll', {
+                offset: compositionHeight,
+                duration: Math.abs(headerHeight - realTop),
+                easing: 'easeInOutSine',
+            });
         });
     });
 
+    document.querySelector('header h1').addEventListener('click', () => {
+        Velocity(document.body, 'scroll', {duration: window.scrollY + window.innerHeight, easing: 'easeInOutSine'});
+    });
 };

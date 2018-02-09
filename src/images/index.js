@@ -7,6 +7,7 @@ import rectangleCuir from './rectangle_cuir.png';
 import rectangleJaune from './rectangle_jaune.png';
 import rectangleOrange from './rectangle_orange.png';
 import triangleRouge from './triangle_rouge.png';
+import background from './background.jpg';
 
 export {
     cercleCentral,
@@ -18,5 +19,6 @@ export {
     rectangleJaune,
     rectangleOrange,
     triangleRouge,
+    background,
 };
 
