@@ -48,13 +48,17 @@ window.onload = async () => {
                     element,
                     activate() {
                         this.element.classList.add('active');
-                        this.title.classList.add('active');
-                        // TODO: create new composition (depending on name)
+                        if (this.title) {
+                            this.title.classList.add('active');
+                            // TODO: create new composition (depending on name)
+                        }
                     },
                     deactivate() {
                         this.element.classList.remove('active');
-                        this.title.classList.remove('active');
-                        // TODO: clear composition
+                        if (this.title) {
+                            this.title.classList.remove('active');
+                            // TODO: clear composition
+                        }
                     },
                 };
             });
@@ -104,7 +108,7 @@ window.onload = async () => {
     });
 
     // Controller
-    sections.forEach((section) => {
+    sections.filter((section) => section.title).forEach((section) => {
         section.title.addEventListener('click', () => {
             const {realTop} = getVerticalPosition(section.element);
 
