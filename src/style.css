@@ -34,23 +34,59 @@ header .flex {
     display: flex;
     margin: 0 20px;
     color: whitesmoke;
+    align-items: baseline;
 }
 
 header .flex h1 {
+    font-size: 1.8em;
+    -webkit-margin-before: 0.4em;
+    -webkit-margin-after: 0.4em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: normal;
+}
+
+#coucool {
     flex: 1;
     min-width: 320px;
     cursor: pointer;
 }
 
-#artwork {
-    width: 100%;
-    position: relative;
-    flex: 1 0 auto;
-    z-index: 1;
+#language {
+    font-weight: normal;
+    font-size: 1em;
+    text-align: right;
 }
 
-#artwork img {
-    position: absolute;
+header nav {
+    display: flex;
+    text-align: center;
+    margin: 0 20px;
+}
+
+nav h2 {
+    flex: 1 0 0;
+    padding: 15px;
+    color: whitesmoke;
+    border-right: whitesmoke solid 1px;
+    margin: 0;
+    font-weight: normal;
+    cursor: pointer;
+    transition: text-shadow 200ms linear;
+    font-size: 1.2em;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    font-weight: normal;
+}
+
+nav h2.curiosites {
+    border-right: none;
+}
+
+nav h2.active {
+    text-shadow: 0 0 10px white;
 }
 
 footer {
@@ -66,31 +102,15 @@ footer div:first-child {
     flex: 1;
 }
 
-#language {
-    margin: auto;
-    font-weight: bold;
-    font-size: larger;
-    min-width: 100px;
-}
-
-header nav {
-    display: flex;
-    text-align: center;
-}
-
-nav h2 {
+#artwork {
+    width: 100%;
+    position: relative;
     flex: 1 0 auto;
-    padding: 15px;
-    color: whitesmoke;
-    border: whitesmoke solid 1px;
-    margin: 0;
-    font-weight: normal;
-    cursor: pointer;
-    transition: text-shadow 200ms linear;
+    z-index: 1;
 }
 
-nav h2.active {
-    text-shadow: 0 0 10px white;
+#artwork img {
+    position: absolute;
 }
 
 #main {
@@ -122,6 +142,7 @@ nav h2.active {
 .content-column {
     text-align: justify;
     width:30%;
+    margin-bottom: 10px;
 }
 
 @media (max-width: 600px) {

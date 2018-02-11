@@ -30,6 +30,7 @@ function getVerticalPosition(element) {
 
 
 window.onload = async () => {
+
     const
         artwork = document.getElementById('artwork'),
         composition = new Composition(artwork, 415, 865);
@@ -48,7 +49,11 @@ window.onload = async () => {
         p.push(composition.add(image));
     });
 
+    artwork.style.visibility = "hidden"
+
     await Promise.all(p);
+
+    artwork.style.visibility = "visible"
 
     const
         sections = _.map(document.querySelectorAll('section'), (element, index) => {
