@@ -30,6 +30,7 @@
     "style-loader": "^0.18.2",
     "sync-request": "^5.0.0",
     "uglifyjs-webpack-plugin": "^0.4.6",
+    "url-loader": "~0.6.2",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.8.2",
     "webpack-merge": "^4.1.0"
