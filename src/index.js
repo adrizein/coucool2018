@@ -63,12 +63,12 @@ window.onload = async () => {
                 element,
                 activate() {
                     this.element.classList.add('active');
-                    this.title.classList.add('active');
+                    if(this.title != null) {this.title.classList.add('active')};
                     // TODO: create new composition (depending on name)
                 },
                 deactivate() {
                     this.element.classList.remove('active');
-                    this.title.classList.remove('active');
+                    if(this.title != null) {this.title.classList.remove('active')};
                     // TODO: clear composition
                 },
             };
@@ -157,15 +157,17 @@ window.onload = async () => {
     });
 
     sections.forEach(({element, title}) => {
-        title.addEventListener('click', () => {
+        if(title != null) {
+            title.addEventListener('click', () => {
             const {realTop} = getVerticalPosition(element);
 
             Velocity(element, 'scroll', {
                 offset: compositionHeight,
                 duration: Math.abs(headerHeight - realTop),
                 easing: 'easeInOutSine',
+                });
             });
-        });
+        }
     });
 
     document.querySelector('header h1').addEventListener('click', () => {
