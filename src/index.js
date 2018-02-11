@@ -22,10 +22,11 @@ const movingImages = {
 
 function getVerticalPosition(element) {
     const
-        {top, bottom} = element.getBoundingClientRect(),
-        paddingTop = parseInt(element.style.paddingTop);
+        {top, bottom} = element.getBoundingClientRect()//,
+        //paddingTop = parseInt(element.style.paddingTop);
 
-    return {realTop: top + paddingTop, realBottom: bottom};
+   //return {realTop: top + paddingTop, realBottom: bottom};
+    return {realTop: top, realBottom: bottom};
 }
 
 
@@ -34,18 +35,19 @@ window.onload = async () => {
     const
         artwork = document.getElementById('artwork'),
         composition = new Composition(artwork, 415, 865),
-        {height: headerHeight} = document.querySelector('header').getBoundingClientRect(),
+        {height: headerHeight} = document.querySelector('header').getBoundingClientRect(), //TO DO REMOVE APPLY THE SCROLL TO MAIN
         sections = _.map(
             document.querySelectorAll('section'), (element, index) => {
                 const
-                    name = element.classList[0],
-                    title = document.querySelector(`nav h2.${name}`);
+                    name = element.classList[0]
+                    //title = document.querySelector(`nav h2.${name}`);
 
                 return {
                     index,
                     name,
-                    title,
+                    //title,
                     element,
+                    /*
                     activate() {
                         this.element.classList.add('active');
                         if (this.title) {
@@ -60,12 +62,13 @@ window.onload = async () => {
                             // TODO: clear composition
                         }
                     },
+                    */
                 };
             });
 
     let
-        compositionBottom,
-        compositionHeight,
+        //compositionBottom,
+        //compositionHeight,
         activeSection = null,
         lastScroll = window.scrollY;
 
@@ -93,8 +96,10 @@ window.onload = async () => {
     artwork.style.visibility = "visible"
 
     // Init
+    setActiveSection(sections[0]) // TO DO Replace by the URL stuff
     onResize(); onScroll();
 
+    /*
     sections.forEach((section) => {
         const {realTop, realBottom} = getVerticalPosition(section.element);
 
@@ -106,6 +111,7 @@ window.onload = async () => {
             section.deactivate();
         }
     });
+
 
     // Controller
     sections.filter((section) => section.title).forEach((section) => {
@@ -120,26 +126,121 @@ window.onload = async () => {
         });
     });
 
-    window.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
-    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
-
     document.querySelector('header h1').addEventListener('click', () => {
         Velocity(document.body, 'scroll', {duration: window.scrollY + window.innerHeight, easing: 'easeInOutSine'});
     });
+    */
+
+    window.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
+    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
+
+
+    function activateNextSection() {
+        setActiveSection(sections[activeSection.index + 1]);
+    }
+
+    function activatePreviousSection() {
+        setActiveSection(sections[activeSection.index - 1]);
+    }
+
+    function setActiveSection(section) {
+        activeSection = section;
+        // Activate 
+        section.element.classList.add('active');
+
+        // Enlighten the nav button
+        var title = document.querySelector(`nav h2.${section.id}`);
+        if (title != null) {title.classList.add('active');}
+    }
+
+    function isEndOfActiveSectionVisible() {
+        // check if the bottom of the activesection is above the bottom of the window
+        var {top, bottom} = activeSection.element.getBoundingClientRect();
+        var isEndOfActiveSectionVisible = bottom < window.innerHeight;
+        return isEndOfActiveSectionVisible
+    }
+
+    function isEndOfActiveSectionBelowHeader() {
+        // check if the bottom of the activesection is above the bottom of the window
+        var {top, bottom} = activeSection.element.getBoundingClientRect();
+        var isEndOfActiveSectionBelowHeader = bottom < headerHeight;
+        return isEndOfActiveSectionBelowHeader
+    }
+
+    function isBeginningOfActiveSection() {
+        var {top, bottom} = activeSection.element.getBoundingClientRect();
+        var isBeginningOfActiveSection = top < (composition.height);
+        return isBeginningOfActiveSection
+    }
+
+    function getVisibleSectionFromPosition() {
+        var sectionsBelow = [];
+        sections.forEach((section) => {
+            var {top, bottom} = section.element.getBoundingClientRect();
+            if ((bottom-headerHeight) > 0) {
+                sectionsBelow.push(section);
+            }
+        });
+        return sectionsBelow[0] || sections[sections.length-1];
+    }
+
 
     function onScroll() {
+        /*
         const
-            scroll = window.scrollY,
+            scroll = window.scrollY
             direction = scroll - lastScroll;
 
         lastScroll = scroll;
+        */
 
+        //console.log(getVisibleSectionFromPosition());
         // animate artwork
-        composition.animate(_.clamp(scroll / compositionHeight, 0, 1));
+        composition.animate(_.clamp(window.scrollY / (composition.height/2), 0, 1));
 
-        const section = activeSection || sections[0];
-        const {realTop, realBottom} = getVerticalPosition(section.element);
+        //const section = activeSection || sections[0];
+        const {top, bottom} = activeSection.element.getBoundingClientRect()
+        //const {realTop, realBottom} = getVerticalPosition(section.element);
+        
 
+        /*
+                sections.forEach((section) => {
+            var {top, bottom} = section.element.getBoundingClientRect();
+            console.log(bottom);
+        });
+
+        console.log(activeSection.element);
+        console.log("compositionHeight is " + composition.height)
+        console.log("headerHeight is " + headerHeight)
+        console.log("realTop is " + top);
+        console.log("realBottom is " + bottom);
+        console.log("scroll is " + window.scrollY);
+        console.log("window height is" + window.innerHeight);
+        */
+        var visibleSection = getVisibleSectionFromPosition()
+        if (visibleSection != activeSection) {
+            // The last line of the active session is visble we can start bringing back the artwork
+           setActiveSection(visibleSection);
+           //composition.animate(_.clamp(top / (composition.height/2), 0, 1));
+        }
+        if (isEndOfActiveSectionVisible()) {
+            // The last line of the active session is visble we can start bringing back the artwork
+            //console.log("EndOfActiveSectionVisible")
+            console.log("isEndOfActiveSectionVisible")
+            composition.animate(_.clamp((composition.height-(window.innerHeight-bottom)) / (composition.height/2), 0, 1));
+        } else {
+            console.log(top)
+            composition.animate(_.clamp((composition.height-(top-headerHeight)) / (composition.height/2), 0, 1));
+        }
+        /*
+        if (isBeginningOfActiveSection()) {
+            console.log("isBeginningOfActiveSection")
+            //composition.animate(_.clamp(top / (composition.height/2), 0, 1));
+        }
+
+
+
+        /*
         // increase opacity of current section with scrolling
         section.element.style.opacity = _.clamp((compositionBottom - realTop) / composition.height, 0, 1);
 
@@ -151,7 +252,6 @@ window.onload = async () => {
                     activeSection = section;
                 }
             }
-
             if (realBottom < headerHeight) {
                 section.deactivate();
                 activeSection = sections[section.index + 1];
@@ -174,18 +274,26 @@ window.onload = async () => {
                 }
             }
         }
+        */
     }
+
 
     function onResize() {
         composition.rescale();
+        document.querySelectorAll('.spacer').forEach((spacer) => {
+            console.log(spacer);
+            spacer.style.height = `${composition.height}px`;
+        });
+        document.getElementById('main').style.paddingTop = `${headerHeight}px`;
+        /*
         compositionHeight = composition.height;
         compositionBottom = compositionHeight + headerHeight;
-
         sections.forEach((section) => {
             section.element.style.paddingTop = `${Math.ceil(compositionBottom) + 5}px`;
             if (!section.element.nextElementSibling) {
                 section.element.style.paddingBottom = `${Math.ceil(compositionBottom)}px`;
             }
         });
+        */
     }
 };
