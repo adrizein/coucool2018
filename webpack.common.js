@@ -24,6 +24,18 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.(eot|svg|ttf|woff|woff2)$/,
+                use: [
+                    'url-loader',
+                ],
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: [
+                    'file-loader',
+                ],
+            },
+            {
                 test: /\.js$/,
                 use: {
                     loader: 'babel-loader',
@@ -38,12 +50,6 @@ module.exports = {
                 use: [
                     'style-loader',
                     'css-loader',
-                ],
-            },
-            {
-                test: /\.(png|svg|jpg|gif)$/,
-                use: [
-                    'file-loader',
                 ],
             },
         ],
