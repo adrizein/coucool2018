@@ -129,7 +129,11 @@ footer div:first-child {
 #main section {
     padding: 0px 20px 0px 20px;
     color: white;
-    opacity: 1;
+    opacity: 0;
+}
+
+#main section.invisible{
+    display:none;
 }
 
 .spacer {
@@ -147,6 +151,7 @@ footer div:first-child {
 
 .content-row {
     display:flex;
+    width: 100%;
     justify-content: space-between;
     margin: 20px 0px 20px 0px;
 }

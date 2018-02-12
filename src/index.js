@@ -39,39 +39,17 @@ window.onload = async () => {
         sections = _.map(
             document.querySelectorAll('section'), (element, index) => {
                 const
-                    name = element.classList[0]
+                    id = element.id
                     //title = document.querySelector(`nav h2.${name}`);
 
                 return {
                     index,
                     name,
-                    //title,
-                    element,
-                    /*
-                    activate() {
-                        this.element.classList.add('active');
-                        if (this.title) {
-                            this.title.classList.add('active');
-                            // TODO: create new composition (depending on name)
-                        }
-                    },
-                    deactivate() {
-                        this.element.classList.remove('active');
-                        if (this.title) {
-                            this.title.classList.remove('active');
-                            // TODO: clear composition
-                        }
-                    },
-                    */
+                    element
                 };
             });
 
-    let
-        //compositionBottom,
-        //compositionHeight,
-        activeSection = null,
-        lastScroll = window.scrollY;
-
+    let activeSection = null
 
     // Load composition
     const p = [];
@@ -97,80 +75,66 @@ window.onload = async () => {
 
     // Init
     setActiveSection(sections[0]) // TO DO Replace by the URL stuff
-    onResize(); onScroll();
+    onResize(); 
 
-    /*
-    sections.forEach((section) => {
-        const {realTop, realBottom} = getVerticalPosition(section.element);
-
-        if (realTop < compositionBottom && realBottom < window.innerHeight) {
-            section.activate();
-            activeSection = section;
-        }
-        else {
-            section.deactivate();
-        }
-    });
-
-
-    // Controller
-    sections.filter((section) => section.title).forEach((section) => {
-        section.title.addEventListener('click', () => {
-            const {realTop} = getVerticalPosition(section.element);
-
-            Velocity(section.element, 'scroll', {
-                offset: compositionHeight,
-                duration: Math.abs(headerHeight - realTop),
-                easing: 'easeInOutSine',
-            });
-        });
-    });
-
-    document.querySelector('header h1').addEventListener('click', () => {
-        Velocity(document.body, 'scroll', {duration: window.scrollY + window.innerHeight, easing: 'easeInOutSine'});
-    });
-    */
-
+    // Events selectors
     window.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
 
+    var divs = document.querySelectorAll('nav h2');
+    [].forEach.call(divs, function(div) {
+        div.addEventListener('click', (event) => {
+            var section = getSectionById(event.target.classList[0])
+            setActiveSection(section);
+            goToActiveSection();
+        });
+    });
 
-    function activateNextSection() {
-        setActiveSection(sections[activeSection.index + 1]);
+
+
+    function goToActiveSection() {
+        // TO DO change to remove all the other section before scrolling
+        Velocity(activeSection.element, 'scroll', {
+            offset: -(headerHeight+composition.height-1),
+            //duration: Math.abs(headerHeight - sectionElement.getBoundingClientRect().top),
+            easing: 'easeInOutSine',
+        });
     }
 
-    function activatePreviousSection() {
-        setActiveSection(sections[activeSection.index - 1]);
+    function getSectionById(sectionId) {
+        var matchingSections = []
+        sections.forEach((section) => {
+            if (section.element.id == sectionId) {
+                matchingSections.push(section);
+            }
+        });
+        return matchingSections[0];
     }
 
     function setActiveSection(section) {
         activeSection = section;
-        // Activate 
-        section.element.classList.add('active');
+        //Remove the active class everywhere
+        var divs = document.querySelectorAll('.active');
+        [].forEach.call(divs, function(div) {
+            div.classList.remove('active');
+        });
 
+        //Set the opacity to 0 in every section
+        sections.forEach((section) => {
+            section.element.style.opacity = 0
+        });
+        
+        // Activate the section
+        section.element.classList.add('active');
         // Enlighten the nav button
-        var title = document.querySelector(`nav h2.${section.id}`);
+        var title = document.querySelector(`nav h2.${section.element.id}`);
         if (title != null) {title.classList.add('active');}
     }
 
     function isEndOfActiveSectionVisible() {
         // check if the bottom of the activesection is above the bottom of the window
-        var {top, bottom} = activeSection.element.getBoundingClientRect();
-        var isEndOfActiveSectionVisible = bottom < window.innerHeight;
+        var isEndOfActiveSectionVisible = activeSection.element.getBoundingClientRect().bottom < window.innerHeight;
         return isEndOfActiveSectionVisible
-    }
-
-    function isEndOfActiveSectionBelowHeader() {
-        // check if the bottom of the activesection is above the bottom of the window
-        var {top, bottom} = activeSection.element.getBoundingClientRect();
-        var isEndOfActiveSectionBelowHeader = bottom < headerHeight;
-        return isEndOfActiveSectionBelowHeader
-    }
-
-    function isBeginningOfActiveSection() {
-        var {top, bottom} = activeSection.element.getBoundingClientRect();
-        var isBeginningOfActiveSection = top < (composition.height);
-        return isBeginningOfActiveSection
     }
 
     function getVisibleSectionFromPosition() {
@@ -185,115 +149,63 @@ window.onload = async () => {
     }
 
 
+    function explode(beginningTop) {
+        var heightOfExplosion = composition.height/2;
+        composition.animate(_.clamp((beginningTop - activeSection.element.getBoundingClientRect().top)/ heightOfExplosion, 0, 1));
+    }
+
+    function implode(endBottom) {
+        var heightOfExplosion = composition.height/2;
+        composition.animate(_.clamp((activeSection.element.getBoundingClientRect().bottom - endBottom)/ heightOfExplosion, 0, 1));
+    }
+
     function onScroll() {
-        /*
-        const
-            scroll = window.scrollY
-            direction = scroll - lastScroll;
 
-        lastScroll = scroll;
-        */
-
-        //console.log(getVisibleSectionFromPosition());
-        // animate artwork
-        composition.animate(_.clamp(window.scrollY / (composition.height/2), 0, 1));
-
-        //const section = activeSection || sections[0];
         const {top, bottom} = activeSection.element.getBoundingClientRect()
-        //const {realTop, realBottom} = getVerticalPosition(section.element);
         
+        // Remove footer
+        if (window.scrollY == 0) {
+            document.querySelectorAll('footer').forEach((footer) => {
+                footer.style.display = "flex";
+            }); 
+        } else {
+           document.querySelectorAll('footer').forEach((footer) => {
+                footer.style.display = "none";
+            });
+        }
 
-        /*
-                sections.forEach((section) => {
-            var {top, bottom} = section.element.getBoundingClientRect();
-            console.log(bottom);
-        });
+        //Remove chevron
+        if (top < headerHeight+composition.height+10 &&
+            top > headerHeight+composition.height-10) {
+            document.getElementById('chevron').style.display = "block"
+        } else {
+           document.getElementById('chevron').style.display = "none" 
+        }
 
-        console.log(activeSection.element);
-        console.log("compositionHeight is " + composition.height)
-        console.log("headerHeight is " + headerHeight)
-        console.log("realTop is " + top);
-        console.log("realBottom is " + bottom);
-        console.log("scroll is " + window.scrollY);
-        console.log("window height is" + window.innerHeight);
-        */
+        // increase opacity of current section with scrolling
+        activeSection.element.style.opacity = _.clamp((composition.height + headerHeight - top) / composition.height, 0, 1);
+
+        //Implode and Explode
+        if (isEndOfActiveSectionVisible()) {
+            implode(headerHeight);
+        } else {
+            explode(composition.height+headerHeight);
+        }
+
+        //Change active section
         var visibleSection = getVisibleSectionFromPosition()
         if (visibleSection != activeSection) {
-            // The last line of the active session is visble we can start bringing back the artwork
            setActiveSection(visibleSection);
-           //composition.animate(_.clamp(top / (composition.height/2), 0, 1));
-        }
-        if (isEndOfActiveSectionVisible()) {
-            // The last line of the active session is visble we can start bringing back the artwork
-            //console.log("EndOfActiveSectionVisible")
-            console.log("isEndOfActiveSectionVisible")
-            composition.animate(_.clamp((composition.height-(window.innerHeight-bottom)) / (composition.height/2), 0, 1));
-        } else {
-            console.log(top)
-            composition.animate(_.clamp((composition.height-(top-headerHeight)) / (composition.height/2), 0, 1));
-        }
-        /*
-        if (isBeginningOfActiveSection()) {
-            console.log("isBeginningOfActiveSection")
-            //composition.animate(_.clamp(top / (composition.height/2), 0, 1));
         }
 
-
-
-        /*
-        // increase opacity of current section with scrolling
-        section.element.style.opacity = _.clamp((compositionBottom - realTop) / composition.height, 0, 1);
-
-        // Detect section change
-        if (direction > 0) {
-            if (realTop < compositionBottom) {
-                if (!activeSection) {
-                    section.activate();
-                    activeSection = section;
-                }
-            }
-            if (realBottom < headerHeight) {
-                section.deactivate();
-                activeSection = sections[section.index + 1];
-                activeSection.activate();
-            }
-        }
-        else {
-            if (realBottom > headerHeight) {
-                if (!activeSection) {
-                    section.activate();
-                    activeSection = section;
-                }
-            }
-
-            if (realTop > compositionBottom) {
-                section.deactivate();
-                activeSection = sections[section.index - 1] || null;
-                if (activeSection) {
-                    activeSection.activate();
-                }
-            }
-        }
-        */
     }
 
 
     function onResize() {
         composition.rescale();
         document.querySelectorAll('.spacer').forEach((spacer) => {
-            console.log(spacer);
             spacer.style.height = `${composition.height}px`;
         });
         document.getElementById('main').style.paddingTop = `${headerHeight}px`;
-        /*
-        compositionHeight = composition.height;
-        compositionBottom = compositionHeight + headerHeight;
-        sections.forEach((section) => {
-            section.element.style.paddingTop = `${Math.ceil(compositionBottom) + 5}px`;
-            if (!section.element.nextElementSibling) {
-                section.element.style.paddingBottom = `${Math.ceil(compositionBottom)}px`;
-            }
-        });
-        */
     }
 };
