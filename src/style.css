@@ -117,7 +117,7 @@ footer div:first-child {
     width: 100%;
     text-align: center;
     color:whitesmoke;
-    font-size: 2em; 
+    font-size: 2em;
 }
 
 #main {
@@ -139,7 +139,6 @@ footer div:first-child {
 .spacer {
     height: 150px;
     width: 100%;
-}
 
 .content-container {
     display:flex;
@@ -168,7 +167,7 @@ footer div:first-child {
     }
     .content-column {
         width:100%;
-    } 
+    }
 }
 
 
