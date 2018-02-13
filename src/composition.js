@@ -51,10 +51,12 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    resize(scale, t) {
+    resize(scale, t, paysage) {
+        if(!paysage){
+            //this.element.rotateTo(90);
+        }
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
-
         this.move(scale, t);
     }
 
@@ -81,7 +83,7 @@ class Composition {
     animate(t) {
         this._t = t;
         const scale = this.scale;
-        this.images.forEach((image) => image.move(scale, t));
+        this.images.forEach((image) => image.move(scale, t, this.paysage_mode));
     }
 
     async add(image) {
@@ -131,6 +133,10 @@ class Composition {
         */
     }
 
+    get paysage_mode() {
+        return this._paysage_mode;
+    }
+
     get height() {
         return this._scaled_height;
     }
@@ -142,7 +148,7 @@ class Composition {
     rescale() {
         this.update();
         const scale = this.scale;
-        this.images.forEach((image) => image.resize(scale, this._t));
+        this.images.forEach((image) => image.resize(scale, this._t, this.paysage_mode));
     }
 
     clear() {
