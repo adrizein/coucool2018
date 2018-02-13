@@ -132,7 +132,7 @@ window.onload = async () => {
         }
         else {
             footer.classList.add('invisible');
-            chevron.classList.add('invisible');
+            //chevron.classList.add('invisible');
         }
 
         activeSection.reveal();
