@@ -63,6 +63,16 @@ class MovingImage {
         this.element.style.top = `${y}px`;
         this.element.style.left = `${x}px`;
     }
+
+    runAnimation(scale, duration, t) {
+        const {x, y} = this._trajectory.position(scale, t);
+
+        return Velocity(this.element, {top: y, left: x}, {
+            queue: false,
+            duration,
+            easing: 'easeInOutSine',
+        });
+    }
 }
 
 class Composition {
@@ -73,12 +83,18 @@ class Composition {
         this._height = height_;
         this._width = width_;
         this._t = 0;
+        this.scale = this._scale;
     }
 
     animate(t) {
         this._t = t;
-        const scale = this.scale;
-        this.images.forEach((image) => image.move(scale, t));
+        this.images.forEach((image) => image.move(this.scale, t));
+    }
+
+    async runAnimation(duration, t) {
+        this._t = t;
+
+        return Promise.all(this.images.map((image) => image.runAnimation(this.scale, duration, t)));
     }
 
     async add(image) {
@@ -88,7 +104,7 @@ class Composition {
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
     }
 
-    get scale() {
+    get _scale() {
         return this._anchor.offsetWidth / this._width;
     }
 
@@ -101,9 +117,9 @@ class Composition {
     }
 
     rescale() {
-        const scale = this.scale;
+        this.scale = this._scale;
 
-        this.images.forEach((image) => image.resize(scale, this._t));
+        this.images.forEach((image) => image.resize(this.scale, this._t));
     }
 
     clear() {

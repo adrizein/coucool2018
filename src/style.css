@@ -11,6 +11,7 @@ html, body {
     margin: 0;
     padding: 0;
     background: url('./images/background.jpg') 100% fixed;
+    color: whitesmoke;
 }
 
 body > .fixed {
@@ -24,10 +25,10 @@ body > .fixed {
 }
 
 header {
-    background-image: url('./images/background.jpg');
-    background-size: cover;
+    background: url('./images/background.jpg') 100% fixed;
     overflow: hidden;
     flex: 0 1 auto;
+    position: relative;
     z-index: 2;
     pointer-events: all;
     padding: 0 20px;
@@ -35,19 +36,17 @@ header {
 
 header .flex {
     display: flex;
-    color: whitesmoke;
     align-items: baseline;
 }
 
-header .flex h1 {
+h1 {
     font-size: 1.8em;
     margin: 10px 0;
     font-weight: normal;
 }
 
 #coucool {
-    flex: 1;
-    min-width: 320px;
+    flex: 1 0 auto;
     cursor: pointer;
 }
 
@@ -62,29 +61,38 @@ header nav {
     text-align: center;
 }
 
-nav h2 {
+h2 {
     flex: 1 0 0;
     padding: 10px 10px;
-    color: whitesmoke;
-    border-right: whitesmoke solid 1px;
+    border-left: whitesmoke solid 1px;
     margin: 0;
     font-weight: normal;
-    cursor: pointer;
     transition: text-shadow 200ms linear;
     font-size: 1.2em;
 }
 
-nav h2:last-child {
-    border-right: none;
+.link, h2 {
+    cursor: pointer;
 }
 
-nav h2.active {
-    text-shadow: 0 0 10px white;
+h2:first-child {
+    border-left: none;
+}
+
+h2.active {
+    text-shadow: 0 0 10px whitesmoke;
 }
 
 footer {
     display: flex;
-    color: white;
+}
+
+footer, #chevron {
+    transition: opacity 1000ms ease-in-out;
+}
+
+.invisible {
+    opacity: 0;
 }
 
 footer div {
@@ -92,7 +100,7 @@ footer div {
 }
 
 footer div:first-child {
-    flex: 1;
+    flex: 1 0 0;
 }
 
 #artwork {
@@ -109,7 +117,6 @@ footer div:first-child {
 #chevron {
     width: 100%;
     text-align: center;
-    color:whitesmoke;
     font-size: 2em;
 }
 
@@ -121,16 +128,27 @@ footer div:first-child {
 
 section {
     padding: 0 20px;
-    color: white;
     opacity: 0;
+    transition: opacity 1000ms ease-in-out;
 }
 
-section.invisible {
+section.active {
+    opacity: 1;
+}
+
+section.hidden {
     display:none;
 }
 
+section:last-child {
+    padding-bottom: 400px;
+}
+
+#curiosites {
+    padding-bottom: 400px;
+}
+
 .spacer {
-    height: 150px;
     width: 100%;
 }
 
@@ -144,7 +162,6 @@ section.invisible {
 }
 
 p {
-    color: whitesmoke;
     font-size: large;
     line-height: 1.5em;
 }
@@ -173,10 +190,29 @@ li {
     flex: 1 0 300px;
 }
 
+.flex-row p {
+    font-size: 1em;
+}
+
 #weezevent {
     flex: 0 1 900px;
 }
 
-#curiosites {
-    padding-bottom: 400px;
+@media (max-width: 640px) {
+    h1 {
+        font-size: 1.2em;
+    }
+
+    h2, h3, h4, p {
+        font-size: 1em;
+    }
+
+    h2:last-child {
+        display: none;
+    }
+
+    footer {
+        font-size: 0.8em;
+        display: block;
+    }
 }
