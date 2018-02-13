@@ -70,9 +70,12 @@ class Composition {
     constructor(anchor, height_, width_) {
         this.images = [];
         this._anchor = anchor;
-        this._height = height_;
-        this._width = width_;
         this._t = 0;
+        this._image_height = height_;
+        this._image_width = width_;
+
+        //To update with the rescale
+        this.update()
     }
 
     animate(t) {
@@ -88,21 +91,57 @@ class Composition {
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
     }
 
+    update(){
+        this._paysage_mode = (this._anchor.offsetWidth > this._anchor.offsetHeight)
+        this._height = this._paysage_mode ? this._image_height : this._image_width;
+        this._width = this._paysage_mode ? this._image_width : this._image_height;
+
+        this._image_scale = this._width / this._height;
+        this._anchor_scale = this._anchor.offsetWidth / this._anchor.offsetHeight;
+        if(this._image_scale >=  this._anchor_scale) {
+            // For the same height the image is wider, therefore the width
+            this._scaled_height = this._anchor.offsetHeight;
+            this._scaled_width = this._scaled_height * this._image_scale;
+            this._scale = this._anchor.offsetWidth / this._width;
+        } else {
+            this._scaled_width = this._anchor.offsetWidth;
+            this._scaled_height = this._scaled_width / this._image_scale;
+            this._scale = this._anchor.offsetHeight / this._height;
+
+        }
+        //this._scale = this._anchor_scale/this._image_scale
+
+        console.log("height " + this._height)
+        console.log("width " + this._width)
+        console.log("image scale " + this._image_scale)
+        console.log("anchor scale " + this._anchor_scale)
+        console.log("offsetWidth " + this._anchor.offsetWidth)
+        console.log("offsetHeight " + this._anchor.offsetHeight)
+
+    }
+
     get scale() {
-        return this._anchor.offsetWidth / this._width;
+        return this._scale;
+        /*
+        if (this._image_scale >=  this._anchor_scale) {
+            return this._anchor.offsetWidth / this._image_width;
+        } else {
+            return this._anchor.offsetHeight / this._image_height;
+        }
+        */
     }
 
     get height() {
-        return this._height * this.scale;
+        return this._scaled_height;
     }
 
     get width() {
-        return this._width * this.scale;
+        return this._scaled_width;
     }
 
     rescale() {
+        this.update();
         const scale = this.scale;
-
         this.images.forEach((image) => image.resize(scale, this._t));
     }
 
