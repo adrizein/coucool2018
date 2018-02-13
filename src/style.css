@@ -1,12 +1,16 @@
+@font-face {
+    font-family: 'coucool';
+    src: url('font.ttf');
+}
 
 html, body {
     height: 100%;
     width: 100%;
-    font-family: Josefin, arial, sans-serif;
+    font-family: coucool, Josefin, arial, sans-serif;
+    letter-spacing: 2px;
     margin: 0;
     padding: 0;
-    background-image: url('./images/background.jpg');
-    background-size: 100%;
+    background: url('./images/background.jpg') 100% fixed;
 }
 
 body > .fixed {
@@ -20,29 +24,24 @@ body > .fixed {
 }
 
 header {
-    width: 100%;
     background-image: url('./images/background.jpg');
     background-size: cover;
-    background-position: revert;
     overflow: hidden;
     flex: 0 1 auto;
     z-index: 2;
     pointer-events: all;
+    padding: 0 20px;
 }
 
 header .flex {
     display: flex;
-    margin: 0 20px;
     color: whitesmoke;
     align-items: baseline;
 }
 
 header .flex h1 {
     font-size: 1.8em;
-    -webkit-margin-before: 0.4em;
-    -webkit-margin-after: 0.4em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
+    margin: 10px 0;
     font-weight: normal;
 }
 
@@ -61,12 +60,11 @@ header .flex h1 {
 header nav {
     display: flex;
     text-align: center;
-    margin: 0 20px;
 }
 
 nav h2 {
     flex: 1 0 0;
-    padding: 15px;
+    padding: 10px 10px;
     color: whitesmoke;
     border-right: whitesmoke solid 1px;
     margin: 0;
@@ -74,14 +72,9 @@ nav h2 {
     cursor: pointer;
     transition: text-shadow 200ms linear;
     font-size: 1.2em;
-    -webkit-margin-before: 0em;
-    -webkit-margin-after: 0em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-    font-weight: normal;
 }
 
-nav h2.curiosites {
+nav h2:last-child {
     border-right: none;
 }
 
@@ -95,7 +88,7 @@ footer {
 }
 
 footer div {
-    margin: 10px 20px;
+    margin: 10px;
 }
 
 footer div:first-child {
@@ -126,67 +119,64 @@ footer div:first-child {
     z-index: 1;
 }
 
-#main section {
-    padding: 0px 20px 0px 20px;
+section {
+    padding: 0 20px;
     color: white;
     opacity: 0;
 }
 
-#main section.invisible{
+section.invisible {
     display:none;
 }
 
 .spacer {
     height: 150px;
     width: 100%;
-
-.content-container {
-    display:flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: space-between;
-    font-size: large;
 }
 
-.content-row {
-    display:flex;
-    width: 100%;
-    justify-content: space-between;
-    margin: 20px 0px 20px 0px;
+#eros .strophe {
+    margin: 15px 0;
 }
 
-.content-column {
-    text-align: justify;
-    width:30%;
-    margin-bottom: 10px;
+#eros p {
+    margin: 0;
+    line-height: 1.4em;
 }
 
-@media (max-width: 600px) {
-   .content-row {
-        display:block;
-    }
-    .content-column {
-        width:100%;
-    }
-}
-
-
-.content-item {
-    display:flex;
-    flex-wrap:wrap;
-}
-
-#main p {
-    font-size: x-large;
-    margin: 20px;
-    padding: 0;
+p {
     color: whitesmoke;
+    font-size: large;
+    line-height: 1.5em;
 }
 
-#main p:last-child {
-    background-color: whitesmoke;
-    padding: 40px;
-    margin-top: 60px;
-    line-height: 1.5em;
-    color: #223;
+.flex-row {
+    display: flex;
+    text-align: left;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+h4, ul {
+    margin: 10px 0;
+}
+
+ul {
+    padding-left: 30px;
+}
+
+li {
+    margin: 10px 0;
+}
+
+.flex-row > div {
+    margin: 20px;
+    flex: 1 0 300px;
+}
+
+#weezevent {
+    flex: 0 1 900px;
+}
+
+#curiosites {
+    padding-bottom: 400px;
 }

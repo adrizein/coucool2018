@@ -30,7 +30,7 @@ window.onload = async () => {
         sections = _.map(
             document.querySelectorAll('section:not(.hidden)'), (element, index) => {
                 const
-                    id = element.id;
+                    name = element.id;
                     //title = document.querySelector(`nav h2.${name}`);
 
                 return {
@@ -40,7 +40,9 @@ window.onload = async () => {
                 };
             });
 
-    let activeSection = null;
+    let
+        previousSection = null,
+        activeSection = null;
 
     // Load composition
     const p = [];
@@ -65,12 +67,13 @@ window.onload = async () => {
     artwork.style.visibility = 'visible';
 
     // Init
-    setActiveSection(sections[0]); // TODO: Replace by the URL stuff
-    onResize();
+    setActiveSection(sections[0]);
+    onResize(); onHash();
 
     // Events selectors
     window.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
+    window.onhashchange = onHash;
 
     const divs = document.querySelectorAll('nav h2');
     [].forEach.call(divs, (div) => {
@@ -82,20 +85,39 @@ window.onload = async () => {
     });
 
 
+    function onHash() {
+        if (window.location.hash.length > 1) {
+            const urlSection = _.find(sections, ({name}) => name === window.location.hash.replace('#', ''));
+            console.log(urlSection, activeSection, previousSection);
+            if (urlSection) {
+                setActiveSection(urlSection);
+                goToActiveSection();
+            }
+        }
+    }
 
-    function goToActiveSection() {
-        // TODO: change to remove all the other section before scrolling
-        Velocity(activeSection.element, 'scroll', {
-            offset: -(headerHeight + composition.height - 1),
-            //duration: Math.abs(headerHeight - sectionElement.getBoundingClientRect().top),
+    async function goToActiveSection() {
+        _.filter(sections, (section) => previousSection !== section).forEach((section) => {
+            section.element.style.display = 'none';
+        });
+        activeSection.element.style.display = null;
+        previousSection.element.style.display = null;
+
+        await Velocity(activeSection.element, 'scroll', {
+            offset: -headerHeight - 20,
+            duration: 2000,
             easing: 'easeInOutSine',
+        });
+
+        sections.forEach((section) => {
+            section.element.style.display = null;
         });
     }
 
     function getSectionById(sectionId) {
         const matchingSections = [];
         sections.forEach((section) => {
-            if (section.element.id === sectionId) {
+            if (section.name === sectionId) {
                 matchingSections.push(section);
             }
         });
@@ -104,6 +126,7 @@ window.onload = async () => {
     }
 
     function setActiveSection(section) {
+        previousSection = activeSection;
         activeSection = section;
         //Remove the active class everywhere
         const divs = document.querySelectorAll('.active');
@@ -118,8 +141,9 @@ window.onload = async () => {
 
         // Activate the section
         section.element.classList.add('active');
+
         // Enlighten the nav button
-        const title = document.querySelector(`nav h2.${section.element.id}`);
+        const title = document.querySelector(`nav h2.${section.name}`);
         if (title) {
             title.classList.add('active');
         }
@@ -138,14 +162,14 @@ window.onload = async () => {
                 sectionsBelow.push(section);
             }
         });
-        return sectionsBelow[0] || sections[sections.length-1];
+        return sectionsBelow[0] || sections[sections.length - 1];
     }
 
 
     function explode(beginningTop) {
         const heightOfExplosion = composition.height / 2;
         composition.animate(_.clamp(
-            (beginningTop - activeSection.element.getBoundingClientRect().top)/ heightOfExplosion, 0, 1)
+            (beginningTop - activeSection.element.getBoundingClientRect().top) / heightOfExplosion, 0, 1)
         );
     }
 
@@ -157,28 +181,25 @@ window.onload = async () => {
     }
 
     function onScroll() {
-
         const {top} = activeSection.element.getBoundingClientRect();
 
         // Remove footer
+        const footer = document.querySelector('footer');
         if (window.scrollY === 0) {
-            document.querySelectorAll('footer').forEach((footer) => {
-                footer.style.display = 'unset';
-            });
+            footer.style.display = null;
         }
         else {
-            document.querySelectorAll('footer').forEach((footer) => {
-                footer.style.display = 'none';
-            });
+            footer.style.display = 'none';
         }
 
         // Remove chevron
+        const chevron = document.getElementById('chevron');
         if (top < headerHeight + composition.height + 10 &&
             top > headerHeight + composition.height - 10) {
-            document.getElementById('chevron').style.display = 'unset';
+            chevron.style.display = null;
         }
         else {
-           document.getElementById('chevron').style.display = 'none';
+            chevron.style.display = 'none';
         }
 
         // increase opacity of current section with scrolling

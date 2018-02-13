@@ -10,7 +10,6 @@
     "prebuild": "npm run lint"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
     "lodash": "^4.17.4",
     "velocity-animate": "^1.5.1"
   },
