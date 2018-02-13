@@ -65,6 +65,16 @@ class MovingImage {
         this.element.style.top = `${y}px`;
         this.element.style.left = `${x}px`;
     }
+
+    runAnimation(scale, duration, t) {
+        const {x, y} = this._trajectory.position(scale, t);
+
+        return Velocity(this.element, {top: y, left: x}, {
+            queue: false,
+            duration,
+            easing: 'easeInOutSine',
+        });
+    }
 }
 
 class Composition {
@@ -84,6 +94,12 @@ class Composition {
         this._t = t;
         const scale = this.scale;
         this.images.forEach((image) => image.move(scale, t, this.paysage_mode));
+    }
+
+    async runAnimation(duration, t) {
+        this._t = t;
+
+        return Promise.all(this.images.map((image) => image.runAnimation(this.scale, duration, t)));
     }
 
     async add(image) {
@@ -111,15 +127,8 @@ class Composition {
             this._scale = this._anchor.offsetHeight / this._height;
 
         }
+
         //this._scale = this._anchor_scale/this._image_scale
-
-        console.log("height " + this._height)
-        console.log("width " + this._width)
-        console.log("image scale " + this._image_scale)
-        console.log("anchor scale " + this._anchor_scale)
-        console.log("offsetWidth " + this._anchor.offsetWidth)
-        console.log("offsetHeight " + this._anchor.offsetHeight)
-
     }
 
     get scale() {
