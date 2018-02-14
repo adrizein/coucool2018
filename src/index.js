@@ -54,14 +54,10 @@ window.onload = async () => {
                         }
                     },
                     reveal() {
-                        if (this.hidden) {
-                            this.element.classList.remove('hidden');
-                        }
+                        this.element.classList.remove('hidden');
                     },
                     hide() {
-                        if (this.hidden) {
-                            this.element.classList.add('hidden');
-                        }
+                        this.element.classList.add('hidden');
                     },
                 };
             });
@@ -71,6 +67,7 @@ window.onload = async () => {
         activeSection = null;
 
     // Load composition
+    artwork.style.visibility = 'hidden';
     const p = [];
     _.forEach(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
         const image = new MovingImage(
@@ -84,16 +81,13 @@ window.onload = async () => {
 
         p.push(composition.add(image));
     });
-
-    artwork.style.visibility = 'hidden';
-
-    // Wait for composition to load
+    // Wait for composition to show the artwork
     await Promise.all(p);
-
     artwork.style.visibility = 'visible';
 
     // Events selectors
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
+    document.getElementById("main").addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.onhashchange = onHash;
 
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
@@ -112,6 +106,34 @@ window.onload = async () => {
     onResize();
     onHash();
 
+    async function setActiveSection(section) {
+        footer.style.display = "none";
+        if(!activeSection || section.name != activeSection.name) {
+            if(activeSection){
+                activeSection.hide();
+                await composition.runAnimation(1000, 0);
+                activeSection.deactivate();
+            }
+            section.activate();
+            section.hide();
+            composition.runAnimation(1000, 1);
+            section.reveal();
+            document.getElementById("main").scrollTop = 0
+            //window.scrollTo(0, 0);
+
+            activeSection = section;
+            window.location.hash = section.name;
+        }
+    }
+
+    function onScroll() {
+        console.log(document.getElementById("main").scrollTop);
+    }
+
+    function onResize() {
+        composition.rescale();
+    }
+
     function onHash() {
         if (window.location.hash.length > 1) {
             const urlSection = _.find(sections, ({name}) => name === window.location.hash.replace('#', ''));
@@ -119,33 +141,5 @@ window.onload = async () => {
                 setActiveSection(urlSection);
             }
         }
-    }
-
-    async function setActiveSection(section) {
-        previousSection = activeSection;
-        activeSection = section;
-
-        if (previousSection) {
-            previousSection.deactivate();
-            await composition.runAnimation(1000, 0);
-            previousSection.hide();
-        }
-        else {
-            footer.classList.add('invisible');
-            //chevron.classList.add('invisible');
-        }
-
-        activeSection.reveal();
-        window.scrollTo(0, activeSection.element.offsetTop);
-        activeSection.activate();
-
-        return composition.runAnimation(1000, 1);
-    }
-
-    function onResize() {
-        composition.rescale();
-        document.querySelectorAll('section .spacer').forEach((spacer) => {
-            spacer.style.height = `${headerHeight}px`;
-        });
     }
 };
