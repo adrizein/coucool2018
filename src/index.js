@@ -26,7 +26,6 @@ window.onload = async () => {
         composition = new Composition(artwork, 415, 865),
         footer = document.querySelector('footer'),
         chevron = document.getElementById('chevron'),
-        {height: headerHeight} = document.querySelector('header').getBoundingClientRect(),
         sections = _.map(
             document.querySelectorAll('section'), (element, index) => {
                 const
@@ -59,6 +58,16 @@ window.onload = async () => {
                     hide() {
                         this.element.classList.add('hidden');
                     },
+                    next() {
+                        var next_index = this.index+1
+                        var next_section = next_index < sections.length ? sections[next_index] : null
+                        return next_section;
+                    },
+                    previous() {
+                        var previous_index = this.index-1
+                        var previous_section = previous_index >=0 ? sections[previous_index] : null
+                        return previous_section;
+                    }
                 };
             });
 
@@ -107,7 +116,6 @@ window.onload = async () => {
     onHash();
 
     async function setActiveSection(section) {
-        footer.style.display = "none";
         if(!activeSection || section.name != activeSection.name) {
             if(activeSection){
                 activeSection.hide();
@@ -127,7 +135,15 @@ window.onload = async () => {
     }
 
     function onScroll() {
-        console.log(document.getElementById("main").scrollTop);
+        var main = document.getElementById("main")
+        console.log("scrolltop " + main.scrollTop);
+        console.log("innerHeight " + main.offsetHeight);
+        console.log("scrollHeight " + main.scrollHeight);
+        if (main.scrollTop + main.offsetHeight >= main.scrollHeight){
+            // SETACTIVESECTION(ACTIVESECTION.NEXT)
+            console.log(activeSection.next());
+        }
+        // if scroll to top set active session to previous
     }
 
     function onResize() {
