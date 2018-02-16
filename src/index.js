@@ -40,17 +40,9 @@ window.onload = async () => {
                     hidden: element.classList.contains('hidden'),
                     activate() {
                         this.element.classList.add('active');
-                        // light up the nav button
-                        if (this.title) {
-                            this.title.classList.add('active');
-                        }
                     },
                     deactivate() {
                         this.element.classList.remove('active');
-                        // light down the nav button
-                        if (this.title) {
-                            this.title.classList.remove('active');
-                        }
                     },
                     reveal() {
                         this.element.classList.remove('hidden');
@@ -117,16 +109,18 @@ window.onload = async () => {
 
     async function setActiveSection(section) {
         if(!activeSection || section.name != activeSection.name) {
+            section.title.classList.add('active');
             if(activeSection){
+                activeSection.title.classList.remove('active');
                 activeSection.hide();
                 await composition.runAnimation(1000, 0);
                 activeSection.deactivate();
+                document.getElementById("main").scrollTop = 0
             }
             section.activate();
             section.hide();
-            composition.runAnimation(1000, 1);
-            section.reveal();
-            document.getElementById("main").scrollTop = 0
+            //composition.runAnimation(1000, 1);
+            //section.reveal();
             //window.scrollTo(0, 0);
 
             activeSection = section;
@@ -137,8 +131,18 @@ window.onload = async () => {
     function onScroll() {
         var main = document.getElementById("main")
         console.log("scrolltop " + main.scrollTop);
-        console.log("innerHeight " + main.offsetHeight);
+        console.log("innerHeight " + main.innerHeight);
         console.log("scrollHeight " + main.scrollHeight);
+        
+        // Explosion
+        // TO DO FAIRE MARCHER CE PUTAIN DE PADDING TOP
+        // activeSection.element.style['paddingTop'] = main.innerHeight;
+        console.log("paddingTop " + activeSection.element.style['paddingTop']);
+        var t = Math.clamp(main.scrollTop / 200, 0, 1)
+        composition.animate(t)
+        activeSection.element.style.opacity = t*4;
+
+
         if (main.scrollTop + main.offsetHeight >= main.scrollHeight){
             // SETACTIVESECTION(ACTIVESECTION.NEXT)
             console.log(activeSection.next());
@@ -148,6 +152,14 @@ window.onload = async () => {
 
     function onResize() {
         composition.rescale();
+        /*
+        _.map(
+            document.querySelectorAll('section'), (element, index) => {
+                element.style.paddingTop = document.getElementById("main").innerHeight;
+               }
+        );
+        */
+                
     }
 
     function onHash() {

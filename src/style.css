@@ -72,6 +72,9 @@ h2 {
     font-weight: normal;
     transition: text-shadow 200ms linear;
     font-size: 1em;
+    background: url('./images/fond_orange.png') 100% fixed;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text
 }
 
 .link, h2 {
@@ -84,6 +87,7 @@ h2:first-child {
 
 h2.active {
     text-shadow: 0 0 10px whitesmoke;
+    -webkit-text-fill-color: white;
 }
 
 footer {
@@ -123,7 +127,7 @@ footer div {
     position:absolute; left: 0; right:0;top: 0;bottom: 0;
     overflow-y: scroll;
     text-align: center;
-    padding: 20px;
+    padding: 0 20px;
 }
 
 #artwork img {
@@ -132,9 +136,10 @@ footer div {
 
 section {
     /*padding: 0 20px;*/
+    padding-top: 300px;
     display:none;
-    transition: opacity 1000ms ease-in-out;
     /*
+        transition: opacity 1000ms ease-in-out;
     background: url('./images/fond_orange.png') 100% fixed;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
@@ -143,13 +148,10 @@ section {
 
 section.active {
     display: block;
-    opacity: 1;
-    transition: opacity 1000ms ease-in-out;
 }
 
 section.hidden {
     opacity: 0;
-    transition: opacity 1000ms ease-in-out;
 }
 
 /*
