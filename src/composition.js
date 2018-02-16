@@ -13,10 +13,10 @@ class LinearTrajectory {
         this._endY = endY;
     }
 
-    position(scale, t) {
+    position(composition) {
         return {
-            x: scale * (this._startX + t * (this._endX - this._startX)),
-            y: scale * (this._startY + t * (this._endY - this._startY)),
+            x: composition.padding_width + composition.scale * (this._startX + composition.t * (this._endX - this._startX)),
+            y: composition.padding_height + composition.scale * (this._startY + composition.t * (this._endY - this._startY)),
         };
     }
 }
@@ -51,23 +51,25 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    resize(scale, t, paysage) {
-        if(!paysage){
+    resize(composition) {
+        if(!this.paysage_mode){
             //this.element.rotateTo(90);
         }
-        this.element.height = scale * this.height;
-        this.element.width = scale * this.width;
-        this.move(scale, t);
+        this.element.height = composition.scale * this.height;
+        this.element.width = composition.scale * this.width;
+        this.move(composition);
     }
 
-    move(scale, t) {
-        const {x, y} = this._trajectory.position(scale, t);
+    move(composition) {
+        console.log(composition.t);
+        console.log(composition.scale);
+        const {x, y} = this._trajectory.position(composition);
         this.element.style.top = `${y}px`;
         this.element.style.left = `${x}px`;
     }
 
-    runAnimation(scale, duration, t) {
-        const {x, y} = this._trajectory.position(scale, t);
+    runAnimation(composition, duration) {
+        const {x, y} = this._trajectory.position(composition);
 
         return Velocity(this.element, {top: y, left: x}, {
             queue: false,
@@ -93,13 +95,12 @@ class Composition {
     animate(t) {
         this._t = t;
         const scale = this.scale;
-        this.images.forEach((image) => image.move(scale, t, this.paysage_mode));
+        this.images.forEach((image) => image.move(this));
     }
 
     async runAnimation(duration, t) {
         this._t = t;
-
-        return Promise.all(this.images.map((image) => image.runAnimation(this.scale, duration, t)));
+        return Promise.all(this.images.map((image) => image.runAnimation(this, duration)));
     }
 
     async add(image) {
@@ -110,24 +111,38 @@ class Composition {
     }
 
     update(){
-        this._paysage_mode = (this._anchor.offsetWidth > this._anchor.offsetHeight)
+        //We dont want the composition to take the whole anchor
+        const padding_height = 20;
+        const padding_width = 20;
+
+        this.composition_frame_width = this._anchor.offsetWidth-2*padding_width;
+        this.composition_frame_height = this._anchor.offsetHeight-2*padding_height;
+
+        console.log(this.composition_frame_width);
+        console.log(this.composition_frame_height);
+        this._paysage_mode = (this.composition_frame_width > this.composition_frame_height)
         this._height = this._paysage_mode ? this._image_height : this._image_width;
         this._width = this._paysage_mode ? this._image_width : this._image_height;
 
         this._image_scale = this._width / this._height;
-        this._anchor_scale = this._anchor.offsetWidth / this._anchor.offsetHeight;
+        this._anchor_scale = this.composition_frame_width / this.composition_frame_height;
         if(this._image_scale >=  this._anchor_scale) {
-            // For the same height the image is wider, therefore the width
-            this._scaled_height = this._anchor.offsetHeight;
-            this._scaled_width = this._scaled_height * this._image_scale;
-            this._scale = this._anchor.offsetWidth / this._width;
-        } else {
-            this._scaled_width = this._anchor.offsetWidth;
+            this._scale = this.composition_frame_width / this._width;
+
+            this._scaled_width = this.composition_frame_width;
             this._scaled_height = this._scaled_width / this._image_scale;
-            this._scale = this._anchor.offsetHeight / this._height;
+            this.padding_height = padding_height + (this.composition_frame_height - this._scaled_height)/2
+            this.padding_width = padding_width;
 
+        } else {
+            this._scale = this.composition_frame_height / this._height;
+
+            this._scaled_height = this.composition_frame_height;
+            this._scaled_width = this._scaled_height * this._image_scale;
+            this.padding_width = padding_width + (this.composition_frame_width - this._scaled_width)/2
+            this.padding_height =padding_height;
         }
-
+        //
         //this._scale = this._anchor_scale/this._image_scale
     }
 
@@ -142,22 +157,18 @@ class Composition {
         */
     }
 
+    get t() {
+        return this._t;
+    }
+
     get paysage_mode() {
         return this._paysage_mode;
-    }
-
-    get height() {
-        return this._scaled_height;
-    }
-
-    get width() {
-        return this._scaled_width;
     }
 
     rescale() {
         this.update();
         const scale = this.scale;
-        this.images.forEach((image) => image.resize(scale, this._t, this.paysage_mode));
+        this.images.forEach((image) => image.resize(this));
     }
 
     clear() {
