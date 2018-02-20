@@ -112,15 +112,16 @@ class Composition {
 
     update(){
         //We dont want the composition to take the whole anchor
-        const padding_height = 20;
-        const padding_width = 20;
+        const padding_height = 40;
+        const padding_width = 40;
 
         this.composition_frame_width = this._anchor.offsetWidth-2*padding_width;
         this.composition_frame_height = this._anchor.offsetHeight-2*padding_height;
 
         console.log(this.composition_frame_width);
         console.log(this.composition_frame_height);
-        this._paysage_mode = (this.composition_frame_width > this.composition_frame_height)
+        //TO_DO ROTATE THE ARTWORK ON MOBILE
+        this._paysage_mode = true;//(this.composition_frame_width > this.composition_frame_height)
         this._height = this._paysage_mode ? this._image_height : this._image_width;
         this._width = this._paysage_mode ? this._image_width : this._image_height;
 

@@ -113,29 +113,42 @@ window.onload = async () => {
             if(activeSection){
                 activeSection.title.classList.remove('active');
                 activeSection.hide();
-                await composition.runAnimation(1000, 0);
+                scrollToTop(1000)
+                
                 activeSection.deactivate();
-                document.getElementById("main").scrollTop = 0
+
             }
             section.activate();
             section.hide();
-            //composition.runAnimation(1000, 1);
-            //section.reveal();
-            //window.scrollTo(0, 0);
 
             activeSection = section;
             window.location.hash = section.name;
         }
     }
 
+    async function scrollToTop(duration){
+        // TO DO SLOWLY SCROLL BACK TO TOP OF MAIN
+        await composition.runAnimation(duration, 0); 
+        document.getElementById("main").scrollTop = 0
+    }
+
     function onScroll() {
-        var main = document.getElementById("main")
+
+        var main = document.getElementById("main");
+        var chevron = document.getElementById("chevron");
+
+        if (main.scrollTop==0){
+            chevron.style.display = "block";
+        } else {
+            chevron.style.display = "none";
+        }
+
         console.log("scrolltop " + main.scrollTop);
         console.log("innerHeight " + main.innerHeight);
         console.log("scrollHeight " + main.scrollHeight);
         
         // Explosion
-        // TO DO FAIRE MARCHER CE PUTAIN DE PADDING TOP
+        // TO DO FAIRE MARCHER CE PUTAIN DE PADDING TOP ET LE VIRER SUR SECTION DANS LE CSS
         // activeSection.element.style['paddingTop'] = main.innerHeight;
         console.log("paddingTop " + activeSection.element.style['paddingTop']);
         var t = Math.clamp(main.scrollTop / 200, 0, 1)
