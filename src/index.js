@@ -7,17 +7,19 @@ import * as images from './images';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
+
 const movingImages = {
     cercleCentral: {zIndex: 3, startX: 931, startY: 101, endX: 300, endY: -700},
     demiCercleHaut: {zIndex: 4, startX: 1200, startY: 0, endX: 1726, endY: 1400},
     pilule: {zIndex: 4, startX: 759, startY: 538, endX: -400, endY: 1500},
     rectangleBicolore: {zIndex: 2, startX: 541, startY: 617, endX: 541, endY: 1800},
     rectangleCentre: {zIndex: 2, startX: 580, startY: 440, endX: 2000, endY: -200},
-    rectangleCuir: {zIndex: 3, startX: 1282, startY: 746, endX: -100, endY: -120},
+    rectangleCuir: {zIndex: 3, startX: 1282, startY: 746, endX: -300, endY: -120},
     rectangleJaune: {zIndex: 1, startX: 0, startY: 703, endX: 2000, endY: 703},
     rectangleOrange: {zIndex: 5, startX: 1174, startY: 47, endX: 1700, endY: 1447},
     triangleRouge: {zIndex: 1, startX: 0, startY: 0, endX: -1300, endY: 0},
 };
+
 const exploding_offset = 200;
 
 
@@ -108,34 +110,40 @@ window.onload = async () => {
     onResize();
     onHash();
 
+    function getSectionByName(section_name) {
+        var urlSection = _.find(sections, ({name}) => name === section_name); 
+        return  urlSection;
+    }
+
     async function setActiveSection(section) {
         var main = document.getElementById("main");
         if(!activeSection || section.name != activeSection.name) {
             section.title.classList.add('active');
             if(activeSection){
                 activeSection.title.classList.remove('active');
-                //activeSection.hide();
                 console.log(document.getElementById("main").scrollTop);
                 await Velocity(activeSection.element, 'scroll', {
-                        container: document.getElementById("main"),
+                        container: main,
                         duration: 1000, 
                         easing: "ease-in"});
-                console.log("pouet 2")
-                console.log(document.getElementById("main").scrollTop);
-                activeSection.deactivate();
-                console.log(document.getElementById("main").scrollTop);
-
+                activeSection.element.classList.remove('active');
             }
-            section.activate();
-            section.hide();
+            section.element.classList.add('active');
+            //section.hide();
             activeSection = section;
             window.location.hash = section.name;
 
-            await Velocity(section.element, 'scroll', {
-                offset:exploding_offset,
-                container: document.getElementById("main"),
-                duration: 1000, 
-                easing: "ease-in"});
+            setTimeout(function () {
+                console.log(document.getElementById("main").scrollTop);
+                console.log(document.getElementById("main").scrollTop == 0);
+                if (document.getElementById("main").scrollTop == 0) {
+                    Velocity(section.element, 'scroll', {
+                        offset:exploding_offset,
+                        container: document.getElementById("main"),
+                        duration: 1000, 
+                        easing: "ease-in"});
+                    }
+            }, 1000);
         }
     }
 
@@ -203,10 +211,12 @@ window.onload = async () => {
 
     function onHash() {
         if (window.location.hash.length > 1) {
-            const urlSection = _.find(sections, ({name}) => name === window.location.hash.replace('#', ''));
+            const urlSection = getSectionByName(window.location.hash.replace('#', '')) //_.find(sections, ({name}) => name === window.location.hash.replace('#', ''));
             if (urlSection) {
                 setActiveSection(urlSection);
-            }
+            } 
+        } else {
+                setActiveSection(getSectionByName("ethos"));
         }
     }
 };

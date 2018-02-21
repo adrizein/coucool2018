@@ -15,8 +15,13 @@ class LinearTrajectory {
 
     position(composition) {
         return {
+            // We want them to explode further
+            x: composition.padding_width + composition.scale * (this._startX + composition.t * (2*this._endX - this._startX)),
+            y: composition.padding_height + composition.scale * (this._startY + composition.t * (2*this._endY - this._startY)),
+            /*
             x: composition.padding_width + composition.scale * (this._startX + composition.t * (this._endX - this._startX)),
             y: composition.padding_height + composition.scale * (this._startY + composition.t * (this._endY - this._startY)),
+            */
         };
     }
 }
