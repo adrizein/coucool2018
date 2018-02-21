@@ -108,14 +108,20 @@ window.onload = async () => {
     onHash();
 
     async function setActiveSection(section) {
+        var elem = document.getElementById("main");
         if(!activeSection || section.name != activeSection.name) {
             section.title.classList.add('active');
             if(activeSection){
                 activeSection.title.classList.remove('active');
                 activeSection.hide();
-                scrollToTop(1000)
-                
+                console.log(document.getElementById("main").scrollTop);
+                await Velocity(elem, 'scroll', {
+                        offset:0,
+                        duration: 750});
+                console.log("pouet 2")
+                console.log(document.getElementById("main").scrollTop);
                 activeSection.deactivate();
+                console.log(document.getElementById("main").scrollTop);
 
             }
             section.activate();
@@ -128,8 +134,20 @@ window.onload = async () => {
 
     async function scrollToTop(duration){
         // TO DO SLOWLY SCROLL BACK TO TOP OF MAIN
-        await composition.runAnimation(duration, 0); 
-        document.getElementById("main").scrollTop = 0
+        //await composition.runAnimation(duration, 0); 
+        //document.getElementById("main").scrollTop = 0
+
+        console.log('Pouet');
+        
+        console.log('Waited for 5 secs');
+        /*
+        Velocity(document.getElementById("main"), 'scroll', {
+                queue: false,
+                offset: 200,
+                duration: 1000,
+                easing: 'easeInOutSine',
+            })
+        */
     }
 
     function onScroll() {
@@ -143,14 +161,14 @@ window.onload = async () => {
             chevron.style.display = "none";
         }
 
-        console.log("scrolltop " + main.scrollTop);
-        console.log("innerHeight " + main.innerHeight);
-        console.log("scrollHeight " + main.scrollHeight);
+        //console.log("scrolltop " + main.scrollTop);
+        //console.log("innerHeight " + main.innerHeight);
+        //console.log("scrollHeight " + main.scrollHeight);
         
         // Explosion
         // TO DO FAIRE MARCHER CE PUTAIN DE PADDING TOP ET LE VIRER SUR SECTION DANS LE CSS
         // activeSection.element.style['paddingTop'] = main.innerHeight;
-        console.log("paddingTop " + activeSection.element.style['paddingTop']);
+        //console.log("paddingTop " + activeSection.element.style['paddingTop']);
         var t = Math.clamp(main.scrollTop / 200, 0, 1)
         composition.animate(t)
         activeSection.element.style.opacity = t*4;
