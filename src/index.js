@@ -18,6 +18,7 @@ const movingImages = {
     rectangleOrange: {zIndex: 5, startX: 1174, startY: 47, endX: 1700, endY: 1447},
     triangleRouge: {zIndex: 1, startX: 0, startY: 0, endX: -1300, endY: 0},
 };
+const exploding_offset = 200;
 
 
 window.onload = async () => {
@@ -108,16 +109,17 @@ window.onload = async () => {
     onHash();
 
     async function setActiveSection(section) {
-        var elem = document.getElementById("main");
+        var main = document.getElementById("main");
         if(!activeSection || section.name != activeSection.name) {
             section.title.classList.add('active');
             if(activeSection){
                 activeSection.title.classList.remove('active');
-                activeSection.hide();
+                //activeSection.hide();
                 console.log(document.getElementById("main").scrollTop);
-                await Velocity(elem, 'scroll', {
-                        offset:0,
-                        duration: 750});
+                await Velocity(activeSection.element, 'scroll', {
+                        container: document.getElementById("main"),
+                        duration: 1000, 
+                        easing: "ease-in"});
                 console.log("pouet 2")
                 console.log(document.getElementById("main").scrollTop);
                 activeSection.deactivate();
@@ -126,9 +128,14 @@ window.onload = async () => {
             }
             section.activate();
             section.hide();
-
             activeSection = section;
             window.location.hash = section.name;
+
+            await Velocity(section.element, 'scroll', {
+                offset:exploding_offset,
+                container: document.getElementById("main"),
+                duration: 1000, 
+                easing: "ease-in"});
         }
     }
 
@@ -169,15 +176,16 @@ window.onload = async () => {
         // TO DO FAIRE MARCHER CE PUTAIN DE PADDING TOP ET LE VIRER SUR SECTION DANS LE CSS
         // activeSection.element.style['paddingTop'] = main.innerHeight;
         //console.log("paddingTop " + activeSection.element.style['paddingTop']);
-        var t = Math.clamp(main.scrollTop / 200, 0, 1)
+        var t = Math.clamp(main.scrollTop / exploding_offset, 0, 1)
         composition.animate(t)
-        activeSection.element.style.opacity = t*4;
+        activeSection.element.style.opacity = Math.clamp(t*3, 0, 1);
 
-
+        /*
         if (main.scrollTop + main.offsetHeight >= main.scrollHeight){
             // SETACTIVESECTION(ACTIVESECTION.NEXT)
             console.log(activeSection.next());
         }
+        */
         // if scroll to top set active session to previous
     }
 
@@ -186,11 +194,11 @@ window.onload = async () => {
         /*
         _.map(
             document.querySelectorAll('section'), (element, index) => {
-                element.style.paddingTop = document.getElementById("main").innerHeight;
+                console.log(element);
+                element.style.marginBottom = document.getElementById("main").innerHeight + exploding_offset;
                }
-        );
-        */
-                
+        ); 
+        */               
     }
 
     function onHash() {
