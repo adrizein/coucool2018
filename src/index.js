@@ -3,7 +3,8 @@
 import * as _ from 'lodash';
 
 import './style.css';
-import * as images from './images';
+import * as composition_images from './images/composition';
+import * as background_images from './images/backgrounds';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
@@ -39,7 +40,8 @@ window.onload = async () => {
                     index,
                     name,
                     element,
-                    title,
+                    title
+                    /*
                     hidden: element.classList.contains('hidden'),
                     activate() {
                         this.element.classList.add('active');
@@ -63,6 +65,7 @@ window.onload = async () => {
                         var previous_section = previous_index >=0 ? sections[previous_index] : null
                         return previous_section;
                     }
+                    */
                 };
             });
 
@@ -77,7 +80,7 @@ window.onload = async () => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
-                src: images[name],
+                src: composition_images[name],
                 zIndex,
                 trajectory: new LinearTrajectory(startX / 2, startY / 2, endX / 2, endY / 2),
             },
@@ -118,25 +121,36 @@ window.onload = async () => {
     async function setActiveSection(section) {
         var main = document.getElementById("main");
         if(!activeSection || section.name != activeSection.name) {
+            
+            //Enlighten title
+            _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
             section.title.classList.add('active');
+
+            //Change background
+            var background_url = "url(" + background_images[section.name] + ")"
+            document.getElementById("background").style.backgroundImage = background_url ;
+            _.map(
+            document.querySelectorAll('.background-color'), (element, index) => {
+                console.log(element);
+                element.style.backgroundImage = background_url ;
+               }
+            );
+
             if(activeSection){
-                activeSection.title.classList.remove('active');
-                console.log(document.getElementById("main").scrollTop);
+                //activeSection.title.classList.remove('active');
                 await Velocity(activeSection.element, 'scroll', {
                         container: main,
                         duration: 1000, 
                         easing: "ease-in"});
                 activeSection.element.classList.remove('active');
             }
+
             section.element.classList.add('active');
-            //section.hide();
             activeSection = section;
             window.location.hash = section.name;
 
             setTimeout(function () {
-                console.log(document.getElementById("main").scrollTop);
-                console.log(document.getElementById("main").scrollTop == 0);
-                if (document.getElementById("main").scrollTop == 0) {
+                if (main.scrollTop == 0) {
                     Velocity(section.element, 'scroll', {
                         offset:exploding_offset,
                         container: document.getElementById("main"),
@@ -147,28 +161,10 @@ window.onload = async () => {
         }
     }
 
-    async function scrollToTop(duration){
-        // TO DO SLOWLY SCROLL BACK TO TOP OF MAIN
-        //await composition.runAnimation(duration, 0); 
-        //document.getElementById("main").scrollTop = 0
-
-        console.log('Pouet');
-        
-        console.log('Waited for 5 secs');
-        /*
-        Velocity(document.getElementById("main"), 'scroll', {
-                queue: false,
-                offset: 200,
-                duration: 1000,
-                easing: 'easeInOutSine',
-            })
-        */
-    }
-
     function onScroll() {
-
         var main = document.getElementById("main");
         var chevron = document.getElementById("chevron");
+        var t = Math.clamp(main.scrollTop / exploding_offset, 0, 1);
 
         if (main.scrollTop==0){
             chevron.style.display = "block";
@@ -176,25 +172,19 @@ window.onload = async () => {
             chevron.style.display = "none";
         }
 
-        //console.log("scrolltop " + main.scrollTop);
-        //console.log("innerHeight " + main.innerHeight);
-        //console.log("scrollHeight " + main.scrollHeight);
-        
-        // Explosion
-        // TO DO FAIRE MARCHER CE PUTAIN DE PADDING TOP ET LE VIRER SUR SECTION DANS LE CSS
-        // activeSection.element.style['paddingTop'] = main.innerHeight;
-        //console.log("paddingTop " + activeSection.element.style['paddingTop']);
-        var t = Math.clamp(main.scrollTop / exploding_offset, 0, 1)
         composition.animate(t)
         activeSection.element.style.opacity = Math.clamp(t*3, 0, 1);
 
-        /*
+        /* 
+        // NOTE : A lot pf element are fixed in pixels and they should be fixed in percent of the main
+        // composition paddings, exploding offset, section padding, section min height, 
+
+        // NOTE : This would be the way to do it if we wanted to go from one section to the other with the scroll
         if (main.scrollTop + main.offsetHeight >= main.scrollHeight){
             // SETACTIVESECTION(ACTIVESECTION.NEXT)
             console.log(activeSection.next());
         }
         */
-        // if scroll to top set active session to previous
     }
 
     function onResize() {
