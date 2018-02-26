@@ -9,6 +9,6 @@ export {
     ethos,
     infos,
     contributions,
-    curiosites
+    curiosites,
 };
 

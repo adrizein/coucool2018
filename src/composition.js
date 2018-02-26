@@ -7,21 +7,22 @@ import * as _ from 'lodash';
 class LinearTrajectory {
 
     constructor(startX, startY, endX, endY) {
-        this._startX = startX;
-        this._startY = startY;
-        this._endX = endX;
-        this._endY = endY;
+        this.startX = startX;
+        this.startY = startY;
+        this.endX = endX;
+        this.endY = endY;
+        this.offsetX = 0;
+        this.offsetY = 0;
     }
 
-    position(composition) {
+    position(scale, t) {
+        const
+            endX = this.endX + Math.sign(this.endX) * Math.abs(this.offsetX),
+            endY = this.endY + Math.sign(this.endY) * Math.abs(this.offsetY);
+
         return {
-            // We want them to explode further
-            x: composition.padding_width + composition.scale * (this._startX + composition.t * (2*this._endX - this._startX)),
-            y: composition.padding_height + composition.scale * (this._startY + composition.t * (2*this._endY - this._startY)),
-            /*
-            x: composition.padding_width + composition.scale * (this._startX + composition.t * (this._endX - this._startX)),
-            y: composition.padding_height + composition.scale * (this._startY + composition.t * (this._endY - this._startY)),
-            */
+            x: scale * this.startX + this.offsetX / 2 + t * (endX - this.startX * scale),
+            y: scale * this.startY + this.offsetY / 2 + t * (endY - this.startY * scale),
         };
     }
 }
@@ -56,25 +57,22 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    resize(composition) {
-        if(!this.paysage_mode){
-            //this.element.rotateTo(90);
-        }
-        this.element.height = composition.scale * this.height;
-        this.element.width = composition.scale * this.width;
-        this.move(composition);
+    resize(scale, t, offsetX, offsetY) {
+        this.element.height = scale * this.height;
+        this.element.width = scale * this.width;
+        this._trajectory.offsetX = offsetX;
+        this._trajectory.offsetY = offsetY;
+        this.move(scale, t);
     }
 
-    move(composition) {
-        //console.log(composition.t);
-        //console.log(composition.scale);
-        const {x, y} = this._trajectory.position(composition);
+    move(scale, t) {
+        const {x, y} = this._trajectory.position(scale, t);
         this.element.style.top = `${y}px`;
         this.element.style.left = `${x}px`;
     }
 
-    runAnimation(composition, duration) {
-        const {x, y} = this._trajectory.position(composition);
+    async runAnimation(scale, t, duration) {
+        const {x, y} = this._trajectory.position(scale, t);
 
         return Velocity(this.element, {top: y, left: x}, {
             queue: false,
@@ -86,26 +84,31 @@ class MovingImage {
 
 class Composition {
 
-    constructor(anchor, height_, width_) {
+    constructor(anchor, height, width, portrait) {
         this.images = [];
         this._anchor = anchor;
         this._t = 0;
-        this._image_height = height_;
-        this._image_width = width_;
+        this._height = height;
+        this._width = width;
+        this._resizing = false;
+        this._portrait = portrait;
 
-        //To update with the rescale
-        this.update()
+        this.resize();
     }
 
     animate(t) {
         this._t = t;
-        const scale = this.scale;
-        this.images.forEach((image) => image.move(this));
+        this.images.forEach((image) => image.move(this._scale, this._t));
     }
 
     async runAnimation(duration, t) {
         this._t = t;
-        return Promise.all(this.images.map((image) => image.runAnimation(this, duration)));
+
+        return Promise.all(this.images.map((image) => image.runAnimation(
+            this._scale,
+            this._t,
+            duration
+        )));
     }
 
     async add(image) {
@@ -115,66 +118,87 @@ class Composition {
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
     }
 
-    update(){
-        //We dont want the composition to take the whole anchor
-        const padding_height = 40;
-        const padding_width = 40;
 
-        this.composition_frame_width = this._anchor.offsetWidth-2*padding_width;
-        this.composition_frame_height = this._anchor.offsetHeight-2*padding_height;
-
-        //console.log(this.composition_frame_width);
-        //console.log(this.composition_frame_height);
-        //TO_DO ROTATE THE ARTWORK ON MOBILE
-        this._paysage_mode = true;//(this.composition_frame_width > this.composition_frame_height)
-        this._height = this._paysage_mode ? this._image_height : this._image_width;
-        this._width = this._paysage_mode ? this._image_width : this._image_height;
-
-        this._image_scale = this._width / this._height;
-        this._anchor_scale = this.composition_frame_width / this.composition_frame_height;
-        if(this._image_scale >=  this._anchor_scale) {
-            this._scale = this.composition_frame_width / this._width;
-
-            this._scaled_width = this.composition_frame_width;
-            this._scaled_height = this._scaled_width / this._image_scale;
-            this.padding_height = padding_height + (this.composition_frame_height - this._scaled_height)/2
-            this.padding_width = padding_width;
-
-        } else {
-            this._scale = this.composition_frame_height / this._height;
-
-            this._scaled_height = this.composition_frame_height;
-            this._scaled_width = this._scaled_height * this._image_scale;
-            this.padding_width = padding_width + (this.composition_frame_width - this._scaled_width)/2
-            this.padding_height =padding_height;
-        }
-        //
-        //this._scale = this._anchor_scale/this._image_scale
+    get height() {
+        return this._portrait ? this._width : this._height;
     }
+
+
+    get width() {
+        return this._portrait ? this._height : this._width;
+    }
+
+
+    get scaledHeight() {
+        return this._scale * this.height;
+    }
+
+    get scaledWidth() {
+        return this._scale * this.width;
+    }
+
 
     get scale() {
         return this._scale;
-        /*
-        if (this._image_scale >=  this._anchor_scale) {
-            return this._anchor.offsetWidth / this._image_width;
-        } else {
-            return this._anchor.offsetHeight / this._image_height;
-        }
-        */
     }
+
 
     get t() {
         return this._t;
     }
 
-    get paysage_mode() {
-        return this._paysage_mode;
+
+    get heightRatio() {
+        return this._anchorHeight / this.height;
     }
 
-    rescale() {
-        this.update();
-        const scale = this.scale;
-        this.images.forEach((image) => image.resize(this));
+
+    get widthRatio() {
+        return this._anchorWidth / this.width;
+    }
+
+    resize() {
+        const {height, width} = this._anchor.getBoundingClientRect();
+        this._anchorHeight = height;
+        this._anchorWidth = width;
+        this._scale = Math.min(this.heightRatio, this.widthRatio);
+        let
+            offsetX = Math.floor(this._anchorWidth - this.scaledWidth),
+            offsetY = Math.floor(this._anchorHeight - this.scaledHeight);
+
+        if (this._portrait) {
+            [offsetX, offsetY] = [offsetY, offsetX];
+        }
+
+        this.images.forEach((image) => {
+            image.resize(this._scale, this._t, offsetX, offsetY);
+        });
+    }
+
+    portrait(duration) {
+        this._anchor.classList.add('portrait');
+        this._resizing = true;
+        this._portrait = true;
+        this._resizeComposition();
+        setTimeout(() => {this._resizing = false;}, duration);
+    }
+
+    landscape(duration) {
+        this._anchor.classList.remove('portrait');
+        this._resizing = true;
+        this._portrait = false;
+        this._resizeComposition();
+        setTimeout(() => {this._resizing = false;}, duration);
+    }
+
+    _resizeComposition() {
+        window.requestAnimationFrame(() => {
+            this.resize();
+
+            if (this._resizing) {
+                this._resizeComposition();
+            }
+        });
     }
 
     clear() {

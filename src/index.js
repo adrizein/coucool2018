@@ -3,31 +3,44 @@
 import * as _ from 'lodash';
 
 import './style.css';
-import * as composition_images from './images/composition';
-import * as background_images from './images/backgrounds';
+import * as compositionImages from './images/composition';
+import * as backgroundImages from './images/backgrounds';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
-
 const movingImages = {
-    cercleCentral: {zIndex: 3, startX: 931, startY: 101, endX: 300, endY: -700},
-    demiCercleHaut: {zIndex: 4, startX: 1200, startY: 0, endX: 1726, endY: 1400},
-    pilule: {zIndex: 4, startX: 759, startY: 538, endX: -400, endY: 1500},
-    rectangleBicolore: {zIndex: 2, startX: 541, startY: 617, endX: 541, endY: 1800},
-    rectangleCentre: {zIndex: 2, startX: 580, startY: 440, endX: 2000, endY: -200},
-    rectangleCuir: {zIndex: 3, startX: 1282, startY: 746, endX: -300, endY: -120},
-    rectangleJaune: {zIndex: 1, startX: 0, startY: 703, endX: 2000, endY: 703},
-    rectangleOrange: {zIndex: 5, startX: 1174, startY: 47, endX: 1700, endY: 1447},
-    triangleRouge: {zIndex: 1, startX: 0, startY: 0, endX: -1300, endY: 0},
+    bigRedTriangle: {zIndex: 2, startX: 92, startY: 39, endX: 1500, endY: 39},
+    blackHalfCircle: {zIndex: 5, startX: 677, startY: 39, endX: 677, endY: -180},
+    blueHair: {zIndex: 3, startX: 778, startY: 358, endX: 778, endY: -200},
+    bluePillLeft: {zIndex: 1, startX: 150, startY: 481, endX: 1400, endY: -100},
+    blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 358, endX: 675, endY: 860},
+    blueRectangleTop: {zIndex: 6, startX: 663, startY: 104, endX: 663, endY: 850},
+    blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
+    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350},
+    featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
+    fingers: {zIndex: 1, startX: 191, startY: 483, endX: 191, endY: 900},
+    greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282},
+    greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
+    orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900},
+    palmTree: {zIndex: 0, startX: 417, startY: 542, endX: 417, endY: 1042},
+    photocopySmallLeft: {zIndex: 0, startX: 246, startY: 462, endX: -200, endY: 280},
+    photocopyShapeTopRight: {zIndex: 2, startX: 627, startY: 238, endX: 100, endY: -200},
+    pillCenterRight: {zIndex: 5, startX: 465, startY: 336, endX: -200, endY: 336},
+    redRectangleTopRight: {zIndex: 3, startX: 964, startY: 227, endX: 364, endY: -30},
+    smallBlackRectangleCenter: {zIndex: 1, startX: 778, startY: 542, endX: 1400, endY: 542},
+    textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100},
+    woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853},
+    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 358, endX: 1400, endY: 359},
+    yellowRectangleCenterLeft: {zIndex: 1, startX: 92, startY: 422, endX: -900, endY: 422},
+    zebraPill: {zIndex: 2, startX: 695, startY: 116, endX: 1000, endY: -150},
 };
-
-const exploding_offset = 200;
-
 
 window.onload = async () => {
     const
+        {width, height} = document.body.getBoundingClientRect(),
+        main = document.getElementById('main'),
         artwork = document.getElementById('artwork'),
-        composition = new Composition(artwork, 415, 865),
+        composition = new Composition(artwork, 843, 1353, width < height),
         footer = document.querySelector('footer'),
         chevron = document.getElementById('chevron'),
         sections = _.map(
@@ -40,7 +53,7 @@ window.onload = async () => {
                     index,
                     name,
                     element,
-                    title
+                    title,
                     /*
                     hidden: element.classList.contains('hidden'),
                     activate() {
@@ -56,13 +69,13 @@ window.onload = async () => {
                         this.element.classList.add('hidden');
                     },
                     next() {
-                        var next_index = this.index+1
-                        var next_section = next_index < sections.length ? sections[next_index] : null
+                        const next_index = this.index+1
+                        const next_section = next_index < sections.length ? sections[next_index] : null
                         return next_section;
                     },
                     previous() {
-                        var previous_index = this.index-1
-                        var previous_section = previous_index >=0 ? sections[previous_index] : null
+                        const previous_index = this.index-1
+                        const previous_section = previous_index >=0 ? sections[previous_index] : null
                         return previous_section;
                     }
                     */
@@ -70,6 +83,7 @@ window.onload = async () => {
             });
 
     let
+        switching = false,
         previousSection = null,
         activeSection = null;
 
@@ -80,9 +94,9 @@ window.onload = async () => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
-                src: composition_images[name],
+                src: compositionImages[name],
                 zIndex,
-                trajectory: new LinearTrajectory(startX / 2, startY / 2, endX / 2, endY / 2),
+                trajectory: new LinearTrajectory(startX, startY, endX, endY),
             },
         );
 
@@ -94,7 +108,7 @@ window.onload = async () => {
 
     // Events selectors
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
-    document.getElementById("main").addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
+    main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.onhashchange = onHash;
 
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
@@ -112,101 +126,107 @@ window.onload = async () => {
     // Init
     onResize();
     onHash();
+    window.requestAnimationFrame(() => artwork.classList.add('loaded'));
 
-    function getSectionByName(section_name) {
-        var urlSection = _.find(sections, ({name}) => name === section_name); 
-        return  urlSection;
+    function getSectionByName(sectionName) {
+        return _.find(sections, ({name}) => name === sectionName);
     }
 
     async function setActiveSection(section) {
-        var main = document.getElementById("main");
-        if(!activeSection || section.name != activeSection.name) {
-            
-            //Enlighten title
-            _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
+        //highlight title
+        switching = true;
+        _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
+        if (section.title) {
             section.title.classList.add('active');
-
-            //Change background
-            var background_url = "url(" + background_images[section.name] + ")"
-            document.getElementById("background").style.backgroundImage = background_url ;
-            _.map(
-            document.querySelectorAll('.background-color'), (element, index) => {
-                console.log(element);
-                element.style.backgroundImage = background_url ;
-               }
-            );
-
-            if(activeSection){
-                //activeSection.title.classList.remove('active');
-                await Velocity(activeSection.element, 'scroll', {
-                        container: main,
-                        duration: 1000, 
-                        easing: "ease-in"});
-                activeSection.element.classList.remove('active');
-            }
-
-            section.element.classList.add('active');
-            activeSection = section;
-            window.location.hash = section.name;
-
-            setTimeout(function () {
-                if (main.scrollTop == 0) {
-                    Velocity(section.element, 'scroll', {
-                        offset:exploding_offset,
-                        container: document.getElementById("main"),
-                        duration: 1000, 
-                        easing: "ease-in"});
-                    }
-            }, 1000);
         }
+
+        //Change background
+        const backgroundUrl = `url(${backgroundImages[section.name]})`;
+        document.body.style.backgroundImage = backgroundUrl;
+        _.map(document.querySelectorAll('.background-color'), (element) => {
+            element.style.backgroundImage = backgroundUrl;
+        });
+
+        let delay = 0;
+        if (activeSection && section.name !== activeSection.name) {
+            await Velocity(activeSection.element, 'scroll', {
+                container: main,
+                duration: main.scrollTop,
+                easing: 'ease-in',
+                queue: false,
+            });
+            activeSection.element.classList.remove('active');
+
+            delay = 1000;
+        }
+
+        if (!activeSection) {
+            delay = 1000;
+        }
+
+        section.element.classList.add('active');
+        activeSection = section;
+        window.location.hash = section.name;
+
+        await Velocity(section.element, 'scroll', {
+            offset: section.element.style.paddingTop,
+            container: document.getElementById('main'),
+            duration: composition.scaledHeight,
+            easing: 'ease-in',
+            delay,
+            queue: false,
+        });
+
+        switching = false;
     }
 
     function onScroll() {
-        var main = document.getElementById("main");
-        var chevron = document.getElementById("chevron");
-        var t = Math.clamp(main.scrollTop / exploding_offset, 0, 1);
+        const t = Math.clamp(main.scrollTop / composition.scaledHeight, 0, 1);
 
-        if (main.scrollTop==0){
-            chevron.style.display = "block";
-        } else {
-            chevron.style.display = "none";
+        if (main.scrollTop === 0) {
+            chevron.style.display = 'block';
+        }
+        else {
+            chevron.style.display = 'none';
         }
 
-        composition.animate(t)
-        activeSection.element.style.opacity = Math.clamp(t*3, 0, 1);
-
-        /* 
-        // NOTE : A lot pf element are fixed in pixels and they should be fixed in percent of the main
-        // composition paddings, exploding offset, section padding, section min height, 
-
-        // NOTE : This would be the way to do it if we wanted to go from one section to the other with the scroll
-        if (main.scrollTop + main.offsetHeight >= main.scrollHeight){
-            // SETACTIVESECTION(ACTIVESECTION.NEXT)
-            console.log(activeSection.next());
-        }
-        */
+        composition.animate(t);
+        activeSection.element.style.opacity = Math.clamp(t, 0, 1);
     }
 
     function onResize() {
-        composition.rescale();
-        /*
-        _.map(
-            document.querySelectorAll('section'), (element, index) => {
-                console.log(element);
-                element.style.marginBottom = document.getElementById("main").innerHeight + exploding_offset;
-               }
-        ); 
-        */               
+        const {width, height} = document.body.getBoundingClientRect();
+
+        composition.resize();
+
+        if (width < height) {
+            if (!artwork.classList.contains('portrait')) {
+                // switch to portrait mode
+                // do not forget to change the timeout value when changing the css transition duration
+                composition.portrait(1000);
+            }
+        }
+        else if (artwork.classList.contains('portrait')) {
+            // switch to landscape mode
+            composition.landscape(1000);
+        }
+
+        document.querySelectorAll('section').forEach((element) => {
+            element.style.paddingTop = `${composition.scaledHeight}px`;
+        });
     }
 
     function onHash() {
-        if (window.location.hash.length > 1) {
-            const urlSection = getSectionByName(window.location.hash.replace('#', '')) //_.find(sections, ({name}) => name === window.location.hash.replace('#', ''));
-            if (urlSection) {
-                setActiveSection(urlSection);
-            } 
-        } else {
-                setActiveSection(getSectionByName("ethos"));
+        if (!switching) {
+            if (window.location.hash.length > 1) {
+                const urlSection = getSectionByName(window.location.hash.replace('#', ''));
+                if (urlSection) {
+                    setActiveSection(urlSection);
+                }
+            }
+            else {
+                setActiveSection(getSectionByName('ethos'));
+            }
         }
     }
 };
