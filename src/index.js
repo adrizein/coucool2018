@@ -4,7 +4,6 @@ import * as _ from 'lodash';
 
 import './style.css';
 import * as compositionImages from './images/composition';
-import * as backgroundImages from './images/backgrounds';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
@@ -141,10 +140,15 @@ window.onload = async () => {
         }
 
         //Change background
-        const backgroundUrl = `url(${backgroundImages[section.name]})`;
-        document.body.style.backgroundImage = backgroundUrl;
-        _.map(document.querySelectorAll('.background-color'), (element) => {
-            element.style.backgroundImage = backgroundUrl;
+        if (activeSection) {
+            document.body.classList.remove(activeSection.name);
+        }
+        document.body.classList.add(section.name);
+        document.querySelectorAll('.background-color').forEach((element) => {
+            if (activeSection) {
+                element.classList.remove(activeSection.name);
+            }
+            element.classList.add(section.name);
         });
 
         let delay = 0;
@@ -203,12 +207,12 @@ window.onload = async () => {
             if (!artwork.classList.contains('portrait')) {
                 // switch to portrait mode
                 // do not forget to change the timeout value when changing the css transition duration
-                composition.portrait(1000);
+                composition.portrait(0);
             }
         }
         else if (artwork.classList.contains('portrait')) {
             // switch to landscape mode
-            composition.landscape(1000);
+            composition.landscape(0);
         }
 
         document.querySelectorAll('section').forEach((element) => {

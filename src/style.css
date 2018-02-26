@@ -14,9 +14,21 @@ html, body {
     display: flex;
     flex-flow: column;
     z-index: 2;
-    background-repeat: round;
-    background-attachment: fixed;
+    background: url('./images/backgrounds/green_planet.jpg') fixed round;
     transition: background 1s ease;
+}
+
+body.benevoles {
+    background-image: url('./images/backgrounds/blue_hair.jpg');
+}
+body.contributions {
+    background-image: url('./images/backgrounds/red_surface.jpg');
+}
+body.infos {
+    background-image: url('./images/backgrounds/orange_mars.jpg');
+}
+body.curiosites {
+    background-image: url('./images/backgrounds/yellow_zebra.jpg');
 }
 
 .title {
@@ -37,7 +49,6 @@ h1 {
 .background-color {
     background-repeat: round;
     background-attachment: fixed;
-    -webkit-text-fill-color: transparent;
     -webkit-background-clip: text
 }
 
@@ -81,7 +92,7 @@ h2:first-child {
 
 h2.active {
     text-shadow: 0 0 10px whitesmoke;
-    -webkit-text-fill-color: white;
+    -webkit-text-fill-color: whitesmoke;
 }
 
 h2:hover {
@@ -124,23 +135,24 @@ footer div {
     z-index: 2;
 }
 
-#artwork.loaded {
-    /* do not forget to change the timeout value when changing the css transition duration */
-    transition: transform 1s ease;
+#artwork > div {
+    position: absolute;
 }
 
-#artwork.portrait {
-    transform: rotate(90deg);
+#artwork.portrait > div {
+    transform: rotate(-90deg);
+    bottom: 0;
 }
 
 #chevron {
-    position:absolute;
+    position: absolute;
     left: 0;
-    right:0;
+    right: 0;
     bottom: 0;
     text-align: center;
     font-size: 40px;
     height: 40px;
+    transform: scaleX(3) scaleY(0.5);
 }
 
 #main {
@@ -149,15 +161,16 @@ footer div {
     right:20px;
     top: 46px;
     bottom: 20px;
-    overflow-y: scroll;
     text-align: center;
     padding: 0 20px;
     -ms-overflow-style: none;
-    overflow: -moz-scrollbars-none;
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll; /* has to be scroll, not auto */
+    overflow-x: hidden;
 }
 
-#main::-webkit-scrollbar { 
-    display: none; 
+#main::-webkit-scrollbar {
+    display: none;
 }
 
 #artwork img {
@@ -193,11 +206,6 @@ section:last-child {
     margin: 15px 0;
 }
 
-#eros p {
-    margin: 0;
-    line-height: 1.4em;
-}
-
 p {
     font-size: larger;
     line-height: 1.5em;
@@ -208,7 +216,7 @@ p {
     text-align: left;
     flex-wrap: wrap;
     justify-content: space-around;
-    font-size: large;
+    font-size: larger;
 }
 
 h4, ul {
@@ -234,11 +242,11 @@ li {
 
 @media (max-width: 640px) {
     h1 {
-        font-size: 1.2em;
+        font-size: 25px;
     }
 
-    h2, h3, h4, p {
-        font-size: 1em;
+    h2, h3, h4, p, .flex-row {
+        font-size: 20px;
     }
 
     h2:last-child {

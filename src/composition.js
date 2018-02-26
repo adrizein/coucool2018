@@ -92,6 +92,8 @@ class Composition {
         this._width = width;
         this._resizing = false;
         this._portrait = portrait;
+        this._canvas = document.createElement('div');
+        this._anchor.appendChild(this._canvas);
 
         this.resize();
     }
@@ -112,22 +114,19 @@ class Composition {
     }
 
     async add(image) {
-        this._anchor.appendChild(image.element);
+        this._canvas.appendChild(image.element);
         this.images.push(image);
 
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
     }
 
-
     get height() {
         return this._portrait ? this._width : this._height;
     }
 
-
     get width() {
         return this._portrait ? this._height : this._width;
     }
-
 
     get scaledHeight() {
         return this._scale * this.height;
@@ -137,21 +136,17 @@ class Composition {
         return this._scale * this.width;
     }
 
-
     get scale() {
         return this._scale;
     }
-
 
     get t() {
         return this._t;
     }
 
-
     get heightRatio() {
         return this._anchorHeight / this.height;
     }
-
 
     get widthRatio() {
         return this._anchorWidth / this.width;
@@ -159,12 +154,12 @@ class Composition {
 
     resize() {
         const {height, width} = this._anchor.getBoundingClientRect();
-        this._anchorHeight = height;
+        this._anchorHeight = height - 40;
         this._anchorWidth = width;
         this._scale = Math.min(this.heightRatio, this.widthRatio);
         let
             offsetX = Math.floor(this._anchorWidth - this.scaledWidth),
-            offsetY = Math.floor(this._anchorHeight - this.scaledHeight);
+            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + 40;
 
         if (this._portrait) {
             [offsetX, offsetY] = [offsetY, offsetX];
