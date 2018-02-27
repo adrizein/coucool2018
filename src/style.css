@@ -18,15 +18,22 @@ html, body {
     transition: background 1s ease;
 }
 
+body.ethos {
+    background-image: url('./images/backgrounds/green_planet.jpg');
+}
+
 body.benevoles {
     background-image: url('./images/backgrounds/blue_hair.jpg');
 }
+
 body.contributions {
     background-image: url('./images/backgrounds/red_surface.jpg');
 }
+
 body.infos {
     background-image: url('./images/backgrounds/orange_mars.jpg');
 }
+
 body.curiosites {
     background-image: url('./images/backgrounds/yellow_zebra.jpg');
 }
@@ -46,8 +53,18 @@ h1 {
     font-weight: normal;
 }
 
+#background {
+    position: fixed;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background-size: 100%;
+    background-attachment: fixed;
+    transition: background 1s ease;
+}
+
 .background-color {
-    background-repeat: round;
+    background-size: 100%;
     background-attachment: fixed;
     -webkit-background-clip: text
 }
@@ -64,8 +81,8 @@ h1 {
 }
 
 nav {
-    position: relative;
-    z-index: 2;
+    position: absolute;
+    left:0;right: 0;
     display: flex;
     margin: 0 20px;
     align-content: center;
@@ -156,6 +173,7 @@ footer div {
 }
 
 #main {
+    overflow-y: scroll;
     position:absolute;
     left: 20px;
     right:20px;
@@ -177,8 +195,21 @@ footer div {
     position: absolute;
 }
 
+#artwork map {
+    position: absolute;
+    width: 100%;
+    height:100%;
+}
+
 section {
+/*<<<<<<< HEAD*/
+    padding-top: 300px;
+    /*min-height: 400px;*/
+/*
+=======
     height: 100%;
+>>>>>>> 4f835fdeef07ff56d828a7d3dfd47ffad9534007
+*/
     display:none;
 }
 
@@ -189,6 +220,19 @@ section.active {
 
 section.hidden {
     opacity: 0;
+}
+
+.composition-link {
+    position:relative;
+    z-index:20;
+}
+
+.composition-link a {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 /*
@@ -252,6 +296,20 @@ li {
     h2:last-child {
         display: none;
     }
+
+    nav {
+        bottom: 0;
+    }
+
+    footer {
+        font-size: 0.6em;
+    }
+
+    #main {
+        top:20px; bottom: 46px;
+    }
+
+
 }
 
 @media (max-width: 934px) {

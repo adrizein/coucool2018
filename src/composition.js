@@ -29,12 +29,17 @@ class LinearTrajectory {
 
 class MovingImage {
 
-    constructor({id, src, zIndex, trajectory}) {
+    constructor({id, src, zIndex, trajectory, shape}) {
         this.element = new Image();
         this.element.src = src;
         this.element.id = id;
         this.element.style.zIndex = zIndex;
         this._trajectory = trajectory;
+        if (shape) {
+            const area = document.createElement("area");
+            area.shape = shape;
+            this.area = area;
+        }
     }
 
     get height() {
@@ -63,6 +68,15 @@ class MovingImage {
         this._trajectory.offsetX = offsetX;
         this._trajectory.offsetY = offsetY;
         this.move(scale, t);
+        if (this.area) {
+            if (this.area.shape == "circle"){
+                const radius_width = this.element.width/2;
+                const radius_height = this.element.height/2;
+                this.area.coords = "400,"+ radius_width + "," + radius_width; //TODO
+                this.area.height = scale * this.height;
+                this.area.width = scale * this.width;
+            }
+        }
     }
 
     move(scale, t) {
@@ -95,6 +109,8 @@ class Composition {
         this._canvas = document.createElement('div');
         this._anchor.appendChild(this._canvas);
 
+        this.create_map();
+
         this.resize();
     }
 
@@ -114,10 +130,22 @@ class Composition {
     }
 
     async add(image) {
+        this._anchor.appendChild(image.element);
+        if(image.area){
+            this._map.appendChild(image.area);
+        }
+
         this._canvas.appendChild(image.element);
         this.images.push(image);
 
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
+    }
+
+    create_map(){
+        const map = document.createElement("map");
+        map.name = "artwork_map";
+        this._map = map;
+        this._anchor.appendChild(this._map);
     }
 
     get height() {
@@ -142,6 +170,10 @@ class Composition {
 
     get t() {
         return this._t;
+    }
+
+    get anchor() {
+        return this._anchor;
     }
 
     get heightRatio() {

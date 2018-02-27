@@ -18,7 +18,7 @@ const movingImages = {
     centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350},
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
     fingers: {zIndex: 1, startX: 191, startY: 483, endX: 191, endY: 900},
-    greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282},
+    greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282, eventGeneratingShape:"circle"},
     greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
     orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900},
     palmTree: {zIndex: 0, startX: 417, startY: 542, endX: 417, endY: 1042},
@@ -89,13 +89,14 @@ window.onload = async () => {
     // Load composition
     artwork.style.visibility = 'hidden';
     const p = [];
-    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
+    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape}, name) => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
                 src: compositionImages[name],
                 zIndex,
                 trajectory: new LinearTrajectory(startX, startY, endX, endY),
+                shape : eventGeneratingShape,
             },
         );
 
@@ -109,7 +110,6 @@ window.onload = async () => {
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
     main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.onhashchange = onHash;
-
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
         element.addEventListener('click', (event) => {
             const section = _.find(sections, (s) => event.target.classList.contains(s.name));
@@ -121,6 +121,16 @@ window.onload = async () => {
             }
         });
     });
+    /*
+    _.forEach(document.querySelectorAll('img'), (element) => {
+        element.addEventListener('mouseover', (event) => {
+            onImgIn(event);
+        });
+        element.addEventListener('mouseout', (event) => {
+            onImgOut(event);
+        });
+    });
+    */
 
     // Init
     onResize();
@@ -140,16 +150,16 @@ window.onload = async () => {
         }
 
         //Change background
-        if (activeSection) {
-            document.body.classList.remove(activeSection.name);
-        }
         document.body.classList.add(section.name);
         document.querySelectorAll('.background-color').forEach((element) => {
+            element.classList.add(section.name);
             if (activeSection) {
                 element.classList.remove(activeSection.name);
             }
-            element.classList.add(section.name);
         });
+        if (activeSection) {
+            document.body.classList.remove(activeSection.name);
+        }
 
         let delay = 0;
         if (activeSection && section.name !== activeSection.name) {
@@ -171,6 +181,15 @@ window.onload = async () => {
         section.element.classList.add('active');
         activeSection = section;
         window.location.hash = section.name;
+
+        /*
+        if(activeSection.name == "curiosites"){
+            composition.anchor.style.pointerEvents = "auto";
+            document.getElementById("chevron").style.display = "none";
+        } else {
+            composition.anchor.style.pointerEvents = "none";
+        }
+        */
 
         await Velocity(section.element, 'scroll', {
             offset: section.element.style.paddingTop,
@@ -196,6 +215,31 @@ window.onload = async () => {
 
         composition.animate(t);
         activeSection.element.style.opacity = Math.clamp(t, 0, 1);
+    }
+
+    function onImgOut(event){
+
+    }
+
+    function onImgIn(event) {
+        //We remove all the composition links
+        _.forEach(document.querySelectorAll('.composition-link'), (element) => {
+            element.parentNode.removeChild(element);
+        });
+        //We create new one
+        var source = event.fromElement;
+        var source_client_rect = source.getBoundingClientRect();
+        console.log(source.id);
+        console.log(composition.anchor);
+        var link = document.createElement("div")
+        link.style.marginLeft = source.style.left;
+        link.style.marginTop = source.style.top;
+        console.log(source_client_rect.height);
+        link.style.height = `${source_client_rect.height}px`
+        link.style.width = `${source_client_rect.width}px`
+        link.className = "composition-link"
+        link.innerHTML = `<a>${source.id}</a>`;
+        composition.anchor.appendChild(link);
     }
 
     function onResize() {
