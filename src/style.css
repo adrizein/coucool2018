@@ -18,15 +18,22 @@ html, body {
     transition: background 1s ease;
 }
 
+body.ethos {
+    background-image: url('./images/backgrounds/green_planet.jpg');
+}
+
 body.benevoles {
     background-image: url('./images/backgrounds/blue_hair.jpg');
 }
+
 body.contributions {
     background-image: url('./images/backgrounds/red_surface.jpg');
 }
+
 body.infos {
     background-image: url('./images/backgrounds/orange_mars.jpg');
 }
+
 body.curiosites {
     background-image: url('./images/backgrounds/yellow_zebra.jpg');
 }

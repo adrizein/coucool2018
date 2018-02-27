@@ -9,6 +9,7 @@
     "start": "webpack-dev-server --config webpack.dev.js"
   },
   "dependencies": {
+    "extract-text-webpack-plugin": "~3.0.2",
     "lodash": "^4.17.4",
     "velocity-animate": "^1.5.1"
   },

@@ -2,6 +2,7 @@ const
     path = require('path'),
     CleanWebpackPlugin = require('clean-webpack-plugin'),
     webpack = require('webpack'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
     HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
@@ -12,6 +13,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
+        new ExtractTextPlugin('./bundle.css'),
         new HtmlWebpackPlugin({
             title: 'Coucool 2018',
             template: './src/index.html',
@@ -47,10 +49,10 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                ],
+                use: ExtractTextPlugin.extract({
+                    fallback: 'style-loader',
+                    use: ['css-loader'],
+                }),
             },
         ],
     },

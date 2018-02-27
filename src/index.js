@@ -140,16 +140,16 @@ window.onload = async () => {
         }
 
         //Change background
-        if (activeSection) {
-            document.body.classList.remove(activeSection.name);
-        }
         document.body.classList.add(section.name);
         document.querySelectorAll('.background-color').forEach((element) => {
+            element.classList.add(section.name);
             if (activeSection) {
                 element.classList.remove(activeSection.name);
             }
-            element.classList.add(section.name);
         });
+        if (activeSection) {
+            document.body.classList.remove(activeSection.name);
+        }
 
         let delay = 0;
         if (activeSection && section.name !== activeSection.name) {
