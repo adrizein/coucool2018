@@ -41,7 +41,7 @@ window.onload = async () => {
         loader = document.getElementById('loader'),
         artwork = document.getElementById('artwork'),
         composition = new Composition(artwork, 843, 1353, width < height),
-        footer = document.querySelector('footer'),
+        coucool = document.getElementById('coucool'),
         chevron = document.getElementById('chevron'),
         sections = _.map(
             document.querySelectorAll('section'), (element, index) => {
@@ -87,6 +87,23 @@ window.onload = async () => {
         previousSection = null,
         activeSection = null;
 
+    // Events selectors
+    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
+    main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
+    window.onhashchange = onHash;
+
+    _.forEach(document.querySelectorAll('h2, .link'), (element) => {
+        element.addEventListener('click', (event) => {
+            const section = _.find(sections, (s) => event.target.classList.contains(s.name));
+            if (section) {
+                setActiveSection(section);
+            }
+            else {
+                console.error('Should not happen, bad section name:', event.target.className);
+            }
+        });
+    });
+
     // Load composition
     const p = [];
     _.forEach(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
@@ -108,22 +125,6 @@ window.onload = async () => {
     await new Promise((resolve) => setTimeout(resolve, 1000));
     artwork.classList.add('visible');
 
-    // Events selectors
-    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
-    main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
-    window.onhashchange = onHash;
-
-    _.forEach(document.querySelectorAll('h2, .link'), (element) => {
-        element.addEventListener('click', (event) => {
-            const section = _.find(sections, (s) => event.target.classList.contains(s.name));
-            if (section) {
-                setActiveSection(section);
-            }
-            else {
-                console.error('Should not happen, bad section name:', event.target.className);
-            }
-        });
-    });
 
     // Init
     onResize();
@@ -142,33 +143,23 @@ window.onload = async () => {
             section.title.classList.add('active');
         }
 
-        //Change background
-        document.body.classList.add(section.name);
-        document.querySelectorAll('.background-color').forEach((element) => {
-            element.classList.add(section.name);
-            if (activeSection) {
-                element.classList.remove(activeSection.name);
-            }
-        });
-        if (activeSection) {
-            document.body.classList.remove(activeSection.name);
-        }
-
         let delay = 0;
         if (activeSection && section.name !== activeSection.name) {
-            await Velocity(activeSection.element, 'scroll', {
-                container: main,
-                duration: main.scrollTop,
-                easing: 'ease-in',
-                queue: false,
-            });
-            activeSection.element.classList.remove('active');
-
-            delay = 1000;
+            const duration = main.scrollTop * 1.5;
+            if (duration > 200) {
+                await Velocity(activeSection.element, 'scroll', {
+                    container: main,
+                    duration,
+                    easing: 'ease-in',
+                    queue: false,
+                });
+                activeSection.element.classList.remove('active');
+                delay = 1500;
+            }
         }
 
-        if (!activeSection) {
-            delay = 2000;
+        if (!activeSection && window.location.hash) {
+            delay = 2500;
         }
 
         section.element.classList.add('active');
@@ -178,7 +169,7 @@ window.onload = async () => {
         await Velocity(section.element, 'scroll', {
             offset: section.element.style.paddingTop,
             container: document.getElementById('main'),
-            duration: composition.scaledHeight,
+            duration: composition.scaledHeight * 1.5,
             easing: 'ease-in',
             delay,
             queue: false,
@@ -232,7 +223,7 @@ window.onload = async () => {
                 }
             }
             else {
-                setActiveSection(getSectionByName('ethos'));
+                //setActiveSection(getSectionByName('ethos'));
             }
         }
     }
