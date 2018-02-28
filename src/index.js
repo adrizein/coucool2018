@@ -119,19 +119,20 @@ window.onload = async () => {
 
         p.push(composition.add(image));
     });
+    // Init
+
     // Wait for composition to show the artwork
     await Promise.all(p);
-
     loader.classList.add('exit');
+    main.scroll(0, 0);
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    artwork.classList.add('visible');
 
-    loader.parentElement.removeChild(loader);
-
-    // Init
     onHash();
     onResize();
-    window.requestAnimationFrame(() => artwork.classList.add('loaded'));
+    window.requestAnimationFrame(() => {
+        artwork.classList.add('visible');
+        loader.parentElement.removeChild(loader);
+    });
 
     function getSectionByName(sectionName) {
         return _.find(sections, ({name}) => name === sectionName);
