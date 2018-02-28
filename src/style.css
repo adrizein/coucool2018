@@ -21,11 +21,21 @@ html, body {
 .title {
     padding: 0 20px;
     display: flex;
-    align-items: baseline;
+    align-items: center;
+}
+
+.transparent-green {
     background: url('./images/background.jpg') 100% fixed;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
+
+.transparent-orange {
+    background: url('./images/backgrounds/orange_mars.jpg') fixed round;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
 
 h1 {
     font-size: 25px;
@@ -72,9 +82,6 @@ h2 {
     font-size: 1em;
     padding-top: 0.6em;
     line-height: 0.6em;
-    background: url('./images/backgrounds/orange_mars.jpg') 100% fixed;
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
 }
 
 .link {
@@ -104,7 +111,7 @@ footer {
     display: flex;
     transition: opacity 1000ms ease-in-out;
     padding: 0 20px;
-    line-height: 24px;
+    line-height: 30px;
 }
 
 .invisible {
@@ -157,7 +164,20 @@ footer div {
     text-align: center;
     font-size: 40px;
     height: 40px;
-    transform: scaleX(3) scaleY(0.5);
+    background: url('./images/backgrounds/orange_mars.jpg') 100% fixed;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    
+    transition: transform 1s;
+    -webkit-animation: pulsate 2s linear infinite;
+    -moz-animation: pulsate 2s linear infinite;
+    animation: pulsate 2s linear infinite;
+}
+
+@-webkit-keyframes pulsate {
+    0% {transform: scaleX(1) scaleY(0.5);}
+    50% {transform: scaleX(1.5) scaleY(0.75);}
+    100% {transform: scaleX(1) scaleY(0.5);}
 }
 
 #main {
@@ -197,16 +217,7 @@ section.hidden {
     opacity: 0;
 }
 
-/*
-section:last-child {
-    padding-bottom: 400px;
-}
 
-
-#curiosites {
-    padding-bottom: 400px;
-}
-*/
 
 #eros .strophe {
     margin: 15px 0;
@@ -216,6 +227,9 @@ p {
     line-height: 1.5em;
 }
 
+a {
+    color:white;
+}
 .content-container {
     max-width: 1000px;
     margin: auto;
