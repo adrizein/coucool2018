@@ -162,7 +162,7 @@ window.onload = async () => {
         }
 
         if (!activeSection) {
-            delay = 2500;
+            delay = 5000;
         }
         else {
             activeSection.element.classList.remove('active');

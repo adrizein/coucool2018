@@ -72,7 +72,7 @@ nav {
 }
 
 h2 {
-    flex: 1 0 100px;
+    flex: 1 0;
     padding: 5px 5px;
     border-left: whitesmoke solid 1px;
     margin: 0;
@@ -183,12 +183,9 @@ footer div {
 #main {
     position: absolute;
     font-size: 20px;
-    left: 20px;
-    right:20px;
     top: 46px;
     bottom: 20px;
     text-align: center;
-    padding: 0 20px;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
     overflow-y: scroll; /* has to be scroll, not auto */
@@ -206,6 +203,7 @@ footer div {
 section {
     height: 100%;
     display:none;
+    padding: 0 20px; 
 }
 
 section.active {
@@ -229,10 +227,19 @@ p {
 
 a {
     color:white;
+    text-decoration: underline;
 }
+
+.nav-container {
+    position: absolute; 
+    width: 100%;
+    top:0px; 
+}
+
 .content-container {
     max-width: 1000px;
     margin: auto;
+    padding: 0 20px;
 }
 
 .flex-row {
@@ -252,6 +259,7 @@ ul {
 
 li {
     margin: 10px 0;
+    text-align: justify;
 }
 
 .flex-row > div {
@@ -270,13 +278,52 @@ li {
 }
 
 @media (max-width: 640px) {
-    h2, h3, h4, p, .flex-row {
+    h2, h3, h4, .flex-row {
         font-size: 20px;
+    }
+
+    p {
+        font-size: 20px;
+        text-align: justify;
     }
 
     h2:last-child {
         display: none;
     }
+
+    #contributions {
+        padding: 0;
+    }
+
+    #contributions .content-container{
+        padding: 0;
+    }
+
+    #contributions p{
+        padding: 0 40px;
+    }
+
+    /*
+    .nav-container {
+        top:auto;
+        bottom:0px; 
+    }
+
+    #main {
+        bottom:46px; 
+        top:0px;
+    }
+
+    .transparent-orange {
+        color:white;
+        -webkit-text-fill-color:white;
+    }
+
+    #chevron{
+        bottom:25px;
+    }
+    */
+
 }
 
 @media (max-width: 934px) {
