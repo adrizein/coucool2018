@@ -198,12 +198,14 @@ class Composition {
 
     resize() {
         const {height, width} = this._anchor.getBoundingClientRect();
-        this._anchorHeight = height - 80;
-        this._anchorWidth = width;
+        var fixed_offsetX = 50;
+        var fixed_offsetY = 50;
+        this._anchorHeight = height - fixed_offsetY*2;
+        this._anchorWidth = width- fixed_offsetX*2;
         this._scale = Math.min(this.heightRatio, this.widthRatio);
         let
-            offsetX = Math.floor(this._anchorWidth - this.scaledWidth),
-            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + 80;
+            offsetX = Math.floor(this._anchorWidth - this.scaledWidth)+ fixed_offsetX*2,
+            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + fixed_offsetY*2;
 
         if (this._portrait) {
             [offsetX, offsetY] = [offsetY, offsetX];
