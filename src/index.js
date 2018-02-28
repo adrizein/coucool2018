@@ -85,7 +85,8 @@ window.onload = async () => {
     let
         switching = false,
         previousSection = null,
-        activeSection = null;
+        activeSection = null,
+        hasScrolledInActiveSection = false;
 
     // Events selectors
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
@@ -140,8 +141,10 @@ window.onload = async () => {
     await frame();
     loader.parentElement.removeChild(loader);
     await frame();
-    main.scroll(0, 0);
-    composition.animate(0);
+    
+    //main.scroll(0, 0);
+    //composition.animate(0);
+    
     artwork.classList.add('visible');
 
     function getSectionByName(sectionName) {
@@ -149,57 +152,53 @@ window.onload = async () => {
     }
 
     async function setActiveSection(section, scroll = true) {
+        const 
+            animationDuration = 500,
+            delayBeforeScrollingDown = 2000;
+
+        //switching = true;
+
         //highlight title
-        switching = true;
         _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
         if (section.title) {
             section.title.classList.add('active');
         }
 
-        let delay = 0;
+        // Implode
         if (activeSection && section.name !== activeSection.name) {
-            const duration = main.scrollTop * 1.5;
-            if (duration > 200) {
-                await Velocity(activeSection.element, 'scroll', {
-                    container: main,
-                    duration,
-                    easing: 'ease-in',
-                    queue: false,
-                });
                 activeSection.element.classList.remove('active');
-                delay = 1500;
-            }
+                await composition.runAnimation(animationDuration,0);
         }
 
-        if (!activeSection) {
-            delay = 5000;
-        }
-        else {
-            activeSection.element.classList.remove('active');
-        }
-
+        // Set the new session
         section.element.classList.add('active');
+        hasScrolledInActiveSection=false;
         activeSection = section;
         window.location.hash = section.name;
 
         await frame();
 
-        if (scroll) {
-            await Velocity(section.element, 'scroll', {
-                offset: section.element.style.paddingTop,
-                container: main,
-                duration: composition.scaledHeight * 1.5,
-                easing: 'ease-in',
-                delay,
-                queue: false,
-            });
-        }
 
-        switching = false;
+        setTimeout(function(){
+            if (!hasScrolledInActiveSection) {
+                console.log(main.scrollTop);
+                console.log("Scrollin again");
+                Velocity(section.element, 'scroll', {
+                    offset: section.element.style.paddingTop,
+                    container: main,
+                    duration: animationDuration,
+                    easing: 'ease-in',
+                    queue: false,
+                });
+            }
+        }, delayBeforeScrollingDown);
+
+        //switching = false;
     }
 
     function onScroll() {
-        const t = Math.clamp(main.scrollTop / composition.scaledHeight, 0, 1);
+        hasScrolledInActiveSection = true;
+        const t = Math.clamp(main.scrollTop / (composition.scaledHeight*3), 0, 1);
 
         if (main.scrollTop === 0) {
             chevron.style.display = 'block';
@@ -209,7 +208,7 @@ window.onload = async () => {
         }
 
         composition.animate(t);
-        activeSection.element.style.opacity = Math.clamp(t, 0, 1);
+        activeSection.element.style.opacity = Math.clamp(t*6, 0, 1);
     }
 
     function onResize() {
@@ -235,7 +234,7 @@ window.onload = async () => {
     }
 
     function onHash() {
-        if (!switching) {
+        //if (!switching) {
             if (window.location.hash.length > 1) {
                 const urlSection = getSectionByName(window.location.hash.replace('#', ''));
                 if (urlSection) {
@@ -245,7 +244,7 @@ window.onload = async () => {
             else {
                 setActiveSection(getSectionByName('ethos'), false);
             }
-        }
+        //}
     }
 
     async function frame() {
