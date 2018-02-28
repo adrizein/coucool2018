@@ -15,7 +15,7 @@ const movingImages = {
     blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 358, endX: 675, endY: 860},
     blueRectangleTop: {zIndex: 6, startX: 663, startY: 104, endX: 663, endY: 850},
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
-    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, eventGeneratingShape:'circle'},
+    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, eventGeneratingShape: 'circle'},
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
     fingers: {zIndex: 1, startX: 191, startY: 483, endX: 191, endY: 900},
     greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282},
@@ -92,6 +92,15 @@ window.onload = async () => {
     main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.onhashchange = onHash;
 
+    coucool.addEventListener('click', () => {
+        Velocity(activeSection.element, 'scroll', {
+            container: main,
+            duration: main.scrollTop * 1.5,
+            queue: false,
+            easing: 'ease-in',
+        });
+    });
+
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
         element.addEventListener('click', (event) => {
             const section = _.find(sections, (s) => event.target.classList.contains(s.name));
@@ -113,32 +122,33 @@ window.onload = async () => {
                 src: compositionImages[name],
                 zIndex,
                 trajectory: new LinearTrajectory(startX, startY, endX, endY),
-                shape:eventGeneratingShape,
+                shape: eventGeneratingShape,
             },
         );
 
         p.push(composition.add(image));
     });
-    // Init
 
+    // Init
     // Wait for composition to show the artwork
     await Promise.all(p);
     loader.classList.add('exit');
-    main.scroll(0, 0);
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     onHash();
     onResize();
-    window.requestAnimationFrame(() => {
-        artwork.classList.add('visible');
-        loader.parentElement.removeChild(loader);
-    });
+    await frame();
+    loader.parentElement.removeChild(loader);
+    await frame();
+    main.scroll(0, 0);
+    composition.animate(0);
+    artwork.classList.add('visible');
 
     function getSectionByName(sectionName) {
         return _.find(sections, ({name}) => name === sectionName);
     }
 
-    async function setActiveSection(section) {
+    async function setActiveSection(section, scroll = true) {
         //highlight title
         switching = true;
         _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
@@ -172,14 +182,18 @@ window.onload = async () => {
         activeSection = section;
         window.location.hash = section.name;
 
-        await Velocity(section.element, 'scroll', {
-            offset: section.element.style.paddingTop,
-            container: document.getElementById('main'),
-            duration: composition.scaledHeight * 1.5,
-            easing: 'ease-in',
-            delay,
-            queue: false,
-        });
+        await frame();
+
+        if (scroll) {
+            await Velocity(section.element, 'scroll', {
+                offset: section.element.style.paddingTop,
+                container: main,
+                duration: composition.scaledHeight * 1.5,
+                easing: 'ease-in',
+                delay,
+                queue: false,
+            });
+        }
 
         switching = false;
     }
@@ -229,8 +243,12 @@ window.onload = async () => {
                 }
             }
             else {
-                setActiveSection(getSectionByName('ethos'));
+                setActiveSection(getSectionByName('ethos'), false);
             }
         }
+    }
+
+    async function frame() {
+        return new Promise((resolve) => window.requestAnimationFrame(resolve));
     }
 };

@@ -70,7 +70,7 @@ class MovingImage {
         const map = document.createElement("map");
         map.name = this.element.id + "_map";
         this._map = map;
-        
+
         const area = document.createElement("area");
         area.shape = shape;
         if (shape == "circle") {
@@ -91,7 +91,7 @@ class MovingImage {
         this._trajectory.offsetY = offsetY;
         this.move(scale, t);
         if (this.area) {
-            if (this.area.shape == "circle"){
+            if (this.area.shape === "circle"){
                 const radius_width = this.element.width/2;
                 const radius_height = this.element.height/2;
                 this.area.coords = "200,"+ radius_width + "," + radius_width; //TODO
@@ -160,7 +160,6 @@ class Composition {
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
     }
 
-    
     get height() {
         return this._portrait ? this._width : this._height;
     }

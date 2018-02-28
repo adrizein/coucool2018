@@ -79,18 +79,15 @@ h2 {
     margin-top: 5px;
     font-weight: normal;
     transition: text-shadow 200ms linear;
-    font-size: 1em;
-    padding-top: 0.6em;
-    line-height: 0.6em;
+    font-size: 20px;
 }
 
 .link {
-    cursor: pointer;
     text-decoration: underline;
 }
 
-.link h2 {
-    text-decoration: none;
+.link, h2 {
+    cursor: pointer;
 }
 
 h2:first-child {
@@ -167,7 +164,7 @@ footer div {
     background: url('./images/backgrounds/orange_mars.jpg') 100% fixed;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
-    
+
     transition: transform 1s;
     -webkit-animation: pulsate 2s linear infinite;
     -moz-animation: pulsate 2s linear infinite;
