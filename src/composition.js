@@ -154,12 +154,12 @@ class Composition {
 
     resize() {
         const {height, width} = this._anchor.getBoundingClientRect();
-        this._anchorHeight = height - 40;
+        this._anchorHeight = height - 80;
         this._anchorWidth = width;
         this._scale = Math.min(this.heightRatio, this.widthRatio);
         let
             offsetX = Math.floor(this._anchorWidth - this.scaledWidth),
-            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + 40;
+            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + 80;
 
         if (this._portrait) {
             [offsetX, offsetY] = [offsetY, offsetX];
@@ -197,10 +197,9 @@ class Composition {
     }
 
     clear() {
-        while (this.images.length) {
-            const image = this.images.pop();
-            this._anchor.removeChild(image.element);
-        }
+        this._anchor.removeChild(this._canvas);
+        this._canvas = document.createElement('div');
+        this._anchor.appendChild(this._canvas);
     }
 }
 

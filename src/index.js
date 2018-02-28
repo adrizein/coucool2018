@@ -38,6 +38,7 @@ window.onload = async () => {
     const
         {width, height} = document.body.getBoundingClientRect(),
         main = document.getElementById('main'),
+        loader = document.getElementById('loader'),
         artwork = document.getElementById('artwork'),
         composition = new Composition(artwork, 843, 1353, width < height),
         footer = document.querySelector('footer'),
@@ -87,7 +88,6 @@ window.onload = async () => {
         activeSection = null;
 
     // Load composition
-    artwork.style.visibility = 'hidden';
     const p = [];
     _.forEach(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
         const image = new MovingImage(
@@ -103,7 +103,10 @@ window.onload = async () => {
     });
     // Wait for composition to show the artwork
     await Promise.all(p);
-    artwork.style.visibility = 'visible';
+
+    loader.classList.add('exit');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    artwork.classList.add('visible');
 
     // Events selectors
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
@@ -165,7 +168,7 @@ window.onload = async () => {
         }
 
         if (!activeSection) {
-            delay = 1000;
+            delay = 2000;
         }
 
         section.element.classList.add('active');
