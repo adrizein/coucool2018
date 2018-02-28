@@ -124,11 +124,11 @@ window.onload = async () => {
     loader.classList.add('exit');
     await new Promise((resolve) => setTimeout(resolve, 1000));
     artwork.classList.add('visible');
-
+    loader.parentElement.removeChild(loader);
 
     // Init
-    onResize();
     onHash();
+    onResize();
     window.requestAnimationFrame(() => artwork.classList.add('loaded'));
 
     function getSectionByName(sectionName) {
@@ -158,8 +158,11 @@ window.onload = async () => {
             }
         }
 
-        if (!activeSection && window.location.hash) {
+        if (!activeSection) {
             delay = 2500;
+        }
+        else {
+            activeSection.element.classList.remove('active');
         }
 
         section.element.classList.add('active');
@@ -223,7 +226,7 @@ window.onload = async () => {
                 }
             }
             else {
-                //setActiveSection(getSectionByName('ethos'));
+                setActiveSection(getSectionByName('ethos'));
             }
         }
     }
