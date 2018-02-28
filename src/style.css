@@ -42,6 +42,8 @@ h1 {
 #coucool {
     flex: 1 0 auto;
     cursor: pointer;
+    line-height: 25px;
+    padding-top: 4px;
 }
 
 #language {
