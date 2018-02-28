@@ -15,7 +15,7 @@ const movingImages = {
     blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 358, endX: 675, endY: 860},
     blueRectangleTop: {zIndex: 6, startX: 663, startY: 104, endX: 663, endY: 850},
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
-    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350},
+    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, eventGeneratingShape:'circle'},
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
     fingers: {zIndex: 1, startX: 191, startY: 483, endX: 191, endY: 900},
     greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282},
@@ -89,13 +89,14 @@ window.onload = async () => {
     // Load composition
     artwork.style.visibility = 'hidden';
     const p = [];
-    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY}, name) => {
+    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape}, name) => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
                 src: compositionImages[name],
                 zIndex,
                 trajectory: new LinearTrajectory(startX, startY, endX, endY),
+                shape:eventGeneratingShape,
             },
         );
 
@@ -112,6 +113,7 @@ window.onload = async () => {
 
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
         element.addEventListener('click', (event) => {
+            console.log(event.target.classList);
             const section = _.find(sections, (s) => event.target.classList.contains(s.name));
             if (section) {
                 setActiveSection(section);

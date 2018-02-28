@@ -29,12 +29,21 @@ class LinearTrajectory {
 
 class MovingImage {
 
-    constructor({id, src, zIndex, trajectory}) {
+    constructor({id, src, zIndex, trajectory, shape}) {
         this.element = new Image();
         this.element.src = src;
         this.element.id = id;
         this.element.style.zIndex = zIndex;
         this._trajectory = trajectory;
+        if (shape) {
+            this.create_map(shape);
+            this.element.useMap = "#" + this._map.name;
+            /*
+            const area = document.createElement("area");
+            area.shape = shape;
+            this.area = area;
+            */
+        }
     }
 
     get height() {
@@ -57,12 +66,39 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
+    create_map(shape){
+        const map = document.createElement("map");
+        map.name = this.element.id + "_map";
+        this._map = map;
+        
+        const area = document.createElement("area");
+        area.shape = shape;
+        if (shape == "circle") {
+            const radius_width = this.element.width/2;
+            const radius_height = this.element.height/2;
+            area.coords = "0,"+ radius_width + "," + radius_width; //TODO
+        }
+        area.href = "www.google.com"
+        this._map.appendChild(area)
+
+    }
+
+
     resize(scale, t, offsetX, offsetY) {
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
         this._trajectory.offsetX = offsetX;
         this._trajectory.offsetY = offsetY;
         this.move(scale, t);
+        if (this.area) {
+            if (this.area.shape == "circle"){
+                const radius_width = this.element.width/2;
+                const radius_height = this.element.height/2;
+                this.area.coords = "200,"+ radius_width + "," + radius_width; //TODO
+                this.area.height = scale * this.height;
+                this.area.width = scale * this.width;
+            }
+        }
     }
 
     move(scale, t) {
@@ -94,7 +130,6 @@ class Composition {
         this._portrait = portrait;
         this._canvas = document.createElement('div');
         this._anchor.appendChild(this._canvas);
-
         this.resize();
     }
 
@@ -114,12 +149,18 @@ class Composition {
     }
 
     async add(image) {
+        this._anchor.appendChild(image.element);
+        if(image._map){
+            this._anchor.appendChild(image._map);
+        }
+
         this._canvas.appendChild(image.element);
         this.images.push(image);
 
         return new Promise((resolve) => image.element.addEventListener('load', resolve));
     }
 
+    
     get height() {
         return this._portrait ? this._width : this._height;
     }
@@ -142,6 +183,10 @@ class Composition {
 
     get t() {
         return this._t;
+    }
+
+    get anchor() {
+        return this._anchor;
     }
 
     get heightRatio() {

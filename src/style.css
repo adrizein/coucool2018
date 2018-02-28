@@ -86,11 +86,21 @@ h2 {
     margin: 0;
     font-weight: normal;
     transition: text-shadow 200ms linear;
-    font-size: 1.5em;
+    font-size: 1em;
+    padding-top: 0.6em;
+    line-height: 0.6em;
+    background: url('./images/backgrounds/orange_mars.jpg') 100% fixed;
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
 }
 
-.link, h2 {
+.link {
     cursor: pointer;
+    text-decoration: underline;
+}
+
+.link h2 {
+    text-decoration: none;
 }
 
 h2:first-child {
