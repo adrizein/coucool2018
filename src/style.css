@@ -187,6 +187,7 @@ footer div {
     -webkit-overflow-scrolling: touch;
     overflow-y: scroll; /* has to be scroll, not auto */
     overflow-x: hidden;
+    width: 100%;
 }
 
 #main::-webkit-scrollbar {
@@ -200,7 +201,7 @@ footer div {
 section {
     height: 100%;
     display:none;
-    padding: 0 20px; 
+    padding: 0 20px;
 }
 
 section.active {
@@ -228,9 +229,9 @@ a {
 }
 
 .nav-container {
-    position: absolute; 
+    position: absolute;
     width: 100%;
-    top:0px; 
+    top:0px;
 }
 
 .content-container {
@@ -303,11 +304,11 @@ li {
     /*
     .nav-container {
         top:auto;
-        bottom:0px; 
+        bottom:0px;
     }
 
     #main {
-        bottom:46px; 
+        bottom:46px;
         top:0px;
     }
 
