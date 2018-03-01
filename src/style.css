@@ -179,6 +179,7 @@ footer div {
 
 #main {
     position: absolute;
+    z-index:3;
     font-size: 20px;
     top: 46px;
     bottom: 20px;
