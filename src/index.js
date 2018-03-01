@@ -114,6 +114,12 @@ window.onload = async () => {
         });
     });
 
+    _.forEach(document.querySelectorAll('.yes'), (element) => {
+        element.addEventListener('click', (event) => {
+            fadeContributionPage(event.target);
+        });
+    });
+
     // Load composition
     const p = [];
     _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape}, name) => {
@@ -166,6 +172,12 @@ window.onload = async () => {
 
         // Implode
         if (activeSection && section.name !== activeSection.name) {
+                /*
+                Velocity(activeSection.element, "fadeOut", {
+                    duration: animationDuration/3,
+                    easing: 'ease-in'
+                });
+                */
                 activeSection.element.classList.remove('active');
                 await composition.runAnimation(animationDuration,0);
         }
@@ -245,6 +257,49 @@ window.onload = async () => {
                 setActiveSection(getSectionByName('ethos'), false);
             }
         //}
+    }
+
+    function fadeContributionPage(element) {
+        
+        /*
+        var a = element;
+        while (a) {
+            if(a.classList.contains("contribution-page")){
+                Velocity(a, "fadeOut", {
+                    duration: 200,
+                    easing: 'ease-in',
+                });
+                break;
+            }
+            a = a.parentNode;
+        }
+        */
+        var a = element;
+        while (a) {
+            if(a.classList.contains("contribution-page")){
+                break;
+            }
+            a = a.parentNode;
+        }
+
+        console.log(a.id);
+        var next_page_number = parseInt(a.id.slice(-1))+1
+        var next_id = a.id.slice(0, -1) + next_page_number;
+        var next_page = document.getElementById(next_id); 
+        console.log(next_id);
+        Velocity(a, "fadeOut", {
+            duration: 200,
+            easing: 'ease-in',
+            complete : function(){
+                console.log("completing");
+                Velocity(next_page, "fadeIn", {
+                    display: "flex",
+                    duration: 200,
+                    easing: 'ease-in'
+                });
+            }
+        });
+
     }
 
     async function frame() {

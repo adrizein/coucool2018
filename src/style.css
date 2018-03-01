@@ -242,6 +242,45 @@ a {
     padding: 0 20px;
 }
 
+#contributions .content-container {
+    height:100%;
+}
+
+.contribution-page {
+    position:absolute;
+    height:100%; 
+    left:0px; 
+    right:0px;
+    display: none;
+}
+
+.contribution-page:first-child {
+    display: flex;
+}
+
+.contribution-page-container {
+    display: flex;
+    height: 100%;
+}
+
+.yes {
+    width: 176px;
+    height:27px;
+    padding-top: 4px;
+    line-height: 27px;
+    background: url('./images/composition/green-rectangle-top-left.png') 100%;
+    margin:auto; 
+}
+
+.no {
+    width: 151px;
+    height:107px;
+    padding-top: 4px;
+    line-height: 107px;
+    background: url('./images/composition/palm-tree.png') 100%;
+    margin:auto; 
+}
+
 .flex-row {
     display: flex;
     text-align: left;
