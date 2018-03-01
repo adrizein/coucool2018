@@ -260,20 +260,7 @@ window.onload = async () => {
     }
 
     function fadeContributionPage(element) {
-        
-        /*
-        var a = element;
-        while (a) {
-            if(a.classList.contains("contribution-page")){
-                Velocity(a, "fadeOut", {
-                    duration: 200,
-                    easing: 'ease-in',
-                });
-                break;
-            }
-            a = a.parentNode;
-        }
-        */
+
         var a = element;
         while (a) {
             if(a.classList.contains("contribution-page")){

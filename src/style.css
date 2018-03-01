@@ -272,14 +272,16 @@ a {
     margin:auto; 
 }
 
-.no {
+.link.no {
     width: 151px;
     height:107px;
     padding-top: 4px;
     line-height: 107px;
     background: url('./images/composition/palm-tree.png') 100%;
-    margin:auto; 
+    margin:auto;
+    text-decoration:none; 
 }
+
 
 .flex-row {
     display: flex;
