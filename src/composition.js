@@ -117,9 +117,9 @@ class MovingImage {
             queue: false,
             duration,
             easing: 'easeInOutSine',
-            progress(elements, completion) {
+            progress(elements, completion, remaining) {
                 if (progress) {
-                    progress(completion);
+                    progress(completion, remaining);
                 }
             },
         });
@@ -143,6 +143,7 @@ class Composition {
         this._canvas = document.createElement('div');
         this._anchor.appendChild(this._canvas);
         this.resize();
+        this.running = false;
     }
 
     animate(t) {
@@ -151,17 +152,21 @@ class Composition {
     }
 
     async runAnimation(duration, t) {
-        if (!this._running) {
-            this._running = true;
+        if (!this.running) {
+            this.running = true;
+            this._lastRun = {duration, t};
             const oldT = this._t;
             await Promise.all(this.images.map((image) => image.runAnimation(
                 this._scale,
                 t,
                 duration,
-                (completion) => {this._t = (t - oldT) * completion + oldT;}
+                (completion, remaining) => {
+                    this._t = (t - oldT) * completion + oldT;
+                    this._lastRun.duration = remaining;
+                }
             )));
 
-            this._running = false;
+            this.running = false;
             return true;
         }
         else {
@@ -169,10 +174,23 @@ class Composition {
         }
     }
 
-    stopAnimation() {
-        if (this._running) {
+    pauseAnimation() {
+        if (this.running) {
             this.images.forEach((image) => image.stopAnimation());
-            this._running = false;
+        }
+    }
+
+    async resumeAnimation() {
+        if (this.running) {
+            return this.runAnimation(this._lastRun.duration, this._lastRun.t);
+        }
+    }
+
+    stopAnimation() {
+        if (this.running) {
+            this.images.forEach((image) => image.stopAnimation());
+            this.running = false;
+            this._lastRun = null;
         }
     }
 
