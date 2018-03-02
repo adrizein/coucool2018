@@ -24,7 +24,12 @@ html, body {
     background-size: 100% 100%;
 }
 
-#container.loading .title, #container.loading nav, #container.loading #main, #container.loading #chevron {
+#container.loading .title,
+#container.loading nav,
+#container.loading #main,
+#container.loading #chevron,
+#container.loading footer
+{
     opacity: 0;
 }
 
@@ -44,7 +49,7 @@ html, body {
 .title {
     padding: 0 20px;
     display: flex;
-    align-items: center;
+    align-items: baseline;
 }
 
 .transparent-green {
@@ -88,7 +93,7 @@ nav {
     position: relative;
     z-index: 2;
     display: flex;
-    margin: 0 20px;
+    margin: 0;
     align-content: center;
     text-align: center;
 }
@@ -176,7 +181,6 @@ footer div {
     right: 0;
     bottom: 0;
     text-align: center;
-    font-size: 40px;
     height: 40px;
     background-image: url('./images/chevron.png');
     background-position: center;
@@ -290,7 +294,7 @@ a {
 .link.no {
     cursor: pointer;
     width: 151px;
-    height:107px;
+    height: 107px;
     padding-top: 4px;
     line-height: 107px;
     background: url('./images/composition/palm-tree.png') 100%;
@@ -320,8 +324,8 @@ li {
 }
 
 .flex-row > div {
-    margin: 20px;
-    flex: 1 0 300px;
+    margin: 0 20px;
+    flex: 1 0 200px;
 }
 
 .flex-row > div:last-child {
@@ -335,16 +339,16 @@ li {
 }
 
 @media (max-width: 640px) {
-    h2, h3, h4, .flex-row {
+    p, h2, h3, h4, .flex-row {
         font-size: 20px;
     }
 
     h2 {
+        border-width: 1px;
         padding: 5px 5px;
     }
 
     p {
-        font-size: 20px;
         text-align: justify;
     }
 
@@ -367,28 +371,25 @@ li {
     #artworkAndContent {
         background-size: contain;
     }
+}
 
-    /*
-    .nav-container {
-        top:auto;
-        bottom:0px;
+@media (max-width: 380px) {
+
+    p, h3, h4, .flex-row, #language {
+        font-size: 15px;
     }
 
-    #main {
-        bottom:46px;
-        top:0px;
+    h2 {
+        font-size: 13px;
     }
 
-    .transparent-orange {
-        color:white;
-        -webkit-text-fill-color:white;
+    .title h1 {
+        font-size: 20px;
     }
 
-    #chevron{
-        bottom:25px;
+    #chevron {
+        background-size: 50px;
     }
-    */
-
 }
 
 @media (max-width: 934px) {
