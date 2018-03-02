@@ -24,7 +24,20 @@ html, body {
     background-size: 100% 100%;
 }
 
-#container.loaded {
+#container.loading .title, #container.loading nav, #container.loading #main, #container.loading #chevron {
+    opacity: 0;
+}
+
+#container.loaded * {
+    opacity: 1;
+    transition: opacity 1000ms;
+}
+
+.visible #artwork {
+    visibility: visible;
+}
+
+#container.visible {
     visibility: visible;
 }
 
@@ -56,7 +69,7 @@ h1 {
 .background-color {
     background-repeat: round;
     background-attachment: fixed;
-    -webkit-background-clip: text
+    -webkit-background-clip: text;
 }
 
 #coucool {
@@ -148,10 +161,6 @@ footer div {
     z-index: 2;
 }
 
-.loaded #artwork {
-    visibility: visible;
-}
-
 #artwork > div {
     position: absolute;
 }
@@ -169,16 +178,15 @@ footer div {
     text-align: center;
     font-size: 40px;
     height: 40px;
-    background: url('./images/frame.jpg') 100% fixed;
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
 
-    /*
-    transition: transform 1s;
+    background-image: url('./images/chevron.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100px;
+
     -webkit-animation: pulsate 2s linear infinite;
     -moz-animation: pulsate 2s linear infinite;
     animation: pulsate 2s linear infinite;
-    */
 }
 
 @keyframes pulsate {
