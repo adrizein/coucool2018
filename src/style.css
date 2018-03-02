@@ -304,12 +304,20 @@ a {
     text-decoration:none;
 }
 
-
 .flex-row {
     display: flex;
     text-align: left;
     flex-wrap: wrap;
     justify-content: space-around;
+}
+
+.flex-row > div {
+    margin: 15px 25px;
+    flex: 1 0 300px;
+}
+
+.flex-row > div:last-child {
+    max-width: 600px;
 }
 
 h4, ul {
@@ -323,15 +331,6 @@ ul {
 li {
     margin: 10px 0;
     text-align: justify;
-}
-
-.flex-row > div {
-    margin: 0 20px;
-    flex: 1 0 200px;
-}
-
-.flex-row > div:last-child {
-    max-width: 600px;
 }
 
 #weezevent {
@@ -372,6 +371,10 @@ li {
 
     #artworkAndContent {
         background-size: contain;
+    }
+
+    .flex-row > div {
+        flex-basis: auto;
     }
 }
 
