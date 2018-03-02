@@ -314,6 +314,7 @@ a {
 .flex-row > div {
     margin: 15px 25px;
     flex: 1 0 300px;
+    max-width: 100%;
 }
 
 .flex-row > div:last-child {
@@ -374,7 +375,7 @@ li {
     }
 
     .flex-row > div {
-        flex-basis: auto;
+        width: 100%;
     }
 }
 
