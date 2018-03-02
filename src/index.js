@@ -146,7 +146,7 @@ window.onload = async () => {
     container.classList.add('loaded');
     await new Promise((resolve) => setTimeout(resolve, 1000));
     container.classList.remove('loaded');
-    
+
     onHash();
     onScroll();
 
