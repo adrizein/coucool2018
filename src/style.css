@@ -182,10 +182,12 @@ footer div {
     bottom: 0;
     text-align: center;
     height: 40px;
+
     background-image: url('./images/chevron.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100px;
+
     -webkit-animation: pulsate 2s linear infinite;
     -moz-animation: pulsate 2s linear infinite;
     animation: pulsate 2s linear infinite;

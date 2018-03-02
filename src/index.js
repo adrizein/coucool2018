@@ -126,6 +126,7 @@ window.onload = async () => {
     // Init
     // Wait for composition to show the artwork
     await Promise.all(p);
+
     loader.classList.add('exit');
 
     onResize();
@@ -145,7 +146,7 @@ window.onload = async () => {
     container.classList.add('loaded');
     await new Promise((resolve) => setTimeout(resolve, 1000));
     container.classList.remove('loaded');
-
+    
     onHash();
     onScroll();
 
@@ -287,21 +288,18 @@ window.onload = async () => {
 
 
     function fadeContributionPage(element) {
-
-        var a = element;
-        while (a) {
-            if (a.classList.contains("contribution-page")){
+        var parentContributionPage = element;
+        while (parentContributionPage) {
+            if (parentContributionPage.classList.contains("contribution-page")){
                 break;
             }
-            a = a.parentNode;
+            parentContributionPage = parentContributionPage.parentNode;
         }
-
-        console.log(a.id);
-        var next_page_number = parseInt(a.id.slice(-1))+1
-        var next_id = a.id.slice(0, -1) + next_page_number;
+        var next_page_number = parseInt(parentContributionPage.id.slice(-1))+1
+        var next_id = parentContributionPage.id.slice(0, -1) + next_page_number;
         var next_page = document.getElementById(next_id);
         console.log(next_id);
-        Velocity(a, "fadeOut", {
+        Velocity(parentContributionPage, "fadeOut", {
             duration: 200,
             easing: 'ease-in',
             complete : function(){
@@ -313,7 +311,6 @@ window.onload = async () => {
                 });
             }
         });
-
     }
 
     async function frame() {
