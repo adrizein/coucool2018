@@ -3,6 +3,7 @@ const
     CleanWebpackPlugin = require('clean-webpack-plugin'),
     webpack = require('webpack'),
     ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    FaviconsWebpackPlugin = require('favicons-webpack-plugin'),
     HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
@@ -13,6 +14,7 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
+        new FaviconsWebpackPlugin('./src/images/logo.png'),
         new ExtractTextPlugin('./bundle.css'),
         new HtmlWebpackPlugin({
             title: 'Coucool 2018',

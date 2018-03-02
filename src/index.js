@@ -17,7 +17,7 @@ const movingImages = {
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
     centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, eventGeneratingShape: 'circle'},
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
-    fingers: {zIndex: 1, startX: 191, startY: 483, endX: 191, endY: 900},
+    fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900},
     greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282},
     greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
     orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900},
@@ -37,6 +37,7 @@ const movingImages = {
 window.onload = async () => {
     const
         {width, height} = document.body.getBoundingClientRect(),
+        container = document.getElementById('container'),
         main = document.getElementById('main'),
         loader = document.getElementById('loader'),
         artwork = document.getElementById('artwork'),
@@ -54,57 +55,42 @@ window.onload = async () => {
                     name,
                     element,
                     title,
-                    /*
-                    hidden: element.classList.contains('hidden'),
-                    activate() {
-                        this.element.classList.add('active');
-                    },
-                    deactivate() {
-                        this.element.classList.remove('active');
-                    },
-                    reveal() {
-                        this.element.classList.remove('hidden');
-                    },
-                    hide() {
-                        this.element.classList.add('hidden');
-                    },
-                    next() {
-                        const next_index = this.index+1
-                        const next_section = next_index < sections.length ? sections[next_index] : null
-                        return next_section;
-                    },
-                    previous() {
-                        const previous_index = this.index-1
-                        const previous_section = previous_index >=0 ? sections[previous_index] : null
-                        return previous_section;
-                    }
-                    */
                 };
             });
 
     let
         switching = false,
-        previousSection = null,
         activeSection = null,
-        hasScrolledInActiveSection = false;
+        autoScroll = true,
+        manualScroll = true;
 
     // Events selectors
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
     main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.onhashchange = onHash;
 
-    coucool.addEventListener('click', () => {
-        Velocity(activeSection.element, 'scroll', {
-            container: main,
-            duration: main.scrollTop * 1.5,
-            queue: false,
-            easing: 'ease-in',
-        });
+    coucool.addEventListener('click', async () => {
+        autoScroll = false;
+        composition.stopAnimation();
+        await Promise.all([
+            composition.runAnimation(2000, 0),
+            Velocity(artwork, {opacity: 1}, {duration: 1000, easing: 'ease-in', queue: false}),
+            Velocity(activeSection.element, {opacity: 0}, {
+                container: main,
+                duration: 1000,
+                queue: false,
+                easing: 'ease-in',
+            }),
+        ]);
+
+        manualScroll = false;
+        main.scrollTo(0, 0);
     });
 
-    _.forEach(document.querySelectorAll('h2, .link'), (element) => {
+    document.querySelectorAll('h2, .link').forEach((element) => {
         element.addEventListener('click', (event) => {
             const section = _.find(sections, (s) => event.target.classList.contains(s.name));
+            composition.stopAnimation();
             if (section) {
                 setActiveSection(section);
             }
@@ -114,7 +100,7 @@ window.onload = async () => {
         });
     });
 
-    _.forEach(document.querySelectorAll('.yes'), (element) => {
+    document.querySelectorAll('.yes').forEach((element) => {
         element.addEventListener('click', (event) => {
             fadeContributionPage(event.target);
         });
@@ -140,29 +126,37 @@ window.onload = async () => {
     // Wait for composition to show the artwork
     await Promise.all(p);
     loader.classList.add('exit');
-    await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    onHash();
     onResize();
+
     await frame();
     loader.parentElement.removeChild(loader);
     await frame();
-    
-    //main.scroll(0, 0);
-    //composition.animate(0);
-    
-    artwork.classList.add('visible');
+
+    // remove the slight offset when the loader is removed
+    manualScroll = false;
+    main.scrollTo(0, 0);
+
+    // initialize the composition in its exploded form
+    composition.animate(1);
+    container.classList.add('loaded');
+    await composition.runAnimation(2000, 0);
+
+    onHash();
+
+    if (!activeSection) {
+        setActiveSection(getSectionByName('ethos'), false);
+    }
+
 
     function getSectionByName(sectionName) {
         return _.find(sections, ({name}) => name === sectionName);
     }
 
     async function setActiveSection(section, scroll = true) {
-        const 
-            animationDuration = 500,
-            delayBeforeScrollingDown = 2000;
-
-        //switching = true;
+        let delayBeforeScrollingDown = 2000;
+        switching = true;
+        window.location.hash = section.name;
 
         //highlight title
         _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
@@ -170,57 +164,76 @@ window.onload = async () => {
             section.title.classList.add('active');
         }
 
-        // Implode
-        if (activeSection && section.name !== activeSection.name) {
-                /*
-                Velocity(activeSection.element, "fadeOut", {
-                    duration: animationDuration/3,
-                    easing: 'ease-in'
-                });
-                */
-                activeSection.element.classList.remove('active');
-                await composition.runAnimation(animationDuration,0);
+        if (activeSection) {
+            if (section.name !== activeSection.name) {
+                if (main.scrollTop > 0) {
+                    // Implode if we changed the section
+                    const duration = 1000;
+                    await Promise.all([
+                        composition.runAnimation(duration, 0),
+                        Velocity(artwork, {opacity: 1}, {duration, queue: false}),
+                        Velocity(activeSection.element, {opacity: 0}, {duration, queue: false}),
+                    ]);
+                    manualScroll = false;
+                    main.scrollTo(0, 0);
+                }
+                else {
+                    delayBeforeScrollingDown = 0;
+                }
+            }
+            else {
+                // do not wait before scrolling to the top of the text otherwise
+                delayBeforeScrollingDown = 0;
+            }
+            activeSection.element.classList.remove('active');
         }
 
-        // Set the new session
+        // Set the new section
         section.element.classList.add('active');
-        hasScrolledInActiveSection=false;
         activeSection = section;
-        window.location.hash = section.name;
 
+        // scroll automatically if nothing happens (no click, no manual scroll)
         await frame();
+        autoScroll = true;
 
-
-        setTimeout(function(){
-            if (!hasScrolledInActiveSection) {
-                console.log(main.scrollTop);
-                console.log("Scrollin again");
-                Velocity(section.element, 'scroll', {
-                    offset: section.element.style.paddingTop,
-                    container: main,
-                    duration: animationDuration,
-                    easing: 'ease-in',
-                    queue: false,
-                });
-            }
-        }, delayBeforeScrollingDown);
-
-        //switching = false;
+        if (scroll) {
+            setTimeout(() => {
+                if (autoScroll) {
+                    Velocity(activeSection.element, 'scroll', {
+                        offset: activeSection.element.style.paddingTop,
+                        container: main,
+                        duration: 1000,
+                        easing: 'ease-in',
+                        queue: false,
+                    });
+                }
+            }, delayBeforeScrollingDown);
+        }
     }
 
-    function onScroll() {
-        hasScrolledInActiveSection = true;
-        const t = Math.clamp(main.scrollTop / (composition.scaledHeight*3), 0, 1);
+    async function onScroll() {
+        if (manualScroll) {
+            autoScroll = false;
+            if (main.scrollTop === 0) {
+                chevron.style.display = 'block';
+            }
+            else {
+                chevron.style.display = 'none';
+            }
 
-        if (main.scrollTop === 0) {
-            chevron.style.display = 'block';
+            const
+                s = main.scrollTop / main.scrollHeight,
+                t = Math.sin(main.scrollTop / 400) * 0.3;
+
+            composition.stopAnimation();
+            await frame();
+            composition.animate(t);
+            artwork.style.opacity = Math.clamp(1 - main.scrollTop / composition.scaledHeight, 0.5, 1);
+            activeSection.element.style.opacity = Math.clamp(s * 10, 0, 1);
         }
         else {
-            chevron.style.display = 'none';
+            manualScroll = true;
         }
-
-        composition.animate(t);
-        activeSection.element.style.opacity = Math.clamp(t*6, 0, 1);
     }
 
     function onResize() {
@@ -245,25 +258,24 @@ window.onload = async () => {
         });
     }
 
-    function onHash() {
-        //if (!switching) {
-            if (window.location.hash.length > 1) {
-                const urlSection = getSectionByName(window.location.hash.replace('#', ''));
-                if (urlSection) {
-                    setActiveSection(urlSection);
-                }
+    async function onHash() {
+        // avoid the onHash handler to be called during the setActiveSection() call
+        if (switching) {
+            switching = false;
+        }
+        else if (window.location.hash.length > 1) {
+            const urlSection = getSectionByName(window.location.hash.replace('#', ''));
+            if (urlSection) {
+                setActiveSection(urlSection);
             }
-            else {
-                setActiveSection(getSectionByName('ethos'), false);
-            }
-        //}
+        }
     }
 
     function fadeContributionPage(element) {
 
         var a = element;
         while (a) {
-            if(a.classList.contains("contribution-page")){
+            if (a.classList.contains("contribution-page")){
                 break;
             }
             a = a.parentNode;
@@ -272,7 +284,7 @@ window.onload = async () => {
         console.log(a.id);
         var next_page_number = parseInt(a.id.slice(-1))+1
         var next_id = a.id.slice(0, -1) + next_page_number;
-        var next_page = document.getElementById(next_id); 
+        var next_page = document.getElementById(next_id);
         console.log(next_id);
         Velocity(a, "fadeOut", {
             duration: 200,
