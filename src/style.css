@@ -174,10 +174,12 @@ footer div {
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 
+    /*
     transition: transform 1s;
     -webkit-animation: pulsate 2s linear infinite;
     -moz-animation: pulsate 2s linear infinite;
     animation: pulsate 2s linear infinite;
+    */
 }
 
 @keyframes pulsate {

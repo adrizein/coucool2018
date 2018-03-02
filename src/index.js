@@ -125,6 +125,7 @@ window.onload = async () => {
     // Init
     // Wait for composition to show the artwork
     await Promise.all(p);
+
     loader.classList.add('exit');
 
     onResize();
@@ -142,6 +143,8 @@ window.onload = async () => {
     container.classList.add('loaded');
     await composition.runAnimation(2000, 0);
 
+    addRedTriangleToChevron();
+    
     onHash();
 
     if (!activeSection) {
@@ -272,21 +275,18 @@ window.onload = async () => {
     }
 
     function fadeContributionPage(element) {
-
-        var a = element;
-        while (a) {
-            if (a.classList.contains("contribution-page")){
+        var parentContributionPage = element;
+        while (parentContributionPage) {
+            if (parentContributionPage.classList.contains("contribution-page")){
                 break;
             }
-            a = a.parentNode;
+            parentContributionPage = parentContributionPage.parentNode;
         }
-
-        console.log(a.id);
-        var next_page_number = parseInt(a.id.slice(-1))+1
-        var next_id = a.id.slice(0, -1) + next_page_number;
+        var next_page_number = parseInt(parentContributionPage.id.slice(-1))+1
+        var next_id = parentContributionPage.id.slice(0, -1) + next_page_number;
         var next_page = document.getElementById(next_id);
         console.log(next_id);
-        Velocity(a, "fadeOut", {
+        Velocity(parentContributionPage, "fadeOut", {
             duration: 200,
             easing: 'ease-in',
             complete : function(){
@@ -298,7 +298,14 @@ window.onload = async () => {
                 });
             }
         });
+    }
 
+    function addRedTriangleToChevron(){
+        var img = new Image();
+        img.src = compositionImages["bigRedTriangle"];
+        img.style.height = "30px";
+        img.style.transform = "rotate(180deg)";
+        chevron.appendChild(img);
     }
 
     async function frame() {
