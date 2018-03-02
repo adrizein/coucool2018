@@ -36,7 +36,7 @@ class MovingImage {
         this.element.style.zIndex = zIndex;
         this._trajectory = trajectory;
         if (shape) {
-            this.create_map(shape);
+            this.createMap(shape);
             this.element.useMap = "#" + this._map.name;
             /*
             const area = document.createElement("area");
@@ -66,7 +66,7 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    create_map(shape){
+    createMap(shape){
         const map = document.createElement("map");
         map.name = this.element.id + "_map";
         this._map = map;
@@ -92,8 +92,8 @@ class MovingImage {
         this.move(scale, t);
         if (this.area) {
             if (this.area.shape === "circle"){
-                const radius_width = this.element.width/2;
-                const radius_height = this.element.height/2;
+                const radius_width = this.element.width / 2;
+                const radius_height = this.element.height / 2;
                 this.area.coords = "200,"+ radius_width + "," + radius_width; //TODO
                 this.area.height = scale * this.height;
                 this.area.width = scale * this.width;
@@ -110,14 +110,23 @@ class MovingImage {
         this.element.width = (1+2*t) * scale * this.width;
     }
 
-    async runAnimation(scale, t, duration) {
+    async runAnimation(scale, t, duration, progress) {
         const {x, y} = this._trajectory.position(scale, t);
 
         return Velocity(this.element, {top: y, left: x}, {
             queue: false,
             duration,
             easing: 'easeInOutSine',
+            progress(elements, completion) {
+                if (progress) {
+                    progress(completion);
+                }
+            },
         });
+    }
+
+    stopAnimation() {
+        Velocity(this.element, 'stop');
     }
 }
 
@@ -142,18 +151,34 @@ class Composition {
     }
 
     async runAnimation(duration, t) {
-        this._t = t;
+        if (!this._running) {
+            this._running = true;
+            const oldT = this._t;
+            await Promise.all(this.images.map((image) => image.runAnimation(
+                this._scale,
+                t,
+                duration,
+                (completion) => {this._t = (t - oldT) * completion + oldT;}
+            )));
 
-        return Promise.all(this.images.map((image) => image.runAnimation(
-            this._scale,
-            this._t,
-            duration
-        )));
+            this._running = false;
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    stopAnimation() {
+        if (this._running) {
+            this.images.forEach((image) => image.stopAnimation());
+            this._running = false;
+        }
     }
 
     async add(image) {
         this._anchor.appendChild(image.element);
-        if(image._map){
+        if (image._map) {
             this._anchor.appendChild(image._map);
         }
 
@@ -201,14 +226,14 @@ class Composition {
 
     resize() {
         const {height, width} = this._anchor.getBoundingClientRect();
-        var fixed_offsetX = 50;
-        var fixed_offsetY = 50;
-        this._anchorHeight = height - fixed_offsetY*2;
-        this._anchorWidth = width- fixed_offsetX*2;
+        const fixedOffsetX = 50;
+        const fixedOffsetY = 50;
+        this._anchorHeight = height - fixedOffsetY * 2;
+        this._anchorWidth = width - fixedOffsetX * 2;
         this._scale = Math.min(this.heightRatio, this.widthRatio);
         let
-            offsetX = Math.floor(this._anchorWidth - this.scaledWidth)+ fixed_offsetX*2,
-            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + fixed_offsetY*2;
+            offsetX = Math.floor(this._anchorWidth - this.scaledWidth) + fixedOffsetX * 2,
+            offsetY = Math.floor(this._anchorHeight - this.scaledHeight) + fixedOffsetY * 2;
 
         if (this._portrait) {
             [offsetX, offsetY] = [offsetY, offsetX];

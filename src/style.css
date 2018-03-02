@@ -11,11 +11,21 @@ html, body {
     padding: 0;
     color: whitesmoke;
     position: fixed;
+    z-index: 2;
+}
+
+#container {
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
     display: flex;
     flex-flow: column;
-    z-index: 2;
-    background: url('./images/backgrounds/orange_mars.jpg') fixed round;
-    transition: background 1s ease;
+    background-image: url('./images/frame.jpg');
+    background-size: 100% 100%;
+}
+
+#container.loaded {
+    visibility: visible;
 }
 
 .title {
@@ -31,7 +41,7 @@ html, body {
 }
 
 .transparent-orange {
-    background: url('./images/backgrounds/orange_mars.jpg') fixed round;
+    background: url('./images/frame.jpg') fixed round;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
@@ -40,7 +50,7 @@ html, body {
 h1 {
     font-size: 25px;
     margin: 10px 0;
-    font-weight: normal;
+    cursor: pointer;
 }
 
 .background-color {
@@ -51,7 +61,6 @@ h1 {
 
 #coucool {
     flex: 1 0 auto;
-    cursor: pointer;
     line-height: 25px;
     padding-top: 4px;
 }
@@ -123,7 +132,8 @@ footer div {
     position: relative;
     flex: 1 0 auto;
     z-index: 1;
-    background: url('./images/background.jpg') 100% fixed;
+    background-image: url('./images/background.jpg');
+    background-size: cover;
     margin: 0 20px 0 20px;
 }
 
@@ -135,13 +145,12 @@ footer div {
     bottom: 0;
     pointer-events: none;
     overflow: hidden;
-    opacity: 0;
+    visibility: hidden;
     z-index: 2;
 }
 
-#artwork.visible {
-    opacity: 1;
-    transition: opacity 1s ease-in;
+.loaded #artwork {
+    visibility: visible;
 }
 
 #artwork > div {
@@ -161,7 +170,7 @@ footer div {
     text-align: center;
     font-size: 40px;
     height: 40px;
-    background: url('./images/backgrounds/orange_mars.jpg') 100% fixed;
+    background: url('./images/frame.jpg') 100% fixed;
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 
@@ -171,7 +180,7 @@ footer div {
     animation: pulsate 2s linear infinite;
 }
 
-@-webkit-keyframes pulsate {
+@keyframes pulsate {
     0% {transform: scaleX(1) scaleY(0.5);}
     50% {transform: scaleX(1.5) scaleY(0.75);}
     100% {transform: scaleX(1) scaleY(0.5);}
@@ -214,8 +223,6 @@ section.hidden {
     opacity: 0;
 }
 
-
-
 #eros .strophe {
     margin: 15px 0;
 }
@@ -233,7 +240,7 @@ a {
 .nav-container {
     position: absolute;
     width: 100%;
-    top:0px;
+    top: 0px;
 }
 
 .content-container {
@@ -247,10 +254,10 @@ a {
 }
 
 .contribution-page {
-    position:absolute;
-    height:100%; 
-    left:0px; 
-    right:0px;
+    position: absolute;
+    height: 100%;
+    left: 0px;
+    right: 0px;
     display: none;
 }
 
@@ -269,7 +276,7 @@ a {
     padding-top: 4px;
     line-height: 27px;
     background: url('./images/composition/green-rectangle-top-left.png') 100%;
-    margin:auto; 
+    margin:auto;
 }
 
 .link.no {
@@ -279,7 +286,7 @@ a {
     line-height: 107px;
     background: url('./images/composition/palm-tree.png') 100%;
     margin:auto;
-    text-decoration:none; 
+    text-decoration:none;
 }
 
 
@@ -318,7 +325,7 @@ li {
     margin: 0;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
     h2, h3, h4, .flex-row {
         font-size: 20px;
     }
@@ -342,6 +349,10 @@ li {
 
     #contributions p{
         padding: 0 40px;
+    }
+
+    #artworkAndContent {
+        background-size: contain;
     }
 
     /*
