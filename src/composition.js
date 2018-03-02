@@ -105,6 +105,9 @@ class MovingImage {
         const {x, y} = this._trajectory.position(scale, t);
         this.element.style.top = `${y}px`;
         this.element.style.left = `${x}px`;
+
+        this.element.height = (1+2*t) * scale * this.height;
+        this.element.width = (1+2*t) * scale * this.width;
     }
 
     async runAnimation(scale, t, duration) {
