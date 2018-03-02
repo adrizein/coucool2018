@@ -35,13 +35,13 @@ html, body {
 }
 
 .transparent-green {
-    background: url('./images/background.jpg') 100% fixed;
+    background-image: url('./images/background.jpg');
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
 
 .transparent-orange {
-    background: url('./images/frame.jpg') fixed round;
+    background-image: url('./images/frame.jpg');
     -webkit-text-fill-color: transparent;
     -webkit-background-clip: text;
 }
@@ -66,8 +66,8 @@ h1 {
 }
 
 #language {
-    font-weight: normal;
-    font-size: 1em;
+    font-weight: bold;
+    font-size: 20px;
     text-align: right;
 }
 
@@ -81,14 +81,13 @@ nav {
 }
 
 h2 {
-    flex: 1 0;
-    padding: 5px 5px;
-    border-left: whitesmoke solid 1px;
+    flex: 1 0 50px;
+    padding: 5px 15px;
+    border-left: whitesmoke solid 2px;
     margin: 0;
     margin-top: 5px;
-    font-weight: normal;
     transition: text-shadow 200ms linear;
-    font-size: 20px;
+    font-size: 25px;
 }
 
 .link {
@@ -189,7 +188,7 @@ footer div {
 #main {
     position: absolute;
     z-index:3;
-    font-size: 20px;
+    font-size: 25px;
     top: 46px;
     bottom: 20px;
     text-align: center;
@@ -271,6 +270,7 @@ a {
 }
 
 .yes {
+    cursor: pointer;
     width: 176px;
     height:27px;
     padding-top: 4px;
@@ -280,6 +280,7 @@ a {
 }
 
 .link.no {
+    cursor: pointer;
     width: 151px;
     height:107px;
     padding-top: 4px;
@@ -328,6 +329,10 @@ li {
 @media (max-width: 640px) {
     h2, h3, h4, .flex-row {
         font-size: 20px;
+    }
+
+    h2 {
+        padding: 5px 5px;
     }
 
     p {

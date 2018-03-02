@@ -68,6 +68,8 @@ window.onload = async () => {
     window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
     main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
     window.onhashchange = onHash;
+    window.onorientationchange = onScroll;
+    main.onblur = function onBlur() {this.focus();};
 
     coucool.addEventListener('click', async () => {
         autoScroll = false;
@@ -83,8 +85,7 @@ window.onload = async () => {
             }),
         ]);
 
-        manualScroll = false;
-        main.scrollTo(0, 0);
+        jumpTop();
     });
 
     document.querySelectorAll('h2, .link').forEach((element) => {
@@ -134,8 +135,7 @@ window.onload = async () => {
     await frame();
 
     // remove the slight offset when the loader is removed
-    manualScroll = false;
-    main.scrollTo(0, 0);
+    jumpTop();
 
     // initialize the composition in its exploded form
     composition.animate(1);
@@ -174,8 +174,7 @@ window.onload = async () => {
                         Velocity(artwork, {opacity: 1}, {duration, queue: false}),
                         Velocity(activeSection.element, {opacity: 0}, {duration, queue: false}),
                     ]);
-                    manualScroll = false;
-                    main.scrollTo(0, 0);
+                    jumpTop();
                 }
                 else {
                     delayBeforeScrollingDown = 0;
@@ -211,35 +210,42 @@ window.onload = async () => {
         }
     }
 
+    function jumpTop() {
+        manualScroll = false;
+        main.scrollTo(0, 0);
+    }
+
     async function onScroll() {
         if (manualScroll) {
             autoScroll = false;
-            if (main.scrollTop === 0) {
-                chevron.style.display = 'block';
-            }
-            else {
-                chevron.style.display = 'none';
-            }
+            if (!composition.running) {
+                if (main.scrollTop === 0) {
+                    chevron.style.display = 'block';
+                }
+                else {
+                    chevron.style.display = 'none';
+                }
 
-            const
-                s = main.scrollTop / main.scrollHeight,
-                t = Math.sin(main.scrollTop / 400) * 0.3;
+                const
+                    s = main.scrollTop / main.scrollHeight,
+                    t = Math.sin(main.scrollTop / 400) * composition.scale;
 
-            composition.stopAnimation();
-            await frame();
-            composition.animate(t);
-            artwork.style.opacity = Math.clamp(1 - main.scrollTop / composition.scaledHeight, 0.5, 1);
-            activeSection.element.style.opacity = Math.clamp(s * 10, 0, 1);
+                await frame();
+                composition.animate(t);
+                artwork.style.opacity = Math.clamp(1 - main.scrollTop / composition.scaledHeight, 0.3, 1);
+                activeSection.element.style.opacity = Math.clamp(s * 10, 0, 1);
+            }
         }
         else {
             manualScroll = true;
         }
     }
 
-    function onResize() {
-        const {width, height} = document.body.getBoundingClientRect();
-
+    async function onResize() {
         composition.resize();
+        composition.resumeAnimation();
+
+        const {width, height} = document.body.getBoundingClientRect();
 
         if (width < height) {
             if (!artwork.classList.contains('portrait')) {
@@ -270,6 +276,7 @@ window.onload = async () => {
             }
         }
     }
+
 
     function fadeContributionPage(element) {
 
