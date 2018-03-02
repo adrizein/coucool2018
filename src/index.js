@@ -107,6 +107,17 @@ window.onload = async () => {
         });
     });
 
+    document.querySelectorAll('.English').forEach((element) => {
+        element.addEventListener('click', (event) => {
+            onLanguageClick("English");
+        });
+    });
+    document.querySelectorAll('.French').forEach((element) => {
+        element.addEventListener('click', (event) => {
+            onLanguageClick("French");
+        });
+    });
+
     // Load composition
     const p = [];
     _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape}, name) => {
@@ -311,6 +322,14 @@ window.onload = async () => {
                 });
             }
         });
+    }
+
+    function onLanguageClick(language){
+        console.log(window.location);
+        console.log(language);
+        if (language == "English") {
+            window.open('en.html');
+        }
     }
 
     async function frame() {
