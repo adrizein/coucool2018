@@ -139,10 +139,15 @@ window.onload = async () => {
 
     // initialize the composition in its exploded form
     composition.animate(1);
-    container.classList.add('loaded');
+    container.classList.add('visible');
     await composition.runAnimation(2000, 0);
+    container.classList.remove('loading');
+    container.classList.add('loaded');
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    container.classList.remove('loaded');
 
     onHash();
+    onScroll();
 
     if (!activeSection) {
         setActiveSection(getSectionByName('ethos'), false);
@@ -165,10 +170,10 @@ window.onload = async () => {
         }
 
         if (activeSection) {
+            const duration = 1000;
             if (section.name !== activeSection.name) {
                 if (main.scrollTop > 0) {
                     // Implode if we changed the section
-                    const duration = 1000;
                     await Promise.all([
                         composition.runAnimation(duration, 0),
                         Velocity(artwork, {opacity: 1}, {duration, queue: false}),
@@ -177,7 +182,9 @@ window.onload = async () => {
                     jumpTop();
                 }
                 else {
-                    delayBeforeScrollingDown = 0;
+                    await composition.runAnimation(duration, 1);
+                    await composition.runAnimation(duration, 0);
+                    //delayBeforeScrollingDown = 0;
                 }
             }
             else {
@@ -216,16 +223,16 @@ window.onload = async () => {
     }
 
     async function onScroll() {
+        if (main.scrollTop === 0) {
+            chevron.style.display = 'block';
+        }
+        else {
+            chevron.style.display = 'none';
+        }
+
         if (manualScroll) {
             autoScroll = false;
             if (!composition.running) {
-                if (main.scrollTop === 0) {
-                    chevron.style.display = 'block';
-                }
-                else {
-                    chevron.style.display = 'none';
-                }
-
                 const
                     s = main.scrollTop / main.scrollHeight,
                     t = Math.sin(main.scrollTop / 400) * composition.scale;
@@ -244,6 +251,7 @@ window.onload = async () => {
     async function onResize() {
         composition.resize();
         composition.resumeAnimation();
+        await frame();
 
         const {width, height} = document.body.getBoundingClientRect();
 
