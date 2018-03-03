@@ -142,6 +142,7 @@ window.onload = async () => {
     composition.animate(1);
     container.classList.add('visible');
     await composition.runAnimation(2000, 0);
+    // TODO: wait more
     container.classList.remove('loading');
     container.classList.add('loaded');
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -183,8 +184,9 @@ window.onload = async () => {
                     jumpTop();
                 }
                 else {
-                    await composition.runAnimation(duration, 1);
-                    await composition.runAnimation(duration, 0);
+                    // less time exploding
+                    await composition.runAnimation(duration * 0.8, 0.8);
+                    await composition.runAnimation(duration * 0.8, 0);
                     //delayBeforeScrollingDown = 0;
                 }
             }
