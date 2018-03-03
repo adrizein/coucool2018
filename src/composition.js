@@ -29,20 +29,17 @@ class LinearTrajectory {
 
 class MovingImage {
 
-    constructor({id, src, zIndex, trajectory, shape}) {
+    constructor({id, src, zIndex, trajectory, shape, title, onClick}) {
         this.element = new Image();
         this.element.src = src;
         this.element.id = id;
         this.element.style.zIndex = zIndex;
         this._trajectory = trajectory;
         if (shape) {
+            this.title = title;
+            this.onClick = onClick;
             this.createMap(shape);
             this.element.useMap = "#" + this._map.name;
-            /*
-            const area = document.createElement("area");
-            area.shape = shape;
-            this.area = area;
-            */
         }
     }
 
@@ -73,13 +70,17 @@ class MovingImage {
 
         const area = document.createElement("area");
         area.shape = shape;
-        if (shape == "circle") {
-            const radius_width = this.element.width/2;
-            const radius_height = this.element.height/2;
-            area.coords = "0,"+ radius_width + "," + radius_width; //TODO
-        }
-        area.href = "www.google.com"
-        this._map.appendChild(area)
+        area.addEventListener("mouseover", (event) => {
+            this.mouseOver();
+        });
+        area.addEventListener("mouseout", (event) => {
+            this.mouseOut();
+        });
+        area.addEventListener("click", (event) => {
+            this.onClick();
+        });
+        this.area = area;
+        this._map.appendChild(area);
 
     }
 
@@ -92,12 +93,21 @@ class MovingImage {
         this.move(scale, t);
         if (this.area) {
             if (this.area.shape === "circle"){
-                const radius_width = this.element.width / 2;
-                const radius_height = this.element.height / 2;
-                this.area.coords = "200,"+ radius_width + "," + radius_width; //TODO
-                this.area.height = scale * this.height;
-                this.area.width = scale * this.width;
+                const radius = this.element.width / 2;
+                this.area.coords = radius + ","+ radius + "," + radius; //TODO
             }
+
+            if (this.area.shape === "rect"){
+                this.area.coords = "0,0," + this.element.width + "," + this.element.height; //TODO
+            }
+            if (this.area.shape === "poly"){
+                //For the moment we only have one triangle, the wood one
+                var point1 = "0,0";
+                var point2 = "0," + this.element.width;
+                var point3 = this.element.height + "," + this.element.width;
+                this.area.coords = point1 + "," + point2 + "," + point3; //TODO
+            }
+
         }
     }
 
@@ -129,6 +139,16 @@ class MovingImage {
 
     stopAnimation() {
         Velocity(this.element, 'stop');
+    }
+
+    mouseOver(){
+        this.element.style.opacity = 0.5;
+        //TO DO SHOW THE TITLES
+    }
+
+    mouseOut(){
+        this.element.style.opacity = 1;
+        // TO DO SHOW THE TITLES
     }
 }
 
