@@ -15,10 +15,22 @@ const movingImages = {
     blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 358, endX: 675, endY: 860},
     blueRectangleTop: {zIndex: 6, startX: 663, startY: 104, endX: 663, endY: 850},
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
-    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, eventGeneratingShape: 'circle'},
+    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, 
+        eventGeneratingShape: 'circle', 
+        title:'Facebook', 
+        onClick:function(){window.open('http://www.facebook.com/coucoolcoucool','_blank');},
+    },
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
-    fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900},
-    greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282},
+    fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900, 
+        eventGeneratingShape: 'circle',
+        title:'Eros',
+        onClick:function(){setActiveSection(getSectionByName('eros'), false);}
+    },
+    greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282,
+        eventGeneratingShape: 'circle',
+        title:'Definitions',
+        onClick:function(){setActiveSection(getSectionByName('definitions'), false);}
+    },
     greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
     orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900},
     palmTree: {zIndex: 0, startX: 417, startY: 542, endX: 417, endY: 1042},
@@ -28,11 +40,20 @@ const movingImages = {
     redRectangleTopRight: {zIndex: 3, startX: 964, startY: 227, endX: 364, endY: -30},
     smallBlackRectangleCenter: {zIndex: 1, startX: 778, startY: 542, endX: 1400, endY: 542},
     textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100},
-    woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853},
-    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 358, endX: 1400, endY: 359},
+    woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853,
+        eventGeneratingShape:'poly',
+        title:'Coucool 2016',
+        onClick:function(){window.open('http://cou.cool/2016','_blank');}
+    },
+    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 358, endX: 1400, endY: 359, 
+        eventGeneratingShape:'rect',
+        title:'Coucool 2017',
+        onClick: function(){window.open('http://cou.cool/2017','_blank');}
+    },
     yellowRectangleCenterLeft: {zIndex: 1, startX: 92, startY: 422, endX: -900, endY: 422},
     zebraPill: {zIndex: 2, startX: 695, startY: 116, endX: 1000, endY: -150},
 };
+
 
 window.onload = async () => {
     const
@@ -44,6 +65,7 @@ window.onload = async () => {
         composition = new Composition(artwork, 843, 1353, width < height),
         coucool = document.getElementById('coucool'),
         chevron = document.getElementById('chevron'),
+        credit = document.getElementById('credit'),
         sections = _.map(
             document.querySelectorAll('section'), (element, index) => {
                 const
@@ -71,6 +93,7 @@ window.onload = async () => {
     window.onorientationchange = onScroll;
     main.onblur = function onBlur() {this.focus();};
 
+    /*
     coucool.addEventListener('click', async () => {
         autoScroll = false;
         composition.stopAnimation();
@@ -87,6 +110,7 @@ window.onload = async () => {
 
         jumpTop();
     });
+    */
 
     document.querySelectorAll('h2, .link').forEach((element) => {
         element.addEventListener('click', (event) => {
@@ -107,9 +131,20 @@ window.onload = async () => {
         });
     });
 
+    document.querySelectorAll('.English').forEach((element) => {
+        element.addEventListener('click', (event) => {
+            onLanguageClick("English");
+        });
+    });
+    document.querySelectorAll('.French').forEach((element) => {
+        element.addEventListener('click', (event) => {
+            onLanguageClick("French");
+        });
+    });
+
     // Load composition
     const p = [];
-    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape}, name) => {
+    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape, title, onClick}, name) => {
         const image = new MovingImage(
             {
                 id: _.kebabCase(name),
@@ -117,6 +152,8 @@ window.onload = async () => {
                 zIndex,
                 trajectory: new LinearTrajectory(startX, startY, endX, endY),
                 shape: eventGeneratingShape,
+                title:title,
+                onClick:onClick
             },
         );
 
@@ -205,19 +242,28 @@ window.onload = async () => {
         await frame();
         autoScroll = true;
 
-        if (scroll) {
-            setTimeout(() => {
-                if (autoScroll) {
-                    Velocity(activeSection.element, 'scroll', {
-                        offset: activeSection.element.style.paddingTop,
-                        container: main,
-                        duration: 1000,
-                        easing: 'ease-in',
-                        queue: false,
-                    });
-                }
-            }, delayBeforeScrollingDown);
+        if(activeSection.name == "curiosites"){
+            console.log("curiosité");
+            artwork.style.zIndex = "5";
+            chevron.style.display = 'none';
+            credit.style.display = 'none';
+        } else {
+            artwork.style.zIndex = "2";
+            if (scroll) {
+                setTimeout(() => {
+                    if (autoScroll) {
+                        Velocity(activeSection.element, 'scroll', {
+                            offset: activeSection.element.style.paddingTop,
+                            container: main,
+                            duration: 1000,
+                            easing: 'ease-in',
+                            queue: false,
+                        });
+                    }
+                }, delayBeforeScrollingDown);
+            }
         }
+
     }
 
     function jumpTop() {
@@ -228,9 +274,11 @@ window.onload = async () => {
     async function onScroll() {
         if (main.scrollTop === 0) {
             chevron.style.display = 'block';
+            credit.style.display = 'block';
         }
         else {
             chevron.style.display = 'none';
+            credit.style.display = 'none';
         }
 
         if (manualScroll) {
@@ -288,6 +336,11 @@ window.onload = async () => {
         }
     }
 
+    function addDivOverImgInArtwork(element){
+        //var title = document.createElement("div"); 
+        //newDiv.appendChild(newDiv);
+    }
+
 
     function fadeContributionPage(element) {
         var parentContributionPage = element;
@@ -313,6 +366,14 @@ window.onload = async () => {
                 });
             }
         });
+    }
+
+    function onLanguageClick(language){
+        console.log(window.location);
+        console.log(language);
+        if (language == "English") {
+            window.open('en.html');
+        }
     }
 
     async function frame() {

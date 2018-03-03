@@ -28,6 +28,8 @@ html, body {
 #container.loading nav,
 #container.loading #main,
 #container.loading #chevron,
+#container.loading #credit,
+#container.loading #date,
 #container.loading footer
 {
     opacity: 0;
@@ -85,27 +87,22 @@ h1 {
 
 #language {
     font-weight: bold;
-    font-size: 20px;
     text-align: right;
 }
 
-nav {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    margin: 0;
-    align-content: center;
-    text-align: center;
+#language a {
+    text-decoration: none;
 }
+
+
 
 h2 {
     flex: 1 0 50px;
-    padding: 5px 15px;
-    border-left: whitesmoke solid 2px;
     margin: 0;
-    margin-top: 5px;
+    padding-top: 5px;
     transition: text-shadow 200ms linear;
-    font-size: 25px;
+    font-size: 20px;
+    text-decoration:none;
 }
 
 .link {
@@ -116,29 +113,30 @@ h2 {
     cursor: pointer;
 }
 
-h2:first-child {
-    border-left: none;
-}
-
 h2.active {
-    text-shadow: 0 0 10px whitesmoke;
-    -webkit-text-fill-color: whitesmoke;
+    text-decoration: line-through;
+    text-decoration-color:rgb(142,158,145);
+    /*color:rgb(228,126,62);
+    -webkit-text-fill-color: rgb(228,126,62);
+    */
 }
 
 h2:hover {
-    text-shadow: 0 0 10px whitesmoke;
+    /*text-shadow: 0 0 10px whitesmoke;*/
 }
 
 footer {
     bottom:0;
     display: flex;
     transition: opacity 1000ms ease-in-out;
-    padding: 0 20px;
-    line-height: 30px;
+    line-height: 40px;
 }
 
-.invisible {
-    opacity: 0;
+nav {
+    z-index: 2;
+    display: flex;
+    text-align: center;
+    line-height: 35px;
 }
 
 footer div {
@@ -151,8 +149,19 @@ footer div {
     z-index: 1;
     background-image: url('./images/background.jpg');
     background-size: cover;
-    margin: 0 20px 0 20px;
+    margin-top: 0px;
+    margin-bottom:0px;
 }
+
+nav, #artworkAndContent, footer {
+    margin-left: 35px;
+    margin-right:35px; 
+} 
+
+area {
+    cursor: pointer;
+}
+
 
 #artwork {
     position: absolute;
@@ -160,7 +169,7 @@ footer div {
     right: 0;
     top: 0;
     bottom: 0;
-    pointer-events: none;
+    /*pointer-events: none;*/
     overflow: hidden;
     visibility: hidden;
     z-index: 2;
@@ -183,10 +192,15 @@ footer div {
     text-align: center;
     height: 40px;
 
+    transform: scaleX(0.5) scaleY(0.5);
+
     background-image: url('./images/chevron.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100px;
+
+}
+/*
 
     -webkit-animation: pulsate 2s linear infinite;
     -moz-animation: pulsate 2s linear infinite;
@@ -198,13 +212,27 @@ footer div {
     50% {transform: scaleX(1.5) scaleY(0.75);}
     100% {transform: scaleX(1) scaleY(0.5);}
 }
+*/
+
+#credit {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    color: rgb(119,133,110);
+    text-align: right;
+}
+
+#credit a {
+    color: rgb(119,133,110);
+}
 
 #main {
     position: absolute;
     z-index:3;
-    font-size: 25px;
-    top: 46px;
+    font-size: 20px;
+    top: 20px;
     bottom: 20px;
+    text-shadow: 1px 1px 1px rgba(63,107,169, 0.5);
     text-align: center;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
@@ -248,12 +276,6 @@ p {
 a {
     color:white;
     text-decoration: underline;
-}
-
-.nav-container {
-    position: absolute;
-    width: 100%;
-    top: 0px;
 }
 
 .content-container {
@@ -321,6 +343,10 @@ a {
     max-width: 600px;
 }
 
+.invisible {
+    opacity: 0;
+}
+
 h4, ul {
     margin: 10px 0;
 }
@@ -345,17 +371,17 @@ li {
         font-size: 20px;
     }
 
-    h2 {
-        border-width: 1px;
-        padding: 5px 5px;
-    }
-
     p {
         text-align: justify;
     }
 
     h2:last-child {
         display: none;
+    }
+
+    nav, #artworkAndContent, footer {
+        margin-left: 15px;
+        margin-right:15px; 
     }
 
     #contributions {
@@ -377,11 +403,15 @@ li {
     .flex-row > div {
         width: 100%;
     }
+
+    #tagline {
+        display: none;
+    }
 }
 
 @media (max-width: 380px) {
 
-    p, h3, h4, .flex-row, #language {
+    p, h3, h4, .flex-row {
         font-size: 15px;
     }
 
@@ -395,12 +425,6 @@ li {
 
     #chevron {
         background-size: 50px;
-    }
-}
-
-@media (max-width: 934px) {
-    #tagline {
-        display: none;
     }
 }
 

@@ -29,20 +29,19 @@ class LinearTrajectory {
 
 class MovingImage {
 
-    constructor({id, src, zIndex, trajectory, shape}) {
+    constructor({id, src, zIndex, trajectory, shape, title, onClick}) {
         this.element = new Image();
         this.element.src = src;
         this.element.id = id;
         this.element.style.zIndex = zIndex;
+        this.zIndex = zIndex;
         this._trajectory = trajectory;
         if (shape) {
+            this.title = title;
+            this.onClick = onClick;
             this.createMap(shape);
+            this.createOverlay();
             this.element.useMap = "#" + this._map.name;
-            /*
-            const area = document.createElement("area");
-            area.shape = shape;
-            this.area = area;
-            */
         }
     }
 
@@ -73,18 +72,33 @@ class MovingImage {
 
         const area = document.createElement("area");
         area.shape = shape;
-        if (shape == "circle") {
-            const radius_width = this.element.width/2;
-            const radius_height = this.element.height/2;
-            area.coords = "0,"+ radius_width + "," + radius_width; //TODO
-        }
-        area.href = "www.google.com"
-        this._map.appendChild(area)
+        area.addEventListener("mouseover", (event) => {
+            this.mouseOver();
+        });
+        area.addEventListener("mouseout", (event) => {
+            this.mouseOut();
+        });
+        area.addEventListener("click", (event) => {
+            this.onClick();
+        });
+        this.area = area;
+        this._map.appendChild(area);
 
+    }
+
+    createOverlay(){
+        this.overlay = document.createElement("div");
+        this.overlay.innerHTML = this.title;
+        this.overlay.style.textAlign = "center";
+        this.overlay.style.position = "absolute";
+        this.overlay.style.pointerEvents = "none";
+        this.overlay.style.zIndex = 1;
+        this.overlay.style.opacity = 0;
     }
 
 
     resize(scale, t, offsetX, offsetY) {
+        console.log("resizing")
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
         this._trajectory.offsetX = offsetX;
@@ -92,12 +106,27 @@ class MovingImage {
         this.move(scale, t);
         if (this.area) {
             if (this.area.shape === "circle"){
-                const radius_width = this.element.width / 2;
-                const radius_height = this.element.height / 2;
-                this.area.coords = "200,"+ radius_width + "," + radius_width; //TODO
-                this.area.height = scale * this.height;
-                this.area.width = scale * this.width;
+                const radius = this.element.width / 2;
+                this.area.coords = radius + ","+ radius + "," + radius; //TODO
             }
+
+            if (this.area.shape === "rect"){
+                this.area.coords = "0,0," + this.element.width + "," + this.element.height; //TODO
+            }
+            if (this.area.shape === "poly"){
+                //For the moment we only have one triangle, the wood one
+                var point1 = "0,0";
+                var point2 = "0," + this.element.width;
+                var point3 = this.element.height + "," + this.element.width;
+                this.area.coords = point1 + "," + point2 + "," + point3; //TODO
+            }
+        }
+        if (this.overlay) {
+            this.overlay.style.height = `${this.element.height}px`;
+            this.overlay.style.lineHeight = `${this.element.height}px`;
+            this.overlay.style.width =  `${this.element.width}px`;
+            this.overlay.style.top = this.element.style.top;
+            this.overlay.style.left = this.element.style.left;
         }
     }
 
@@ -129,6 +158,18 @@ class MovingImage {
 
     stopAnimation() {
         Velocity(this.element, 'stop');
+    }
+
+    mouseOver(){
+        this.element.style.zIndex = 14;
+        this.overlay.style.zIndex = 20;
+        this.overlay.style.opacity = 1;
+    }
+
+    mouseOut(){
+        this.element.style.zIndex = this.zIndex;
+        this.overlay.style.zIndex = 1;
+        this.overlay.style.opacity = 0;
     }
 }
 
@@ -201,7 +242,9 @@ class Composition {
         if (image._map) {
             this._anchor.appendChild(image._map);
         }
-
+        if (image.overlay) {
+            this._anchor.appendChild(image.overlay);
+        }
         this._canvas.appendChild(image.element);
         this.images.push(image);
 
