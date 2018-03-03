@@ -244,6 +244,7 @@ window.onload = async () => {
             console.log("curiosité");
             artwork.style.zIndex = "5";
             chevron.style.display = 'none';
+            credit.style.display = 'none';
         } else {
             artwork.style.zIndex = "2";
             if (scroll) {

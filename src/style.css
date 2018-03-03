@@ -102,6 +102,7 @@ h2 {
     padding-top: 5px;
     transition: text-shadow 200ms linear;
     font-size: 20px;
+    text-decoration:none;
 }
 
 .link {
@@ -113,12 +114,15 @@ h2 {
 }
 
 h2.active {
-    color:rgb(228,126,62);
+    text-decoration: line-through;
+    text-decoration-color:rgb(142,158,145);
+    /*color:rgb(228,126,62);
     -webkit-text-fill-color: rgb(228,126,62);
+    */
 }
 
 h2:hover {
-    text-shadow: 0 0 10px whitesmoke;
+    /*text-shadow: 0 0 10px whitesmoke;*/
 }
 
 footer {

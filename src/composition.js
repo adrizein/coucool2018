@@ -34,11 +34,13 @@ class MovingImage {
         this.element.src = src;
         this.element.id = id;
         this.element.style.zIndex = zIndex;
+        this.zIndex = zIndex;
         this._trajectory = trajectory;
         if (shape) {
             this.title = title;
             this.onClick = onClick;
             this.createMap(shape);
+            this.createOverlay();
             this.element.useMap = "#" + this._map.name;
         }
     }
@@ -84,8 +86,19 @@ class MovingImage {
 
     }
 
+    createOverlay(){
+        this.overlay = document.createElement("div");
+        this.overlay.innerHTML = this.title;
+        this.overlay.style.textAlign = "center";
+        this.overlay.style.position = "absolute";
+        this.overlay.style.pointerEvents = "none";
+        this.overlay.style.zIndex = 1;
+        this.overlay.style.opacity = 0;
+    }
+
 
     resize(scale, t, offsetX, offsetY) {
+        console.log("resizing")
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
         this._trajectory.offsetX = offsetX;
@@ -107,7 +120,13 @@ class MovingImage {
                 var point3 = this.element.height + "," + this.element.width;
                 this.area.coords = point1 + "," + point2 + "," + point3; //TODO
             }
-
+        }
+        if (this.overlay) {
+            this.overlay.style.height = `${this.element.height}px`;
+            this.overlay.style.lineHeight = `${this.element.height}px`;
+            this.overlay.style.width =  `${this.element.width}px`;
+            this.overlay.style.top = this.element.style.top;
+            this.overlay.style.left = this.element.style.left;
         }
     }
 
@@ -142,13 +161,15 @@ class MovingImage {
     }
 
     mouseOver(){
-        this.element.style.opacity = 0.5;
-        //TO DO SHOW THE TITLES
+        this.element.style.zIndex = 14;
+        this.overlay.style.zIndex = 20;
+        this.overlay.style.opacity = 1;
     }
 
     mouseOut(){
-        this.element.style.opacity = 1;
-        // TO DO SHOW THE TITLES
+        this.element.style.zIndex = this.zIndex;
+        this.overlay.style.zIndex = 1;
+        this.overlay.style.opacity = 0;
     }
 }
 
@@ -221,7 +242,9 @@ class Composition {
         if (image._map) {
             this._anchor.appendChild(image._map);
         }
-
+        if (image.overlay) {
+            this._anchor.appendChild(image.overlay);
+        }
         this._canvas.appendChild(image.element);
         this.images.push(image);
 
