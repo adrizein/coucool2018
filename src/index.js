@@ -86,6 +86,7 @@ window.onload = async () => {
             });
 
     let
+        language = 'fr',
         switching = false,
         activeSection = null,
         autoScroll = true,
@@ -103,7 +104,6 @@ window.onload = async () => {
             manualScroll = false;
             main.classList.add('no-scroll');
             const section = _.find(sections, (s) => event.target.classList.contains(s.name));
-            composition.stopAnimation();
             if (section) {
                 setActiveSection(section);
             }
@@ -119,74 +119,71 @@ window.onload = async () => {
         });
     });
 
-    document.querySelectorAll('.English').forEach((element) => {
+    document.querySelectorAll('#language span').forEach((element) => {
         element.addEventListener('click', () => {
-            onLanguageClick('English');
-        });
-    });
-    document.querySelectorAll('.French').forEach((element) => {
-        element.addEventListener('click', () => {
-            onLanguageClick('French');
+            onLanguageClick(element.id);
         });
     });
 
-    // Load composition
-    const p = [];
-    _.forEach(
-        movingImages,
-        ({zIndex, startX, startY, endX, endY, eventGeneratingShape, title, onClick, section}, name) => {
-            if (section) {
-                const s = getSectionByName(section);
-                onClick = () => setActiveSection(s, false);
-            }
+    init();
 
-            const image = new MovingImage(
-                {
-                    id: _.kebabCase(name),
-                    src: compositionImages[name],
-                    zIndex,
-                    trajectory: new LinearTrajectory(startX, startY, endX, endY),
-                    shape: eventGeneratingShape,
-                    title,
-                    onClick,
-                },
-            );
+    ////////////
 
-            p.push(composition.add(image));
-        });
 
-    // Init
-    // Wait for composition to show the artwork
-    await Promise.all(p);
+    async function init() {
+        // Load composition
+        const p = [];
+        _.forEach(
+            movingImages,
+            ({zIndex, startX, startY, endX, endY, eventGeneratingShape, title, onClick, section}, name) => {
+                if (section) {
+                    const s = getSectionByName(section);
+                    onClick = () => setActiveSection(s, false);
+                }
 
-    loader.classList.add('exit');
+                const image = new MovingImage(
+                    {
+                        id: _.kebabCase(name),
+                        src: compositionImages[name],
+                        zIndex,
+                        trajectory: new LinearTrajectory(startX, startY, endX, endY),
+                        shape: eventGeneratingShape,
+                        title,
+                        onClick,
+                    },
+                );
 
-    onResize();
+                p.push(composition.add(image));
+            });
 
-    await frame();
-    loader.parentElement.removeChild(loader);
-    await frame();
+        // Wait for composition to show the artwork
+        await Promise.all(p);
 
-    // remove the slight offset when the loader is removed
-    main.scrollTo(0, 0);
+        // remove loader
+        loader.classList.add('exit');
+        onResize();
+        await frame();
+        loader.parentElement.removeChild(loader);
+        await frame();
+        main.scrollTo(0, 0); // remove the slight offset when the loader is removed
 
-    // initialize the composition in its exploded form
-    composition.animate(1);
-    container.classList.add('visible');
-    await composition.runAnimation(2000, 0);
-    // TODO: wait more
-    container.classList.remove('loading');
-    container.classList.add('loaded');
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    container.classList.remove('loaded');
+        // initialize the composition in its exploded form
+        composition.animate(1);
+        container.classList.add('visible');
+        await composition.runAnimation(2000, 0);
+        await pause(1000);
+        container.classList.remove('loading');
+        container.classList.add('loaded');
+        await pause(1000);
+        container.classList.remove('loaded');
 
-    onHash();
-    onScroll();
+        onHash();
+        onScroll();
 
-    if (!activeSection) {
-        setActiveSection(getSectionByName('ethos'), false);
+        if (!activeSection) {
+            setActiveSection(getSectionByName('ethos'), false);
+        }
     }
-
 
     function getSectionByName(sectionName) {
         return _.find(sections, ({name}) => name === sectionName);
@@ -212,6 +209,7 @@ window.onload = async () => {
                 section.title.classList.add('active');
             }
 
+            // quit previous section
             if (activeSection) {
                 const duration = 1000;
                 if (section.name !== activeSection.name) {
@@ -264,7 +262,7 @@ window.onload = async () => {
                 credit.style.display = null;
                 artwork.style.zIndex = '2';
                 if (scroll) {
-                    await new Promise((resolve) => setTimeout(resolve, delayBeforeScrollingDown));
+                    await pause(delayBeforeScrollingDown);
                     if (autoScroll) {
                         return Velocity(section.element, 'scroll', {
                             offset: section.element.style.paddingTop,
@@ -282,11 +280,11 @@ window.onload = async () => {
     async function onScroll() {
         if (main.scrollTop === 0) {
             chevron.style.display = 'block';
-            credit.style.display = 'block';
+            credit.classList.remove('hidden');
         }
         else {
             chevron.style.display = 'none';
-            credit.style.display = 'none';
+            credit.classList.add('hidden');
         }
 
         if (manualScroll) {
@@ -338,47 +336,48 @@ window.onload = async () => {
         }
     }
 
-    function addDivOverImgInArtwork(element){
+    function addDivOverImgInArtwork(element) {
         //var title = document.createElement("div");
         //newDiv.appendChild(newDiv);
     }
 
 
-    function fadeContributionPage(element) {
-        var parentContributionPage = element;
+    async function fadeContributionPage(element) {
+        let parentContributionPage = element;
         while (parentContributionPage) {
-            if (parentContributionPage.classList.contains("contribution-page")){
+            if (parentContributionPage.classList.contains('contribution-page')){
                 break;
             }
             parentContributionPage = parentContributionPage.parentNode;
         }
-        var next_page_number = parseInt(parentContributionPage.id.slice(-1))+1
-        var next_id = parentContributionPage.id.slice(0, -1) + next_page_number;
-        var next_page = document.getElementById(next_id);
-        console.log(next_id);
-        Velocity(parentContributionPage, "fadeOut", {
+        const nextPageNumber = parseInt(parentContributionPage.id.slice(-1)) + 1;
+        const nextId = parentContributionPage.id.slice(0, -1) + nextPageNumber;
+        const nextPage = document.getElementById(nextId);
+
+        await Velocity(parentContributionPage, 'fadeOut', {
             duration: 200,
             easing: 'ease-in',
-            complete : function(){
-                console.log("completing");
-                Velocity(next_page, "fadeIn", {
-                    display: "flex",
-                    duration: 200,
-                    easing: 'ease-in'
-                });
-            }
+            queue: false,
+        });
+
+        await Velocity(nextPage, 'fadeIn', {
+            display: 'flex',
+            duration: 200,
+            easing: 'ease-in',
+            queue: false,
         });
     }
 
-    function onLanguageClick(language){
-        console.log(window.location);
-        console.log(language);
-        if (language == "English") {
-            window.open('en.html');
-        }
-    }
-
-    async function frame() {
-        return new Promise((resolve) => window.requestAnimationFrame(resolve));
+    function onLanguageClick(lang) {
+        language = lang;
+        console.log(`switch to ${lang}`);
     }
 };
+
+async function frame() {
+    return new Promise((resolve) => window.requestAnimationFrame(resolve));
+}
+
+async function pause(duration) {
+    return new Promise((resolve) => setTimeout(resolve, duration));
+}
