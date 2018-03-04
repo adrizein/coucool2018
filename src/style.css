@@ -40,6 +40,10 @@ html, body {
     transition: opacity 1000ms;
 }
 
+#container.loaded section {
+    opacity: 0;
+}
+
 .visible #artwork {
     visibility: visible;
 }
@@ -95,14 +99,16 @@ h1 {
 }
 
 
-
 h2 {
     flex: 1 0 50px;
     margin: 0;
     padding-top: 5px;
     transition: text-shadow 200ms linear;
     font-size: 20px;
-    text-decoration:none;
+}
+
+h2.inactive {
+    cursor: not-allowed;
 }
 
 .link {
@@ -116,7 +122,8 @@ h2 {
 h2.active {
     text-decoration: line-through;
     text-decoration-color:rgb(142,158,145);
-    /*color:rgb(228,126,62);
+    /*
+    color:rgb(228,126,62);
     -webkit-text-fill-color: rgb(228,126,62);
     */
 }
@@ -133,7 +140,6 @@ footer {
 }
 
 nav {
-    z-index: 2;
     display: flex;
     text-align: center;
     line-height: 35px;
@@ -155,8 +161,8 @@ footer div {
 
 nav, #artworkAndContent, footer {
     margin-left: 35px;
-    margin-right:35px; 
-} 
+    margin-right:35px;
+}
 
 area {
     cursor: pointer;
@@ -169,7 +175,6 @@ area {
     right: 0;
     top: 0;
     bottom: 0;
-    /*pointer-events: none;*/
     overflow: hidden;
     visibility: hidden;
     z-index: 2;
@@ -200,19 +205,6 @@ area {
     background-size: 100px;
 
 }
-/*
-
-    -webkit-animation: pulsate 2s linear infinite;
-    -moz-animation: pulsate 2s linear infinite;
-    animation: pulsate 2s linear infinite;
-}
-
-@keyframes pulsate {
-    0% {transform: scaleX(1) scaleY(0.5);}
-    50% {transform: scaleX(1.5) scaleY(0.75);}
-    100% {transform: scaleX(1) scaleY(0.5);}
-}
-*/
 
 #credit {
     position: absolute;
@@ -244,6 +236,10 @@ area {
 
 #main::-webkit-scrollbar {
     display: none;
+}
+
+#main.no-scroll {
+    overflow: hidden;
 }
 
 #artwork img {
@@ -323,8 +319,8 @@ a {
     padding-top: 4px;
     line-height: 107px;
     background: url('./images/composition/palm-tree.png') 100%;
-    margin:auto;
-    text-decoration:none;
+    margin: auto;
+    text-decoration: none;
 }
 
 .flex-row {
@@ -380,9 +376,13 @@ li {
         display: none;
     }
 
+    h2.ethos {
+        order: -1;
+    }
+
     nav, #artworkAndContent, footer {
         margin-left: 15px;
-        margin-right:15px; 
+        margin-right:15px;
     }
 
     #contributions {

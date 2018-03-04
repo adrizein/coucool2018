@@ -86,7 +86,7 @@ class MovingImage {
 
     }
 
-    createOverlay(){
+    createOverlay() {
         this.overlay = document.createElement("div");
         this.overlay.innerHTML = this.title;
         this.overlay.style.textAlign = "center";
@@ -98,7 +98,6 @@ class MovingImage {
 
 
     resize(scale, t, offsetX, offsetY) {
-        console.log("resizing")
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
         this._trajectory.offsetX = offsetX;
