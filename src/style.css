@@ -90,12 +90,12 @@ h1 {
 }
 
 #language {
-    font-weight: bold;
     text-align: right;
 }
 
-#language a {
+#language span {
     text-decoration: none;
+    cursor: pointer;
 }
 
 
@@ -121,7 +121,7 @@ h2.inactive {
 
 h2.active {
     text-decoration: line-through;
-    text-decoration-color:rgb(142,158,145);
+    text-decoration-color: #cd6152
     /*
     color:rgb(228,126,62);
     -webkit-text-fill-color: rgb(228,126,62);
@@ -137,6 +137,7 @@ footer {
     display: flex;
     transition: opacity 1000ms ease-in-out;
     line-height: 40px;
+    font-size: 16px;
 }
 
 nav {
@@ -155,8 +156,8 @@ footer div {
     z-index: 1;
     background-image: url('./images/background.jpg');
     background-size: cover;
-    margin-top: 0px;
-    margin-bottom:0px;
+    margin-top: 0;
+    margin-bottom:0;
 }
 
 nav, #artworkAndContent, footer {
@@ -167,7 +168,6 @@ nav, #artworkAndContent, footer {
 area {
     cursor: pointer;
 }
-
 
 #artwork {
     position: absolute;
@@ -203,20 +203,25 @@ area {
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100px;
-
 }
 
 #credit {
     position: absolute;
     right: 10px;
     bottom: 10px;
+    z-index: 4;
     color: rgb(119,133,110);
     text-align: right;
     z-index: 3;
+    transition: right 500ms linear;
 }
 
 #credit a {
-    color: rgb(119,133,110);
+    color: rgb(119, 133, 110);
+}
+
+#credit.hidden {
+    right: -200px;
 }
 
 #main {
@@ -225,7 +230,7 @@ area {
     font-size: 20px;
     top: 20px;
     bottom: 20px;
-    text-shadow: 1px 1px 1px rgba(63,107,169, 0.5);
+    text-shadow: 1px 1px 1px rgba(63, 107, 169, 0.5);
     text-align: center;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
@@ -265,6 +270,10 @@ section.hidden {
     margin: 15px 0;
 }
 
+.strophe p {
+    margin: 0;
+}
+
 p {
     line-height: 1.5em;
     text-align: justify;
@@ -288,8 +297,8 @@ a {
 .contribution-page {
     position: absolute;
     height: 100%;
-    left: 0px;
-    right: 0px;
+    left: 0;
+    right: 0;
     display: none;
 }
 
@@ -411,7 +420,6 @@ li {
 }
 
 @media (max-width: 380px) {
-
     p, h3, h4, .flex-row {
         font-size: 15px;
     }
