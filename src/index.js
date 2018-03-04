@@ -225,8 +225,7 @@ window.onload = async () => {
                         main.scrollTo(0, 0);
                     }
                     else {
-                        // less time exploding
-                        await composition.runAnimation(duration * 0.8, 0.8);
+                        await composition.runAnimation(duration * 0.8, 0.6);
                         await composition.runAnimation(duration * 0.8, 0);
                     }
                 }
