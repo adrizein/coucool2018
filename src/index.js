@@ -15,21 +15,23 @@ const movingImages = {
     blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 358, endX: 675, endY: 860},
     blueRectangleTop: {zIndex: 6, startX: 663, startY: 104, endX: 663, endY: 850},
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
-    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350, 
-        eventGeneratingShape: 'circle', 
-        title:'Facebook', 
-        onClick:function(){window.open('http://www.facebook.com/coucoolcoucool','_blank');},
+    centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350,
+        eventGeneratingShape: 'circle',
+        title: 'Facebook',
+        onClick() {
+            window.open('http://www.facebook.com/coucoolcoucool', '_blank');
+        },
     },
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
-    fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900, 
+    fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900,
         eventGeneratingShape: 'circle',
-        title:'Eros',
-        onClick:function(){setActiveSection(getSectionByName('eros'), false);}
+        title: 'Eros',
+        section: 'eros',
     },
     greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282,
         eventGeneratingShape: 'circle',
-        title:'Definitions',
-        onClick:function(){setActiveSection(getSectionByName('definitions'), false);}
+        title: 'Definitions',
+        section: 'definitions',
     },
     greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
     orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900},
@@ -41,14 +43,18 @@ const movingImages = {
     smallBlackRectangleCenter: {zIndex: 1, startX: 778, startY: 542, endX: 1400, endY: 542},
     textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100},
     woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853,
-        eventGeneratingShape:'poly',
-        title:'Coucool 2016',
-        onClick:function(){window.open('http://cou.cool/2016','_blank');}
+        eventGeneratingShape: 'poly',
+        title: 'Coucool 2016',
+        onClick() {
+            window.open('http://cou.cool/2016', '_blank');
+        },
     },
-    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 358, endX: 1400, endY: 359, 
-        eventGeneratingShape:'rect',
-        title:'Coucool 2017',
-        onClick: function(){window.open('http://cou.cool/2017','_blank');}
+    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 358, endX: 1400, endY: 359,
+        eventGeneratingShape: 'rect',
+        title: 'Coucool 2017',
+        onClick() {
+            window.open('http://cou.cool/2017', '_blank');
+        },
     },
     yellowRectangleCenterLeft: {zIndex: 1, startX: 92, startY: 422, endX: -900, endY: 422},
     zebraPill: {zIndex: 2, startX: 695, startY: 116, endX: 1000, endY: -150},
@@ -63,7 +69,6 @@ window.onload = async () => {
         loader = document.getElementById('loader'),
         artwork = document.getElementById('artwork'),
         composition = new Composition(artwork, 843, 1353, width < height),
-        coucool = document.getElementById('coucool'),
         chevron = document.getElementById('chevron'),
         credit = document.getElementById('credit'),
         sections = _.map(
@@ -87,33 +92,16 @@ window.onload = async () => {
         manualScroll = true;
 
     // Events selectors
-    window.addEventListener('resize', () => window.requestAnimationFrame(() => onResize()), {passive: true});
-    main.addEventListener('scroll', () => window.requestAnimationFrame(() => onScroll()), {passive: true});
+    window.addEventListener('resize', () => onResize(), {passive: true});
+    main.addEventListener('scroll', () => onScroll(), {passive: true});
     window.onhashchange = onHash;
-    window.onorientationchange = onScroll;
+    window.onorientationchange = () => {onResize(); onScroll();};
     main.onblur = function onBlur() {this.focus();};
-
-    /*
-    coucool.addEventListener('click', async () => {
-        autoScroll = false;
-        composition.stopAnimation();
-        await Promise.all([
-            composition.runAnimation(2000, 0),
-            Velocity(artwork, {opacity: 1}, {duration: 1000, easing: 'ease-in', queue: false}),
-            Velocity(activeSection.element, {opacity: 0}, {
-                container: main,
-                duration: 1000,
-                queue: false,
-                easing: 'ease-in',
-            }),
-        ]);
-
-        jumpTop();
-    });
-    */
 
     document.querySelectorAll('h2, .link').forEach((element) => {
         element.addEventListener('click', (event) => {
+            manualScroll = false;
+            main.classList.add('no-scroll');
             const section = _.find(sections, (s) => event.target.classList.contains(s.name));
             composition.stopAnimation();
             if (section) {
@@ -132,33 +120,40 @@ window.onload = async () => {
     });
 
     document.querySelectorAll('.English').forEach((element) => {
-        element.addEventListener('click', (event) => {
-            onLanguageClick("English");
+        element.addEventListener('click', () => {
+            onLanguageClick('English');
         });
     });
     document.querySelectorAll('.French').forEach((element) => {
-        element.addEventListener('click', (event) => {
-            onLanguageClick("French");
+        element.addEventListener('click', () => {
+            onLanguageClick('French');
         });
     });
 
     // Load composition
     const p = [];
-    _.forEach(movingImages, ({zIndex, startX, startY, endX, endY, eventGeneratingShape, title, onClick}, name) => {
-        const image = new MovingImage(
-            {
-                id: _.kebabCase(name),
-                src: compositionImages[name],
-                zIndex,
-                trajectory: new LinearTrajectory(startX, startY, endX, endY),
-                shape: eventGeneratingShape,
-                title:title,
-                onClick:onClick
-            },
-        );
+    _.forEach(
+        movingImages,
+        ({zIndex, startX, startY, endX, endY, eventGeneratingShape, title, onClick, section}, name) => {
+            if (section) {
+                const s = getSectionByName(section);
+                onClick = () => setActiveSection(s, false);
+            }
 
-        p.push(composition.add(image));
-    });
+            const image = new MovingImage(
+                {
+                    id: _.kebabCase(name),
+                    src: compositionImages[name],
+                    zIndex,
+                    trajectory: new LinearTrajectory(startX, startY, endX, endY),
+                    shape: eventGeneratingShape,
+                    title,
+                    onClick,
+                },
+            );
+
+            p.push(composition.add(image));
+        });
 
     // Init
     // Wait for composition to show the artwork
@@ -173,7 +168,7 @@ window.onload = async () => {
     await frame();
 
     // remove the slight offset when the loader is removed
-    jumpTop();
+    main.scrollTo(0, 0);
 
     // initialize the composition in its exploded form
     composition.animate(1);
@@ -198,77 +193,91 @@ window.onload = async () => {
     }
 
     async function setActiveSection(section, scroll = true) {
-        let delayBeforeScrollingDown = 2000;
-        switching = true;
-        window.location.hash = section.name;
+        if (!switching) {
+            let delayBeforeScrollingDown = 2000;
+            switching = true;
+            autoScroll = false;
+            window.location.hash = section.name;
 
-        //highlight title
-        _.map(sections, (s) => {if (s.title) {s.title.classList.remove('active');}});
-        if (section.title) {
-            section.title.classList.add('active');
-        }
+            //highlight title
+            sections.forEach((s) => {
+                if (s.title) {
+                    if (s.name !== section.name) {
+                        s.title.classList.add('inactive');
+                        s.title.classList.remove('active');
+                    }
+                }
+            });
+            if (section.title) {
+                section.title.classList.add('active');
+            }
 
-        if (activeSection) {
-            const duration = 1000;
-            if (section.name !== activeSection.name) {
-                if (main.scrollTop > 0) {
-                    // Implode if we changed the section
-                    await Promise.all([
-                        composition.runAnimation(duration, 0),
-                        Velocity(artwork, {opacity: 1}, {duration, queue: false}),
-                        Velocity(activeSection.element, {opacity: 0}, {duration, queue: false}),
-                    ]);
-                    jumpTop();
+            if (activeSection) {
+                const duration = 1000;
+                if (section.name !== activeSection.name) {
+                    if (main.scrollTop > 0) {
+                        // Implode if we changed the section
+                        await Promise.all([
+                            composition.runAnimation(duration, 0),
+                            Velocity(artwork, {opacity: 1}, {duration, queue: false}),
+                            Velocity(activeSection.element, {opacity: 0}, {duration, queue: false}),
+                        ]);
+                        main.scrollTo(0, 0);
+                    }
+                    else {
+                        // less time exploding
+                        await composition.runAnimation(duration * 0.8, 0.8);
+                        await composition.runAnimation(duration * 0.8, 0);
+                    }
                 }
                 else {
-                    // less time exploding
-                    await composition.runAnimation(duration * 0.8, 0.8);
-                    await composition.runAnimation(duration * 0.8, 0);
-                    //delayBeforeScrollingDown = 0;
+                    // do not wait before scrolling to the top of the text otherwise
+                    delayBeforeScrollingDown = 0;
                 }
+                activeSection.element.classList.remove('active');
+            }
+
+            // Set the new section
+            activeSection = section;
+            activeSection.element.classList.add('active');
+            manualScroll = true;
+            main.classList.remove('no-scroll');
+
+            switching = false;
+            sections.forEach((s) => {
+                if (s.name !== section.name) {
+                    if (s.title) {
+                        s.title.classList.remove('inactive');
+                    }
+                }
+            });
+            await frame();
+
+            if (activeSection.name === 'curiosites') {
+                artwork.style.zIndex = '5';
+                chevron.style.display = 'none';
+                credit.style.display = 'none';
             }
             else {
-                // do not wait before scrolling to the top of the text otherwise
-                delayBeforeScrollingDown = 0;
-            }
-            activeSection.element.classList.remove('active');
-        }
-
-        // Set the new section
-        section.element.classList.add('active');
-        activeSection = section;
-
-        // scroll automatically if nothing happens (no click, no manual scroll)
-        await frame();
-        autoScroll = true;
-
-        if(activeSection.name == "curiosites"){
-            console.log("curiosité");
-            artwork.style.zIndex = "5";
-            chevron.style.display = 'none';
-            credit.style.display = 'none';
-        } else {
-            artwork.style.zIndex = "2";
-            if (scroll) {
-                setTimeout(() => {
+                // scroll automatically if nothing happens (no click, no manual scroll)
+                autoScroll = true;
+                chevron.style.display = null;
+                credit.style.display = null;
+                artwork.style.zIndex = '2';
+                if (scroll) {
+                    await new Promise((resolve) => setTimeout(resolve, delayBeforeScrollingDown));
                     if (autoScroll) {
-                        Velocity(activeSection.element, 'scroll', {
-                            offset: activeSection.element.style.paddingTop,
+                        return Velocity(section.element, 'scroll', {
+                            offset: section.element.style.paddingTop,
                             container: main,
                             duration: 1000,
                             easing: 'ease-in',
                             queue: false,
                         });
                     }
-                }, delayBeforeScrollingDown);
+                }
             }
         }
-
-    }
-
-    function jumpTop() {
-        manualScroll = false;
-        main.scrollTo(0, 0);
     }
 
     async function onScroll() {
@@ -293,9 +302,6 @@ window.onload = async () => {
                 artwork.style.opacity = Math.clamp(1 - main.scrollTop / composition.scaledHeight, 0.3, 1);
                 activeSection.element.style.opacity = Math.clamp(s * 10, 0, 1);
             }
-        }
-        else {
-            manualScroll = true;
         }
     }
 
@@ -325,10 +331,7 @@ window.onload = async () => {
 
     async function onHash() {
         // avoid the onHash handler to be called during the setActiveSection() call
-        if (switching) {
-            switching = false;
-        }
-        else if (window.location.hash.length > 1) {
+        if (!switching && window.location.hash.length > 1) {
             const urlSection = getSectionByName(window.location.hash.replace('#', ''));
             if (urlSection) {
                 setActiveSection(urlSection);
@@ -337,7 +340,7 @@ window.onload = async () => {
     }
 
     function addDivOverImgInArtwork(element){
-        //var title = document.createElement("div"); 
+        //var title = document.createElement("div");
         //newDiv.appendChild(newDiv);
     }
 
