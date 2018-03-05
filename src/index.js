@@ -12,7 +12,7 @@ const movingImages = {
     blackHalfCircle: {zIndex: 5, startX: 677, startY: 39, endX: 677, endY: -180},
     blueHair: {zIndex: 3, startX: 778, startY: 358, endX: 778, endY: -200},
     bluePillLeft: {zIndex: 1, startX: 150, startY: 481, endX: 1400, endY: -100},
-    blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 358, endX: 675, endY: 860},
+    blueRectangleCenterRight: {zIndex: 2, startX: 675, startY: 357, endX: 675, endY: 860},
     blueRectangleTop: {zIndex: 6, startX: 663, startY: 104, endX: 663, endY: 850},
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
     centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350,
@@ -40,7 +40,7 @@ const movingImages = {
     photocopyShapeTopRight: {zIndex: 2, startX: 627, startY: 238, endX: 100, endY: -200},
     pillCenterRight: {zIndex: 5, startX: 465, startY: 336, endX: -200, endY: 336},
     redRectangleTopRight: {zIndex: 3, startX: 964, startY: 227, endX: 364, endY: -30},
-    smallBlackRectangleCenter: {zIndex: 1, startX: 778, startY: 542, endX: 1400, endY: 542},
+    smallBlackRectangleCenter: {zIndex: 1, startX: 778, startY: 539, endX: 1400, endY: 542},
     textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100},
     woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853,
         eventGeneratingShape: 'poly',
@@ -49,7 +49,7 @@ const movingImages = {
             window.open('http://cou.cool/2016', '_blank');
         },
     },
-    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 358, endX: 1400, endY: 359,
+    yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 357, endX: 1400, endY: 359,
         eventGeneratingShape: 'rect',
         title: 'Coucool 2017',
         onClick() {
@@ -335,12 +335,6 @@ window.onload = async () => {
             }
         }
     }
-
-    function addDivOverImgInArtwork(element) {
-        //var title = document.createElement("div");
-        //newDiv.appendChild(newDiv);
-    }
-
 
     async function fadeContributionPage(element) {
         let parentContributionPage = element;

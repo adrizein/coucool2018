@@ -372,6 +372,13 @@ li {
     margin: 0;
 }
 
+#tagline-a {
+    display: block;
+}
+#tagline-b {
+    display: none;
+}
+
 @media (max-width: 640px) {
     p, h2, h3, h4, .flex-row {
         font-size: 20px;
@@ -414,8 +421,11 @@ li {
         width: 100%;
     }
 
-    #tagline {
+    #tagline-a, #date {
         display: none;
+    }
+    #tagline-b {
+        display: block;
     }
 }
 
