@@ -108,7 +108,7 @@ h2 {
 }
 
 h2.inactive {
-    cursor: not-allowed;
+    /* TODO: change text color to indicate unavailable menu*/
 }
 
 .link {

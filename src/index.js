@@ -345,7 +345,7 @@ window.onload = async () => {
     async function fadeContributionPage(element) {
         let parentContributionPage = element;
         while (parentContributionPage) {
-            if (parentContributionPage.classList.contains('contribution-page')){
+            if (parentContributionPage.classList.contains('contribution-page')) {
                 break;
             }
             parentContributionPage = parentContributionPage.parentNode;
