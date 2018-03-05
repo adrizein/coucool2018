@@ -125,6 +125,27 @@ window.onload = async () => {
         });
     });
 
+    /*
+    document.querySelectorAll('#ethos .content-container div').forEach((element) => {
+        element.addEventListener('mouseover', () => {
+            //
+            console.log(element.lastElementChild);
+            if (element.lastElementChild.style.display != "block") {
+                element.lastElementChild.style.display = "block";
+                //Velocity(element.lastElementChild, "slideDown", {duration:500, queue: false});
+            }
+        });
+        element.addEventListener('mouseout', () => {
+            //
+            console.log(element.lastElementChild);
+            if (element.lastElementChild.style.display == "block") {
+                element.lastElementChild.style.display = "none"
+                //Velocity(element.lastElementChild, "slideUp", {duration:500, queue: false});
+            }
+        });
+    });
+    */
+
     init();
 
     ////////////

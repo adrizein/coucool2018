@@ -353,6 +353,47 @@ a {
     opacity: 0;
 }
 
+#ethos div {
+    padding-bottom: 10px;
+}
+
+#ethos li {
+    text-align: inherit;
+    margin:auto;
+    list-style-type: none;
+}
+
+.accordion:hover .accordion-item:hover .accordion-item-content,
+.accordion .accordion-item--default .accordion-item-content {
+    height: 3em;
+}
+
+.accordion:hover .accordion-item:hover .accordion-item-content,
+.accordion .accordion-item--default .accordion-item-content:after {
+    content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+.accordion-item-content,
+.accordion:hover .accordion-item-content {
+    height: 0;
+    overflow: hidden;
+    transition: height .5s;
+}
+
+.accordion-item h4:before {
+    color: rgb(255,255,255);
+    content: '\02795'; /* Unicode character for "plus" sign (+) */
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+.accordion-item:hover h4:before {
+    color:rgb(255,255,255);
+    content: "\2796"; /* Unicode character for "plus" sign (-) */
+    font-size: 13px;
+    margin-right: 5px;
+}
+
 h4, ul {
     margin: 10px 0;
 }
