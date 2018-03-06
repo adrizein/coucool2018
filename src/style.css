@@ -341,6 +341,7 @@ a {
     cursor: pointer;
     margin: auto;
     background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .yes {

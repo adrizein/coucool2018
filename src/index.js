@@ -98,7 +98,7 @@ window.onload = async () => {
     window.onorientationchange = () => {onResize(); onScroll();};
     main.onblur = function onBlur() {this.focus();};
 
-    document.querySelectorAll('h2, .link').forEach((element) => {
+    _.forEach(document.querySelectorAll('h2, .link'), (element) => {
         element.addEventListener('click', (event) => {
             manualScroll = false;
             main.classList.add('no-scroll');
@@ -112,13 +112,13 @@ window.onload = async () => {
         });
     });
 
-    document.querySelectorAll('.yes').forEach((element) => {
+    _.forEach(document.querySelectorAll('.yes'), (element) => {
         element.addEventListener('click', (event) => {
             fadeContributionPage(event.target);
         });
     });
 
-    document.querySelectorAll('#language span').forEach((element) => {
+    _.forEach(document.querySelectorAll('#language span'), (element) => {
         element.addEventListener('click', () => {
             setActiveSection(activeSection, true, element.id);
         });
@@ -168,7 +168,7 @@ window.onload = async () => {
         await frame();
         loader.parentElement.removeChild(loader);
         await frame();
-        main.scrollTo(0, 0); // remove the slight offset when the loader is removed
+        main.scrollTo = 0; // remove the slight offset when the loader is removed
 
         // initialize the composition in its exploded form
         composition.animate(1);
@@ -228,7 +228,7 @@ window.onload = async () => {
                             Velocity(artwork, {opacity: 1}, {duration, queue: false}),
                             Velocity(activeSection.element, {opacity: 0}, {duration, queue: false}),
                         ]);
-                        main.scrollTo(0, 0);
+                        main.scrollTop = 0;
                     }
                     else {
                         await composition.runAnimation(duration * 0.7, 0.6);
@@ -338,7 +338,7 @@ window.onload = async () => {
             composition.landscape(0);
         }
 
-        document.querySelectorAll('section').forEach((element) => {
+        sections.forEach(({element}) => {
             element.style.paddingTop = `${composition.scaledHeight}px`;
         });
     }
