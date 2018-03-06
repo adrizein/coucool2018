@@ -88,7 +88,14 @@ class MovingImage {
 
     createOverlay() {
         this.overlay = document.createElement("div");
-        this.overlay.innerHTML = this.title;
+        var overlayContent = document.createElement("span");
+        overlayContent.style.position = "absolute";
+        overlayContent.style.pointerEvents = "none";
+        overlayContent.style.top = "50%";
+        overlayContent.style.transform = "translateY(-50%) translateX(-50%)";
+        overlayContent.style.left = "50%";
+        overlayContent.innerHTML = this.title;
+        this.overlay.appendChild(overlayContent);
         this.overlay.style.textAlign = "center";
         this.overlay.style.position = "absolute";
         this.overlay.style.pointerEvents = "none";
@@ -97,7 +104,7 @@ class MovingImage {
     }
 
 
-    resize(scale, t, offsetX, offsetY) {
+    resize(scale, t, offsetX, offsetY, portrait) {
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
         this._trajectory.offsetX = offsetX;
@@ -120,12 +127,19 @@ class MovingImage {
                 this.area.coords = point1 + "," + point2 + "," + point3; //TODO
             }
         }
+
         if (this.overlay) {
-            this.overlay.style.height = `${this.element.height}px`;
-            this.overlay.style.lineHeight = `${this.element.height}px`;
-            this.overlay.style.width =  `${this.element.width}px`;
-            this.overlay.style.top = this.element.style.top;
-            this.overlay.style.left = this.element.style.left;
+            if(portrait){
+                this.overlay.style.height = `${this.element.width}px`;
+                this.overlay.style.width =  `${this.element.height}px`;
+                this.overlay.style.bottom = this.element.style.left;
+                this.overlay.style.left = this.element.style.top;
+            } else {
+                this.overlay.style.height = `${this.element.height}px`;
+                this.overlay.style.width =  `${this.element.width}px`;
+                this.overlay.style.top = this.element.style.top;
+                this.overlay.style.left = this.element.style.left;
+            }
         }
     }
 
@@ -302,7 +316,7 @@ class Composition {
         }
 
         this.images.forEach((image) => {
-            image.resize(this._scale, this._t, offsetX, offsetY);
+            image.resize(this._scale, this._t, offsetX, offsetY, this._portrait);
         });
     }
 

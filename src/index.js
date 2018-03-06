@@ -126,10 +126,12 @@ window.onload = async () => {
 
     document.querySelectorAll('.accordion-item').forEach((element) => {
         element.addEventListener('click', () => {
-            if(element.lastElementChild.height == 0){
-                console.log("closed")
+            console.log(element.lastElementChild.style.height);
+            if(element.lastElementChild.style.height == '4em'){
+                //console.log("closed")
+                element.lastElementChild.style.height = '0px';
             } else {
-                console.log("open")
+                element.lastElementChild.style.height = '4em';
             }
         });
     });

@@ -144,7 +144,7 @@ area {
     position: absolute;
 }
 
-#artwork.portrait > div {
+#artwork.portrait div {
     transform: rotate(-90deg);
     bottom: 0;
 }
@@ -416,11 +416,6 @@ a {
 .accordion:hover .accordion-item:hover .accordion-item-content,
 .accordion .accordion-item--default .accordion-item-content {
     height: 4em;
-}
-
-.accordion:hover .accordion-item:hover .accordion-item-content,
-.accordion .accordion-item--default .accordion-item-content:after {
-    content: "\2796"; /* Unicode character for "minus" sign (-) */
 }
 
 .accordion-item-content,
