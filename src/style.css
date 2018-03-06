@@ -443,7 +443,7 @@ li:before {
 
 .accordion-item:hover h4:before {
     content: "-"; /* Unicode character for "plus" sign (-) */
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 #solidaire h4 {
