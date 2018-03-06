@@ -41,10 +41,7 @@ const movingImages = {
     pillCenterRight: {zIndex: 5, startX: 465, startY: 336, endX: -200, endY: 336},
     redRectangleTopRight: {zIndex: 3, startX: 964, startY: 227, endX: 364, endY: -30},
     smallBlackRectangleCenter: {zIndex: 1, startX: 778, startY: 539, endX: 1400, endY: 542},
-    textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100,
-        eventGeneratingShape: 'rect',
-        title: 'Définition',
-        section: 'definition',},
+    textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100},
     woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853,
         eventGeneratingShape: 'poly',
         title: 'Coucool 2016',
@@ -89,7 +86,6 @@ window.onload = async () => {
             });
 
     let
-        language = 'fr',
         switching = false,
         activeSection = null,
         autoScroll = true,
@@ -106,12 +102,12 @@ window.onload = async () => {
         element.addEventListener('click', (event) => {
             manualScroll = false;
             main.classList.add('no-scroll');
-            const section = _.find(sections, (s) => event.target.classList.contains(s.name));
+            const section = _.find(sections, (s) => event.currentTarget.classList.contains(s.name));
             if (section) {
                 setActiveSection(section);
             }
             else {
-                console.error('Should not happen, bad section name:', event.target.className);
+                console.error('Should not happen, bad section name:', event.currentTarget.className);
             }
         });
     });
@@ -124,30 +120,9 @@ window.onload = async () => {
 
     document.querySelectorAll('#language span').forEach((element) => {
         element.addEventListener('click', () => {
-            onLanguageClick(element.id);
+            setActiveSection(activeSection, true, element.id);
         });
     });
-
-    /*
-    document.querySelectorAll('#ethos .content-container div').forEach((element) => {
-        element.addEventListener('mouseover', () => {
-            //
-            console.log(element.lastElementChild);
-            if (element.lastElementChild.style.display != "block") {
-                element.lastElementChild.style.display = "block";
-                //Velocity(element.lastElementChild, "slideDown", {duration:500, queue: false});
-            }
-        });
-        element.addEventListener('mouseout', () => {
-            //
-            console.log(element.lastElementChild);
-            if (element.lastElementChild.style.display == "block") {
-                element.lastElementChild.style.display = "none"
-                //Velocity(element.lastElementChild, "slideUp", {duration:500, queue: false});
-            }
-        });
-    });
-    */
 
     init();
 
@@ -155,6 +130,10 @@ window.onload = async () => {
 
 
     async function init() {
+        // set language
+        const [initialSection, language] = getSectionAndLanguage();
+        document.documentElement.lang = language;
+
         // Load composition
         const p = [];
         _.forEach(
@@ -195,50 +174,55 @@ window.onload = async () => {
         composition.animate(1);
         container.classList.add('visible');
         await composition.runAnimation(2000, 0);
-        await pause(1000);
-        container.classList.remove('loading');
-        container.classList.add('loaded');
-        await pause(1000);
-        container.classList.remove('loaded');
-
-        onHash();
-        onScroll();
-
-        if (!activeSection) {
-            setActiveSection(getSectionByName('ethos'), false);
-        }
+        await setActiveSection(initialSection, false, language);
+        await fadeInTexts();
     }
 
     function getSectionByName(sectionName) {
         return _.find(sections, ({name}) => name === sectionName);
     }
 
-    async function setActiveSection(section, scroll = true) {
+    async function setActiveSection(section, scroll = true, lang) {
+        onResize();
+
+        lang = lang || document.documentElement.lang;
+        const languageChanged = lang !== document.documentElement.lang;
+        const sectionChanged = !activeSection || section.name !== activeSection.name;
+
         if (!switching) {
             let delayBeforeScrollingDown = 2000;
             switching = true;
             autoScroll = false;
-            window.location.hash = section.name;
+            window.location.hash = `${section.name}-${lang}`;
 
-            //highlight title
-            sections.forEach((s) => {
-                if (s.title) {
-                    if (s.name !== section.name) {
-                        s.title.classList.add('inactive');
-                        s.title.classList.remove('active');
+            if (sectionChanged) {
+                //highlight title
+                sections.forEach((s) => {
+                    if (s.title) {
+                        if (s.name !== section.name) {
+                            s.title.classList.add('inactive');
+                            s.title.classList.remove('active');
+                        }
                     }
+                });
+                if (section.title) {
+                    section.title.classList.add('active');
                 }
-            });
-            if (section.title) {
-                section.title.classList.add('active');
             }
 
             // quit previous section
             if (activeSection) {
-                const duration = 1000;
-                if (section.name !== activeSection.name) {
+                chevron.classList.add('hidden');
+                credit.classList.add('hidden');
+
+                if (languageChanged) {
+                    fadeOutTexts();
+                }
+
+                if (languageChanged || sectionChanged) {
+                    const duration = 1000;
                     if (main.scrollTop > 0) {
-                        // Implode if we changed the section
+                        // Implode if we changed the section or language
                         await Promise.all([
                             composition.runAnimation(duration, 0),
                             Velocity(artwork, {opacity: 1}, {duration, queue: false}),
@@ -247,20 +231,28 @@ window.onload = async () => {
                         main.scrollTo(0, 0);
                     }
                     else {
-                        await composition.runAnimation(duration * 0.8, 0.6);
-                        await composition.runAnimation(duration * 0.8, 0);
+                        await composition.runAnimation(duration * 0.7, 0.6);
+                        await composition.runAnimation(duration * 0.7, 0);
                     }
                 }
                 else {
-                    // do not wait before scrolling to the top of the text otherwise
+                    // do not wait before scrolling
                     delayBeforeScrollingDown = 0;
                 }
+
                 activeSection.element.classList.remove('active');
+
+                if (languageChanged) {
+                    document.documentElement.lang = lang;
+                    await fadeInTexts();
+                }
             }
 
             // Set the new section
             activeSection = section;
             activeSection.element.classList.add('active');
+            chevron.classList.remove('hidden');
+            credit.classList.remove('hidden');
             manualScroll = true;
             main.classList.remove('no-scroll');
 
@@ -272,6 +264,7 @@ window.onload = async () => {
                     }
                 }
             });
+
             await frame();
 
             if (activeSection.name === 'curiosites') {
@@ -303,11 +296,11 @@ window.onload = async () => {
 
     async function onScroll() {
         if (main.scrollTop === 0) {
-            chevron.style.display = 'block';
+            chevron.classList.remove('hidden');
             credit.classList.remove('hidden');
         }
         else {
-            chevron.style.display = 'none';
+            chevron.classList.add('hidden');
             credit.classList.add('hidden');
         }
 
@@ -352,12 +345,24 @@ window.onload = async () => {
 
     async function onHash() {
         // avoid the onHash handler to be called during the setActiveSection() call
-        if (!switching && window.location.hash.length > 1) {
-            const urlSection = getSectionByName(window.location.hash.replace('#', ''));
+        if (!switching) {
+            const [section, lang] = getSectionAndLanguage();
+
+            return setActiveSection(section, true, lang);
+        }
+    }
+
+    function getSectionAndLanguage() {
+        if (window.location.hash.length > 1) {
+            const urlSection = window.location.hash.replace('#', '');
             if (urlSection) {
-                setActiveSection(urlSection);
+                const [section, lang] = urlSection.split('-');
+
+                return [getSectionByName(section), lang || document.documentElement.lang];
             }
         }
+
+        return [activeSection || getSectionByName('ethos'), document.documentElement.lang];
     }
 
     async function fadeContributionPage(element) {
@@ -386,9 +391,16 @@ window.onload = async () => {
         });
     }
 
-    function onLanguageClick(lang) {
-        language = lang;
-        console.log(`switch to ${lang}`);
+    async function fadeOutTexts() {
+        container.classList.add('loading');
+        return pause(1000);
+    }
+
+    async function fadeInTexts() {
+        container.classList.add('loaded');
+        container.classList.remove('loading');
+        await pause(3000);
+        container.classList.remove('loaded');
     }
 };
 
