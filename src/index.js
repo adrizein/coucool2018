@@ -124,6 +124,16 @@ window.onload = async () => {
         });
     });
 
+    document.querySelectorAll('.accordion-item').forEach((element) => {
+        element.addEventListener('click', () => {
+            if(element.lastElementChild.height == 0){
+                console.log("closed")
+            } else {
+                console.log("open")
+            }
+        });
+    });
+
     init();
 
     ////////////
