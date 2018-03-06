@@ -124,6 +124,17 @@ window.onload = async () => {
         });
     });
 
+    document.querySelectorAll('.accordion-item').forEach((element) => {
+        element.addEventListener('click', () => {
+            console.log(element.lastElementChild.style.height);
+            if(element.lastElementChild.style.height == '4em'){
+                element.lastElementChild.style.height = '0px';
+            } else {
+                element.lastElementChild.style.height = '4em';
+            }
+        });
+    });
+
     init();
 
     ////////////
@@ -266,6 +277,15 @@ window.onload = async () => {
             });
 
             await frame();
+
+            if (activeSection.name === 'contributions') {
+                main.style.top = '0';
+                main.style.bottom = '0';
+            }
+            else {
+                main.style.top = '20px';
+                main.style.bottom = '20px';
+            }
 
             if (activeSection.name === 'curiosites') {
                 artwork.style.zIndex = '5';

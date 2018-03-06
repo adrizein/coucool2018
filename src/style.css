@@ -17,16 +17,6 @@ body {
     color: whitesmoke;
 }
 
-#container {
-    height: 100%;
-    width: 100%;
-    visibility: hidden;
-    display: flex;
-    flex-flow: column;
-    background-image: url('./images/frame.jpg');
-    background-size: 100% 100%;
-}
-
 html:lang(en) .fr {
     display: none !important;
 }
@@ -35,11 +25,16 @@ html:lang(fr) .en {
     display: none !important;
 }
 
-.accordion {
-    margin: 30px auto 0 auto;
-    padding-top: 30px;
-    border: solid 3px white;
-    max-width: 750px;
+/*STRUCTURE*/
+
+#container {
+    height: 100%;
+    width: 100%;
+    visibility: hidden;
+    display: flex;
+    flex-flow: column;
+    background-image: url('./images/frame.jpg');
+    background-size: 100% 100%;
 }
 
 #container.loading .title,
@@ -82,29 +77,6 @@ html:lang(fr) .en {
     align-items: baseline;
 }
 
-.transparent-green {
-    color: #93a69b;
-}
-
-.transparent-orange {
-    background-image: url('./images/frame.jpg');
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-}
-
-
-h1 {
-    font-size: 25px;
-    margin: 10px 0;
-    cursor: pointer;
-}
-
-.background-color {
-    background-repeat: round;
-    background-attachment: fixed;
-    -webkit-background-clip: text;
-}
-
 #coucool {
     flex: 1 0 auto;
     line-height: 25px;
@@ -118,33 +90,6 @@ h1 {
 #language span {
     text-decoration: none;
     cursor: pointer;
-}
-
-
-h2 {
-    flex: 1 0 50px;
-    margin: 0;
-    padding-top: 5px;
-    font-size: 20px;
-    text-decoration: line-through;
-    transition: text-decoration-color 500ms linear;
-    text-decoration-color: transparent;
-}
-
-h2.inactive {
-    /*color: lightgray;*/
-}
-
-.link {
-    text-decoration: underline;
-}
-
-.link, h2 {
-    cursor: pointer;
-}
-
-h2.active {
-    text-decoration-color: #cd6152
 }
 
 footer {
@@ -199,7 +144,7 @@ area {
     position: absolute;
 }
 
-#artwork.portrait > div {
+#artwork.portrait div {
     transform: rotate(-90deg);
     bottom: 0;
 }
@@ -229,6 +174,7 @@ area {
 }
 
 #credit {
+    display:flex;
     position: absolute;
     right: 10px;
     bottom: 10px;
@@ -281,7 +227,7 @@ area {
 section {
     height: 100%;
     display: none;
-    padding: 0 20px;
+    padding: 0px 20px;
 }
 
 section.active {
@@ -289,8 +235,65 @@ section.active {
     opacity: 0;
 }
 
-#eros .strophe {
-    margin: 15px 0;
+.content-container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0 20px;
+}
+
+
+
+/*HELPER*/
+
+.transparent-green {
+    color: #93a69b;
+}
+
+.transparent-orange {
+    background-image: url('./images/frame.jpg');
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+
+.background-color {
+    background-repeat: round;
+    background-attachment: fixed;
+    -webkit-background-clip: text;
+}
+
+
+/*TEXT TAG*/
+
+h1 {
+    font-size: 25px;
+    margin: 10px 0;
+    cursor: pointer;
+}
+
+h2 {
+    flex: 1 0 50px;
+    margin: 0;
+    padding-top: 5px;
+    font-size: 20px;
+    text-decoration: line-through;
+    transition: text-decoration-color 500ms linear;
+    text-decoration-color: transparent;
+}
+
+h2.inactive {
+    /*color: lightgray;*/
+}
+
+.link {
+    text-decoration: underline;
+}
+
+.link, h2 {
+    cursor: pointer;
+}
+
+h2.active {
+    text-decoration-color: #cd6152
 }
 
 .strophe p {
@@ -307,11 +310,12 @@ a {
     text-decoration: underline;
 }
 
-.content-container {
-    max-width: 1000px;
-    margin: auto;
-    padding: 0 20px;
+/* SECTIONS SPECIFICITIES*/
+
+#eros .strophe {
+    margin: 15px 0;
 }
+
 
 #contributions .content-container {
     height:100%;
@@ -392,14 +396,28 @@ a {
     list-style-type: none;
 }
 
-.accordion:hover .accordion-item:hover .accordion-item-content,
-.accordion .accordion-item--default .accordion-item-content {
-    height: 3em;
+#ethos ul {
+    padding-left: 0px;
+}
+
+
+#ethos p {
+    max-width: 750px;
+    margin: 0px auto 10px auto;
+}
+
+
+
+.accordion {
+    margin: 20px auto 20px auto;
+    padding-top: 30px;
+    border: solid 3px white;
+    max-width: 750px;
 }
 
 .accordion:hover .accordion-item:hover .accordion-item-content,
-.accordion .accordion-item--default .accordion-item-content:after {
-    content: "\2796"; /* Unicode character for "minus" sign (-) */
+.accordion .accordion-item--default .accordion-item-content {
+    height: 4em;
 }
 
 .accordion-item-content,
@@ -410,17 +428,17 @@ a {
 }
 
 .accordion-item h4:before {
-    color: rgb(255,255,255);
-    content: '\02795'; /* Unicode character for "plus" sign (+) */
-    font-size: 13px;
+    content: "+"; /* Unicode character for "plus" sign (+) */
     margin-right: 10px;
 }
 
 .accordion-item:hover h4:before {
-    color:rgb(255,255,255);
-    content: "\2796"; /* Unicode character for "plus" sign (-) */
-    font-size: 13px;
-    margin-right: 5px;
+    content: "-"; /* Unicode character for "plus" sign (-) */
+    margin-right: 10px;
+}
+
+#solidaire h4 {
+    text-align: left;
 }
 
 h4, ul {
@@ -449,6 +467,17 @@ li {
 footer .date {
     display: none;
 }
+
+@media (max-width: 740px) {
+    .tagline, #date {
+        display: none;
+    }
+
+    footer .date {
+        display: block;
+    }
+}
+
 
 @media (max-width: 640px) {
     p, h2, h3, h4, .flex-row {
@@ -492,13 +521,14 @@ footer .date {
         width: 100%;
     }
 
-    .tagline, #date {
-        display: none;
+    #credit {
+        display:block;
+        width:110px;
+    }
+    #credit div {
+        width:110px;
     }
 
-    footer .date {
-        display: block;
-    }
 }
 
 @media (max-width: 380px) {
