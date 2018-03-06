@@ -127,10 +127,18 @@ window.onload = async () => {
     document.querySelectorAll('.accordion-item').forEach((element) => {
         element.addEventListener('click', () => {
             console.log(element.lastElementChild.style.height);
-            if(element.lastElementChild.style.height == '4em'){
+            if(activeSection.name == "benevoles"){
+                if(element.lastElementChild.style.height == '6em'){
                 element.lastElementChild.style.height = '0px';
+                } else {
+                    element.lastElementChild.style.height = '6em';
+                }
             } else {
-                element.lastElementChild.style.height = '4em';
+                if(element.lastElementChild.style.height == '4em'){
+                    element.lastElementChild.style.height = '0px';
+                } else {
+                    element.lastElementChild.style.height = '4em';
+                }
             }
         });
     });

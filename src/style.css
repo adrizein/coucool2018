@@ -88,7 +88,7 @@ html:lang(fr) .en {
 }
 
 #language span {
-    text-decoration: none;
+    text-decoration: underline;
     cursor: pointer;
 }
 
@@ -203,7 +203,7 @@ area {
     font-size: 20px;
     top: 20px;
     bottom: 20px;
-    text-shadow: 1px 1px 1px rgba(63, 107, 169, 0.5);
+    text-shadow: 1px 1px 1px rgba(60, 100, 160, 0.8);
     text-align: center;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
@@ -236,7 +236,7 @@ section.active {
 }
 
 .content-container {
-    max-width: 1000px;
+    max-width: 750px;
     margin: auto;
     padding: 0 20px;
 }
@@ -303,11 +303,22 @@ h2.active {
 p {
     line-height: 1.5em;
     text-align: justify;
+    margin: 0px auto 10px auto;
 }
 
 a {
     color:white;
     text-decoration: underline;
+}
+
+li {
+    list-style-type:none;/*"⇀";*/
+    margin: 10px 0;
+}
+
+li:before {
+    content:"⇀";
+    margin-right: 10px;
 }
 
 /* SECTIONS SPECIFICITIES*/
@@ -390,34 +401,32 @@ a {
     padding-bottom: 10px;
 }
 
-#ethos li {
-    text-align: inherit;
-    margin: auto;
-    list-style-type: none;
-}
-
 #ethos ul {
     padding-left: 0px;
 }
 
 
-#ethos p {
-    max-width: 750px;
-    margin: 0px auto 10px auto;
-}
-
 
 
 .accordion {
     margin: 20px auto 20px auto;
-    padding-top: 30px;
     border: solid 3px white;
     max-width: 750px;
+    padding: 30px 20px 20px 20px;
+}
+
+.accordion div {
+    text-align: left;
 }
 
 .accordion:hover .accordion-item:hover .accordion-item-content,
 .accordion .accordion-item--default .accordion-item-content {
     height: 4em;
+}
+
+#benevoles .accordion:hover .accordion-item:hover .accordion-item-content,
+#benevoles .accordion .accordion-item--default .accordion-item-content {
+    height: 6em;
 }
 
 .accordion-item-content,
@@ -447,11 +456,6 @@ h4, ul {
 
 ul {
     padding-left: 30px;
-}
-
-li {
-    margin: 10px 0;
-    text-align: justify;
 }
 
 #weezevent {
