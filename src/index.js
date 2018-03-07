@@ -89,7 +89,7 @@ window.onload = async () => {
         switching = false,
         activeSection = null,
         autoScroll = true,
-        manualScroll = true;
+        manualScroll = false;
 
     // Events selectors
     window.addEventListener('resize', () => onResize(), {passive: true});
@@ -120,18 +120,28 @@ window.onload = async () => {
 
     _.forEach(document.querySelectorAll('#language span'), (element) => {
         element.addEventListener('click', () => {
-            setActiveSection(activeSection, true, element.id);
+            if (element.id !== document.documentElement.lang) {
+                setActiveSection(activeSection, true, element.id);
+            }
         });
     });
 
-    document.querySelectorAll('.accordion-item').forEach((element) => {
-        element.addEventListener('click', () => {
-            console.log(element.lastElementChild.style.height);
-            if(element.lastElementChild.style.height == '4em'){
-                element.lastElementChild.style.height = '0px';
-            } else {
-                element.lastElementChild.style.height = '4em';
-            }
+    _.forEach(document.querySelectorAll('.accordion-item'), (element) => {
+        element.addEventListener('click', async () => {
+            openAccordion(element);
+        });
+    });
+
+    _.forEach(document.querySelectorAll('.accordion-item'), (element) => {
+        element.addEventListener('mouseenter', () => {
+            closeAccordions(element.parentElement, element);
+            openAccordion(element);
+        });
+    });
+
+    _.forEach(document.querySelectorAll('.accordion-item'), (element) => {
+        element.addEventListener('mouseleave', () => {
+            closeAccordion(element);
         });
     });
 
@@ -186,7 +196,16 @@ window.onload = async () => {
         container.classList.add('visible');
         await composition.runAnimation(2000, 0);
         await setActiveSection(initialSection, false, language);
+        manualScroll = false;
+        main.classList.add('no-scroll');
         await fadeInTexts();
+        manualScroll = true;
+        main.classList.remove('no-scroll');
+        await pause(4000);
+
+        if (autoScroll) {
+            return scrollToSection();
+        }
     }
 
     function getSectionByName(sectionName) {
@@ -201,10 +220,11 @@ window.onload = async () => {
         const sectionChanged = !activeSection || section.name !== activeSection.name;
 
         if (!switching) {
-            let delayBeforeScrollingDown = 2000;
+            let delayBeforeScrollingDown = 3000;
             switching = true;
             autoScroll = false;
-            window.location.hash = `${section.name}-${lang}`;
+            window.location.hash = `/${lang}/${section.name}`;
+            await frame();
 
             if (sectionChanged) {
                 //highlight title
@@ -227,7 +247,7 @@ window.onload = async () => {
                 credit.classList.add('hidden');
 
                 if (languageChanged) {
-                    fadeOutTexts();
+                    await fadeOutTexts();
                 }
 
                 if (languageChanged || sectionChanged) {
@@ -252,6 +272,7 @@ window.onload = async () => {
                 }
 
                 activeSection.element.classList.remove('active');
+                await frame();
 
                 if (languageChanged) {
                     document.documentElement.lang = lang;
@@ -278,15 +299,6 @@ window.onload = async () => {
 
             await frame();
 
-            if (activeSection.name === 'contributions') {
-                main.style.top = '0';
-                main.style.bottom = '0';
-            }
-            else {
-                main.style.top = '20px';
-                main.style.bottom = '20px';
-            }
-
             if (activeSection.name === 'curiosites') {
                 artwork.style.zIndex = '5';
                 chevron.style.display = 'none';
@@ -301,13 +313,7 @@ window.onload = async () => {
                 if (scroll) {
                     await pause(delayBeforeScrollingDown);
                     if (autoScroll) {
-                        return Velocity(section.element, 'scroll', {
-                            offset: section.element.style.paddingTop,
-                            container: main,
-                            duration: 1000,
-                            easing: 'ease-in',
-                            queue: false,
-                        });
+                        return scrollToSection();
                     }
                 }
             }
@@ -364,7 +370,7 @@ window.onload = async () => {
     }
 
     async function onHash() {
-        // avoid the onHash handler to be called during the setActiveSection() call
+        // avoid the onHash handler from being called during the setActiveSection() call
         if (!switching) {
             const [section, lang] = getSectionAndLanguage();
 
@@ -374,9 +380,9 @@ window.onload = async () => {
 
     function getSectionAndLanguage() {
         if (window.location.hash.length > 1) {
-            const urlSection = window.location.hash.replace('#', '');
+            const urlSection = window.location.hash.substr(1);
             if (urlSection) {
-                const [section, lang] = urlSection.split('-');
+                const [,lang, section] = urlSection.split('/');
 
                 return [getSectionByName(section), lang || document.documentElement.lang];
             }
@@ -421,6 +427,50 @@ window.onload = async () => {
         container.classList.remove('loading');
         await pause(3000);
         container.classList.remove('loaded');
+
+        return frame();
+    }
+
+    async function scrollToSection() {
+        return Velocity(activeSection.element, 'scroll', {
+            offset: activeSection.element.style.paddingTop,
+            container: main,
+            duration: 1000,
+            easing: 'ease-in',
+            queue: false,
+        });
+    }
+
+    async function openAccordion(element) {
+        if (!element.classList.contains('active')) {
+            element.classList.add('active');
+            await Velocity(element.lastElementChild, 'stop');
+            return Velocity(
+                element.lastElementChild,
+                {height: element.lastElementChild.scrollHeight},
+                {queue: false, duration: 10 * element.lastElementChild.scrollHeight}
+            );
+        }
+    }
+
+    async function closeAccordion(element, force) {
+        if (element.classList.contains('active') || force) {
+            element.classList.remove('active');
+            await Velocity(element.lastElementChild, 'stop');
+            return Velocity(
+                element.lastElementChild,
+                {height: 0},
+                {queue: false, duration: 10 * element.lastElementChild.scrollHeight}
+            );
+        }
+    }
+
+    async function closeAccordions(parent, element) {
+        return Promise.all(_.map(parent.children, (e) => {
+            if (e !== element) {
+                return closeAccordion(e, true);
+            }
+        }));
     }
 };
 

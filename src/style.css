@@ -40,23 +40,41 @@ html:lang(fr) .en {
 #container.loading .title,
 #container.loading nav,
 #container.loading #main,
-#container.loading #chevron,
 #container.loading #credit,
 #container.loading #date,
 #container.loading footer
 {
     opacity: 0;
-    transition: opacity 1000ms linear;
+    transition: opacity 500ms linear;
 }
 
-#container.loaded #chevron, #container.loaded #credit {
-    transition-delay: 1000ms;
+#container.loading #chevron {
+    opacity: 0;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+#container.loaded #chevron {
+    animation: blink 500ms 500ms infinite alternate linear;
+}
+
+#container.loaded #credit {
+    transition-duration: 500ms;
+    transition-delay: 500ms;
 }
 
 #container.loaded * {
     opacity: 1;
-    transition: opacity 1000ms linear;
-    transition-delay: 2000ms;
+    transition: opacity 500ms linear;
+    transition-delay: 2500ms;
 }
 
 #container.loaded section {
@@ -182,7 +200,7 @@ area {
     text-align: right;
     z-index: 3;
     transition: opacity 500ms linear;
-    transition-delay: 1000ms;
+    transition-delay: 500ms;
 }
 
 #credit a {
@@ -339,8 +357,8 @@ a {
 }
 
 .yes, .no {
-    width: 176px;
-    height: 176px;
+    width: 85px;
+    height: 85px;
     display: flex;
     cursor: pointer;
     margin: auto;
@@ -400,13 +418,10 @@ a {
     padding-left: 0px;
 }
 
-
 #ethos p {
     max-width: 750px;
     margin: 0px auto 10px auto;
 }
-
-
 
 .accordion {
     margin: 20px auto 20px auto;
@@ -415,25 +430,19 @@ a {
     max-width: 750px;
 }
 
-.accordion:hover .accordion-item:hover .accordion-item-content,
-.accordion .accordion-item--default .accordion-item-content {
-    height: 4em;
-}
-
-.accordion-item-content,
-.accordion:hover .accordion-item-content {
+.accordion-item-content {
     height: 0;
+    margin: 0px 20px;
     overflow: hidden;
-    transition: height .5s;
 }
 
-.accordion-item h4:before {
-    content: "+"; /* Unicode character for "plus" sign (+) */
+.accordion-item h4::before {
+    content: '+';
     margin-right: 10px;
 }
 
-.accordion-item:hover h4:before {
-    content: "-"; /* Unicode character for "plus" sign (-) */
+.accordion-item:hover h4::before {
+    content: '-';
     margin-right: 10px;
 }
 
