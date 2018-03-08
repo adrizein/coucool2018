@@ -339,7 +339,7 @@ li {
 
 li:before {
     content:"⇀";
-    margin-right: 10px;
+    margin-right: 12px;
 }
 
 /* SECTIONS SPECIFICITIES*/
