@@ -194,10 +194,13 @@ window.onload = async () => {
         // initialize the composition in its exploded form
         composition.animate(1);
         container.classList.add('visible');
+
+        // TODO: credit should disappear with scroll
+        credit.classList.add('visible');
         await composition.runAnimation(2000, 0);
         await setActiveSection(initialSection, false, language);
+        // TODO: texts should appear with scroll too
         manualScroll = false;
-        main.classList.add('no-scroll');
         await fadeInTexts();
         manualScroll = true;
         main.classList.remove('no-scroll');
@@ -382,9 +385,17 @@ window.onload = async () => {
         if (window.location.hash.length > 1) {
             const urlSection = window.location.hash.substr(1);
             if (urlSection) {
-                const [,lang, section] = urlSection.split('/');
+                const parts = urlSection.split('/').splice(1);
+                let lang, section;
+                if (['fr', 'en'].includes(parts[0])) {
+                    lang = parts[0];
+                    section = getSectionByName(parts[1]) || activeSection || getSectionByName('ethos');
+                }
+                else {
+                    section = getSectionByName(parts[0]);
+                }
 
-                return [getSectionByName(section), lang || document.documentElement.lang];
+                return [section || activeSection || getSectionByName('ethos'), lang || document.documentElement.lang];
             }
         }
 
@@ -425,7 +436,7 @@ window.onload = async () => {
     async function fadeInTexts() {
         container.classList.add('loaded');
         container.classList.remove('loading');
-        await pause(3000);
+        await pause(5500);
         container.classList.remove('loaded');
 
         return frame();
@@ -448,7 +459,7 @@ window.onload = async () => {
             return Velocity(
                 element.lastElementChild,
                 {height: element.lastElementChild.scrollHeight},
-                {queue: false, duration: 10 * element.lastElementChild.scrollHeight}
+                {queue: false, duration: 5 * element.lastElementChild.scrollHeight}
             );
         }
     }
@@ -460,7 +471,7 @@ window.onload = async () => {
             return Velocity(
                 element.lastElementChild,
                 {height: 0},
-                {queue: false, duration: 10 * element.lastElementChild.scrollHeight}
+                {queue: false, duration: 5 * element.lastElementChild.scrollHeight}
             );
         }
     }

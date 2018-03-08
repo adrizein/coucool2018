@@ -40,12 +40,11 @@ html:lang(fr) .en {
 #container.loading .title,
 #container.loading nav,
 #container.loading #main,
-#container.loading #credit,
 #container.loading #date,
 #container.loading footer
 {
     opacity: 0;
-    transition: opacity 500ms linear;
+    transition: opacity 1000ms linear;
 }
 
 #container.loading #chevron {
@@ -63,22 +62,26 @@ html:lang(fr) .en {
 }
 
 #container.loaded #chevron {
-    animation: blink 500ms 500ms infinite alternate linear;
-}
-
-#container.loaded #credit {
-    transition-duration: 500ms;
-    transition-delay: 500ms;
+    animation: blink 1000ms 500ms infinite alternate linear;
 }
 
 #container.loaded * {
     opacity: 1;
-    transition: opacity 500ms linear;
-    transition-delay: 2500ms;
+    transition: opacity 1000ms linear;
+    transition-delay: 4500ms;
 }
 
 #container.loaded section {
     opacity: 0;
+}
+
+#credit {
+    opacity: 0;
+}
+
+#credit.visible {
+    opacity: 1;
+    transition: opacity 1000ms 1000ms linear;
 }
 
 .visible #artwork {
@@ -196,7 +199,7 @@ area {
     position: absolute;
     right: 10px;
     bottom: 10px;
-    color: rgb(119, 133, 110);
+    color: rgb(134, 149, 123);
     text-align: right;
     z-index: 3;
     transition: opacity 500ms linear;
@@ -204,7 +207,7 @@ area {
 }
 
 #credit a {
-    color: rgb(119, 133, 110);
+    color: rgb(134, 149, 123);
 }
 
 #credit.hidden {
