@@ -37,22 +37,70 @@ html:lang(fr) .en {
     background-size: 100% 100%;
 }
 
-#container.loading .title,
-#container.loading nav,
-#container.loading #main,
-#container.loading #date,
-#container.loading footer
-{
+#container.visible {
+    visibility: visible;
+}
+
+.visible #credit {
+    opacity: 1;
+    transition: opacity 1000ms 0ms linear;
+}
+
+.visible.loading #credit {
+    transition-delay: 1000ms;
+}
+
+.text {
     opacity: 0;
+}
+
+.loaded .text {
+    opacity: 1;
+}
+
+.visible.loading .text {
     transition: opacity 1000ms linear;
 }
 
-#container.loading #chevron {
+.visible section.text {
+    opacity: 0;
+    transition: none;
+}
+
+.text.visible {
+    opacity: 1;
+}
+
+.loaded .hidden {
+    opacity: 0;
+    transition-duration: 0ms !important;
+    transition-delay: 0ms !important;
+}
+
+.visible #credit.hidden {
+    opacity: 0;
+    transition-duration: 0ms;
+    transition-delay: 0ms;
+}
+
+#credit {
     opacity: 0;
 }
 
 @keyframes blink {
     0% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    75% {
         opacity: 0;
     }
 
@@ -61,41 +109,14 @@ html:lang(fr) .en {
     }
 }
 
-#container.loaded #chevron {
-    animation: blink 1000ms 500ms infinite alternate linear;
+.loading #chevron.blink {
+    transition: opacity 1000ms 500ms linear;
+    animation: blink 4000ms linear;
+    animation-delay: 1500ms;
 }
 
-#container.loaded * {
-    opacity: 1;
-    transition: opacity 1000ms linear;
-    transition-delay: 4500ms;
-}
-
-#container.loaded section {
-    opacity: 0;
-}
-
-#credit {
-    opacity: 0;
-}
-
-#credit.visible {
-    opacity: 1;
-    transition: opacity 1000ms 1000ms linear;
-}
-
-.visible #artwork {
-    visibility: visible;
-}
-
-#container.visible {
-    visibility: visible;
-}
-
-.title {
-    padding: 0 20px;
-    display: flex;
-    align-items: baseline;
+.loaded #chevron {
+    transition: opacity 500ms linear;
 }
 
 #coucool {
@@ -116,7 +137,6 @@ html:lang(fr) .en {
 footer {
     bottom: 0;
     display: flex;
-    transition: opacity 1000ms ease-in-out;
     line-height: 40px;
     font-size: 16px;
 }
@@ -157,7 +177,6 @@ area {
     top: 0;
     bottom: 0;
     overflow: hidden;
-    visibility: hidden;
     z-index: 2;
 }
 
@@ -177,17 +196,11 @@ area {
     bottom: 0;
     text-align: center;
     height: 40px;
-    transition: opacity 500ms linear;
-    transition-delay: 500ms;
 
     background-image: url('./images/chevron.png');
     background-position: center;
     background-repeat: no-repeat;
     background-size: 50px;
-}
-
-#chevron.hidden {
-    transition-delay: 0ms;
 }
 
 .example {
@@ -203,7 +216,6 @@ area {
     text-align: right;
     z-index: 3;
     transition: opacity 500ms linear;
-    transition-delay: 500ms;
 }
 
 #credit a {
@@ -248,7 +260,7 @@ area {
 section {
     height: 100%;
     display: none;
-    padding: 0px 20px;
+    padding: 0 20px;
 }
 
 section.active {
@@ -263,23 +275,10 @@ section.active {
 }
 
 
-
 /*HELPER*/
 
 .transparent-green {
     color: #93a69b;
-}
-
-.transparent-orange {
-    background-image: url('./images/frame.jpg');
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
-}
-
-.background-color {
-    background-repeat: round;
-    background-attachment: fixed;
-    -webkit-background-clip: text;
 }
 
 
@@ -299,10 +298,6 @@ h2 {
     text-decoration: line-through;
     transition: text-decoration-color 500ms linear;
     text-decoration-color: transparent;
-}
-
-h2.inactive {
-    /*color: lightgray;*/
 }
 
 .link {
@@ -444,7 +439,7 @@ li:before {
 
 .accordion-item-content {
     height: 0;
-    margin: 0px 20px;
+    margin: 0 20px;
     overflow: hidden;
 }
 

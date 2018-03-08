@@ -71,6 +71,7 @@ window.onload = async () => {
         composition = new Composition(artwork, 843, 1353, width < height),
         chevron = document.getElementById('chevron'),
         credit = document.getElementById('credit'),
+        texts = document.getElementsByClassName('text'),
         sections = _.map(
             document.querySelectorAll('section'), (element, index) => {
                 const
@@ -193,19 +194,23 @@ window.onload = async () => {
 
         // initialize the composition in its exploded form
         composition.animate(1);
+        chevron.classList.add('hidden');
+        container.classList.add('loading');
         container.classList.add('visible');
-
-        // TODO: credit should disappear with scroll
-        credit.classList.add('visible');
         await composition.runAnimation(2000, 0);
+        chevron.classList.remove('hidden');
+        chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
-        // TODO: texts should appear with scroll too
-        manualScroll = false;
-        await fadeInTexts();
-        manualScroll = true;
-        main.classList.remove('no-scroll');
-        await pause(4000);
+        await pause(4500);
+        const c = fadeInTexts();
+        await pause(500);
+        chevron.classList.remove('blink');
+        await c;
+        container.classList.remove('loading');
+        container.classList.add('loaded');
+        await frame();
 
+        await pause(4000);
         if (autoScroll) {
             return scrollToSection();
         }
@@ -234,7 +239,6 @@ window.onload = async () => {
                 sections.forEach((s) => {
                     if (s.title) {
                         if (s.name !== section.name) {
-                            s.title.classList.add('inactive');
                             s.title.classList.remove('active');
                         }
                     }
@@ -250,7 +254,7 @@ window.onload = async () => {
                 credit.classList.add('hidden');
 
                 if (languageChanged) {
-                    await fadeOutTexts();
+                    //await fadeOutTexts();
                 }
 
                 if (languageChanged || sectionChanged) {
@@ -279,7 +283,7 @@ window.onload = async () => {
 
                 if (languageChanged) {
                     document.documentElement.lang = lang;
-                    await fadeInTexts();
+                    //await fadeInTexts();
                 }
             }
 
@@ -301,7 +305,7 @@ window.onload = async () => {
             });
 
             await frame();
-            
+
             if (activeSection.name === 'contributions') {
                 main.style.top = '0px';
                 main.style.bottom = '0px';
@@ -339,11 +343,14 @@ window.onload = async () => {
         }
         else {
             chevron.classList.add('hidden');
+            chevron.classList.remove('blink');
             credit.classList.add('hidden');
         }
 
         if (manualScroll) {
             autoScroll = false;
+            container.classList.remove('loading');
+            container.classList.add('loaded');
             if (!composition.running) {
                 const
                     s = main.scrollTop / main.scrollHeight,
@@ -437,20 +444,6 @@ window.onload = async () => {
         });
     }
 
-    async function fadeOutTexts() {
-        container.classList.add('loading');
-        return pause(1000);
-    }
-
-    async function fadeInTexts() {
-        container.classList.add('loaded');
-        container.classList.remove('loading');
-        await pause(5500);
-        container.classList.remove('loaded');
-
-        return frame();
-    }
-
     async function scrollToSection() {
         return Velocity(activeSection.element, 'scroll', {
             offset: activeSection.element.style.paddingTop,
@@ -491,6 +484,16 @@ window.onload = async () => {
                 return closeAccordion(e, true);
             }
         }));
+    }
+
+    async function fadeInTexts() {
+        _.forEach(texts, (e) => e.classList.add('visible'));
+
+        return pause(1000);
+    }
+
+    async function fadeOutTexts() {
+        _.forEach(texts, (e) => e.classList.remove('visible'));
     }
 };
 
