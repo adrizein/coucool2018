@@ -301,6 +301,15 @@ window.onload = async () => {
             });
 
             await frame();
+            
+            if (activeSection.name === 'contributions') {
+                main.style.top = '0px';
+                main.style.bottom = '0px';
+            }
+            else {
+                main.style.top = '20px';
+                main.style.bottom = '20px';
+            }
 
             if (activeSection.name === 'curiosites') {
                 artwork.style.zIndex = '5';
