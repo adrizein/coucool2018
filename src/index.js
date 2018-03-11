@@ -199,16 +199,13 @@ window.onload = async () => {
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
-        await pause(6500);
-        const c = fadeInTexts();
-        await pause(500);
+        await pause(7000);
         chevron.classList.remove('blink');
-        await c;
+        await pause(4000);
         container.classList.remove('loading');
         container.classList.add('loaded');
         await frame();
 
-        await pause(4000);
         if (autoScroll) {
             return scrollToSection();
         }
@@ -286,7 +283,6 @@ window.onload = async () => {
                     container.classList.add('loaded');
                     fadeInTexts();
                     document.documentElement.lang = lang;
-                    await pause(2000);
                 }
             }
 

@@ -14,6 +14,10 @@ html, body {
 
 body {
     font-family: coucool, Josefin, arial, sans-serif;
+    color: rgb(66, 68, 66);
+}
+
+footer, #date, footer a {
     color: whitesmoke;
 }
 
@@ -52,19 +56,11 @@ html:lang(fr) .en {
 
 .text {
     opacity: 0;
+    transition: opacity 500ms linear;
 }
 
 .loaded .text {
     opacity: 1;
-    transition: opacity 500ms linear;
-}
-
-.visible.loading .text {
-    transition: opacity 1000ms linear;
-}
-
-.loading section.text {
-    opacity: 0 !important;
 }
 
 .visible section.text {
@@ -185,9 +181,19 @@ area {
     position: absolute;
 }
 
-#artwork.portrait div {
+#artwork.portrait > div {
     transform: rotate(-90deg);
     bottom: 0;
+}
+
+#artwork.portrait span {
+    transform: translateY(-50%) translateX(-50%) rotate(90deg);
+    position: absolute;
+    pointer-events: none;
+    top: 50%;
+    left: 50%;
+    font-size: 20px;
+    text-shadow: 1px 1px 1px rgba(60, 100, 160, 0.8);
 }
 
 #chevron {
@@ -324,7 +330,7 @@ p {
 }
 
 a {
-    color:white;
+    color: rgb(66, 68, 66);
     text-decoration: underline;
 }
 
@@ -463,7 +469,7 @@ h4, ul {
 }
 
 ul {
-    padding-left: 30px;
+    padding: 0 10px;
 }
 
 #weezevent {
@@ -491,8 +497,8 @@ footer .date {
 
 
 @media (max-width: 640px) {
-    p, h2, h3, h4, .flex-row {
-        font-size: 20px;
+    p, h2, h3, h4, section {
+        font-size: 19px;
     }
 
     p {
@@ -536,27 +542,32 @@ footer .date {
         display:block;
         width:110px;
     }
+
     #credit div {
-        width:110px;
+        width: 110px;
     }
 
+    section {
+        padding: 0;
+    }
+
+    .content-container {
+        padding: 0 10px;
+    }
+
+    .accordion {
+        padding: 10px;
+        border: solid 2px white;
+    }
+
+    .accordion-item-content {
+        margin: 0 10px;
+    }
 }
 
 @media (max-width: 380px) {
-    p, h3, h4, .flex-row {
+    p, h2, h3, h4, section, footer {
         font-size: 15px;
-    }
-
-    h2 {
-        font-size: 13px;
-    }
-
-    .title h1 {
-        font-size: 17px;
-    }
-
-    #chevron {
-        background-size: 50px;
     }
 }
 

@@ -65,7 +65,7 @@ class MovingImage {
         this.element.src = _.get(src, 'src') || src;
     }
 
-    createMap(shape){
+    createMap(shape) {
         const map = document.createElement("map");
         map.name = this.element.id + "_map";
         this._map = map;
@@ -92,7 +92,6 @@ class MovingImage {
         overlayContent.style.position = "absolute";
         overlayContent.style.pointerEvents = "none";
         overlayContent.style.top = "50%";
-        overlayContent.style.transform = "translateY(-50%) translateX(-50%)";
         overlayContent.style.left = "50%";
         overlayContent.innerHTML = this.title;
         this.overlay.appendChild(overlayContent);
