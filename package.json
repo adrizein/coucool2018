@@ -8,9 +8,16 @@
     "lint": "eslint ./src",
     "start": "webpack-dev-server --config webpack.dev.js"
   },
+  "browserslist": [
+    "> 0.1%"
+  ],
   "dependencies": {
+    "cssnano": "~3.10.0",
+    "dom4": "~2.0.1",
     "extract-text-webpack-plugin": "~3.0.2",
     "lodash": "^4.17.4",
+    "postcss-cssnext": "~3.1.0",
+    "postcss-loader": "~2.1.1",
     "velocity-animate": "^1.5.1"
   },
   "devDependencies": {

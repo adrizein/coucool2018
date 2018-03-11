@@ -130,7 +130,8 @@
         "Buffer": true,
         "module": true,
         "inject": true,
-        "Velocity": true
+        "Velocity": true,
+        "_": true
     },
 
     "parserOptions": {

@@ -1,7 +1,5 @@
 'use strict';
 
-import * as _ from 'lodash';
-
 import './style.css';
 import * as compositionImages from './images/composition';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
@@ -188,7 +186,7 @@ window.onload = async () => {
         loader.classList.add('exit');
         onResize();
         await frame();
-        loader.parentElement.removeChild(loader);
+        loader.remove();
         await frame();
         main.scrollTo = 0; // remove the slight offset when the loader is removed
 

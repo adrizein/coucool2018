@@ -8,9 +8,12 @@ const
 
 
 module.exports = {
-    entry: ['babel-polyfill', './src/index.js'],
+    entry: {
+        polyfills: './src/polyfills.js',
+        index: './src/index.js',
+    },
     output: {
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
@@ -21,6 +24,7 @@ module.exports = {
             template: './src/index.html',
         }),
         new webpack.ProvidePlugin({
+            _: 'lodash',
             Velocity: 'velocity-animate',
         }),
         new CleanWebpackPlugin(['./dist']),
@@ -44,7 +48,11 @@ module.exports = {
                 use: {
                     loader: 'babel-loader',
                     options: {
-                        presets: ['babel-preset-env'],
+                        presets: [['babel-preset-env', {
+                            targets: {
+                                browsers: ['> 0.1%'],
+                            },
+                        }]],
                     },
                 },
                 exclude: path.resolve(__dirname, 'node_modules'),
@@ -53,7 +61,15 @@ module.exports = {
                 test: /\.css$/,
                 use: ExtractTextPlugin.extract({
                     fallback: 'style-loader',
-                    use: ['css-loader'],
+                    use: [
+                        {
+                            loader: 'css-loader',
+                            options: {
+                                importLoaders: 1,
+                            },
+                        },
+                        'postcss-loader',
+                    ],
                 }),
             },
         ],
