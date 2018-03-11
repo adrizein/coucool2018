@@ -226,7 +226,7 @@ window.onload = async () => {
         const sectionChanged = !activeSection || section.name !== activeSection.name;
 
         if (!switching) {
-            let delayBeforeScrollingDown = 3000;
+            let delayBeforeScrollingDown = 4000;
             switching = true;
             autoScroll = false;
             window.location.hash = `/${lang}/${section.name}`;
