@@ -88,6 +88,7 @@ class MovingImage {
 
     createOverlay() {
         this.overlay = document.createElement("div");
+        this.overlay.classList.add("overlay");
         var overlayContent = document.createElement("span");
         overlayContent.style.position = "absolute";
         overlayContent.style.pointerEvents = "none";
