@@ -56,10 +56,15 @@ html:lang(fr) .en {
 
 .loaded .text {
     opacity: 1;
+    transition: opacity 500ms linear;
 }
 
 .visible.loading .text {
     transition: opacity 1000ms linear;
+}
+
+.loading section.text {
+    opacity: 0 !important;
 }
 
 .visible section.text {
@@ -92,15 +97,7 @@ html:lang(fr) .en {
         opacity: 1;
     }
 
-    25% {
-        opacity: 0;
-    }
-
     50% {
-        opacity: 1;
-    }
-
-    75% {
         opacity: 0;
     }
 
@@ -109,14 +106,18 @@ html:lang(fr) .en {
     }
 }
 
+#chevron.blink {
+    animation: blink 2000ms 1000ms linear;
+}
+
 .loading #chevron.blink {
     transition: opacity 1000ms 500ms linear;
-    animation: blink 4000ms linear;
+    animation: blink 2000ms linear infinite;
     animation-delay: 1500ms;
 }
 
 .loaded #chevron {
-    transition: opacity 500ms linear;
+    transition: opacity 1000ms linear;
 }
 
 #coucool {

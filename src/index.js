@@ -201,7 +201,7 @@ window.onload = async () => {
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
-        await pause(4500);
+        await pause(6500);
         const c = fadeInTexts();
         await pause(500);
         chevron.classList.remove('blink');
@@ -254,7 +254,9 @@ window.onload = async () => {
                 credit.classList.add('hidden');
 
                 if (languageChanged) {
-                    //await fadeOutTexts();
+                    container.classList.add('loading');
+                    container.classList.remove('loaded');
+                    fadeOutTexts();
                 }
 
                 if (languageChanged || sectionChanged) {
@@ -269,21 +271,24 @@ window.onload = async () => {
                         main.scrollTop = 0;
                     }
                     else {
-                        await composition.runAnimation(duration * 0.7, 0.6);
-                        await composition.runAnimation(duration * 0.7, 0);
+                        await composition.runAnimation(duration * 0.6, 0.6);
+                        await composition.runAnimation(duration * 0.6, 0);
                     }
+
+                    activeSection.element.classList.remove('active');
+                    await frame();
                 }
                 else {
                     // do not wait before scrolling
                     delayBeforeScrollingDown = 0;
                 }
 
-                activeSection.element.classList.remove('active');
-                await frame();
-
                 if (languageChanged) {
+                    container.classList.remove('loading');
+                    container.classList.add('loaded');
+                    fadeInTexts();
                     document.documentElement.lang = lang;
-                    //await fadeInTexts();
+                    await pause(2000);
                 }
             }
 
@@ -292,8 +297,9 @@ window.onload = async () => {
             activeSection.element.classList.add('active');
             chevron.classList.remove('hidden');
             credit.classList.remove('hidden');
-            manualScroll = true;
             main.classList.remove('no-scroll');
+            manualScroll = true;
+            await frame();
 
             switching = false;
             sections.forEach((s) => {
@@ -340,6 +346,7 @@ window.onload = async () => {
         if (main.scrollTop === 0) {
             chevron.classList.remove('hidden');
             credit.classList.remove('hidden');
+            chevron.classList.add('blink');
         }
         else {
             chevron.classList.add('hidden');
