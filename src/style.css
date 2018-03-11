@@ -357,13 +357,17 @@ li:before {
     display: none;
 }
 
+
 .contribution-page:first-child {
     display: flex;
 }
 
+.contribution-page-content {
+    margin: 0 20px 50px 20px;
+}
+
 .contribution-page-container {
-    display: flex;
-    height: 100%;
+    margin:auto;
 }
 
 .yes, .no {
@@ -374,6 +378,10 @@ li:before {
     margin: auto;
     background-size: contain;
     background-repeat: no-repeat;
+}
+
+.no.non-clickable {
+    cursor: inherit;
 }
 
 .yes {
@@ -391,6 +399,14 @@ li:before {
 .link.no {
     background-image: url('./images/composition/feather-circle.png');
     text-decoration: none;
+}
+
+#weezevent {
+    display: none;
+}
+
+.weezevent-visible #weezevent {
+    display: block;
 }
 
 .flex-row {

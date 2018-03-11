@@ -117,6 +117,12 @@ window.onload = async () => {
         });
     });
 
+    _.forEach(document.querySelectorAll('input'), (element) => {
+        element.addEventListener('click', (event) => {
+            fadeContributionPage(event.target);
+        });
+    });
+
     _.forEach(document.querySelectorAll('#language span'), (element) => {
         element.addEventListener('click', () => {
             if (element.id !== document.documentElement.lang) {
@@ -435,6 +441,16 @@ window.onload = async () => {
         const nextId = parentContributionPage.id.slice(0, -1) + nextPageNumber;
         const nextPage = document.getElementById(nextId);
 
+        //We append the weezevent div if the next page contains the weezevent-visble class
+        //This is to avoid to have 2 weezevent div in the page which makes it blink
+        var nextPageDisplay = 'flex';
+        if (nextPage.classList.contains('weezevent-visible')){
+            var weez = document.getElementById("weezevent")
+            nextPage.append(weez);
+            nextPageDisplay = 'block';
+        }
+
+
         await Velocity(parentContributionPage, 'fadeOut', {
             duration: 200,
             easing: 'ease-in',
@@ -442,7 +458,7 @@ window.onload = async () => {
         });
 
         await Velocity(nextPage, 'fadeIn', {
-            display: 'flex',
+            display: nextPageDisplay,
             duration: 200,
             easing: 'ease-in',
             queue: false,
