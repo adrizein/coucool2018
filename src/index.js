@@ -94,7 +94,11 @@ window.onload = async () => {
     window.addEventListener('resize', () => onResize(), {passive: true});
     main.addEventListener('scroll', () => onScroll(), {passive: true});
     window.onhashchange = onHash;
-    window.onorientationchange = () => {onResize(); onScroll();};
+    window.onorientationchange = async () => {
+        await frame();
+        await onResize();
+        await onScroll();
+    };
     main.onblur = function onBlur() {this.focus();};
 
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
@@ -376,9 +380,9 @@ window.onload = async () => {
         composition.resumeAnimation();
         await frame();
 
-        const {width, height} = document.body.getBoundingClientRect();
+        const {width: w, height: h} = document.body.getBoundingClientRect();
 
-        if (width < height) {
+        if (w < h) {
             if (!artwork.classList.contains('portrait')) {
                 // switch to portrait mode
                 // do not forget to change the timeout value when changing the css transition duration
