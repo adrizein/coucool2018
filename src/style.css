@@ -346,6 +346,11 @@ li:before {
 
 /* SECTIONS SPECIFICITIES*/
 
+#definitions p {
+    margin-bottom: 30px;
+}
+
+
 #eros .strophe {
     margin: 15px 0;
 }
