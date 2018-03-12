@@ -374,9 +374,10 @@ li:before {
 
 .contribution-page-container {
     margin:auto;
+    max-width: 750px;
 }
 
-.yes, .no {
+.yes, .no,.mer-noire, .kamoulox {
     width: 100px;
     height: 100px;
     display: flex;
@@ -387,20 +388,31 @@ li:before {
     background-repeat: no-repeat;
 }
 
+.yes div,.no div,.mer-noire div, .kamoulox div {
+    margin: auto;
+}
+
 .no.non-clickable {
     cursor: inherit;
+    background-image: url('./images/composition/feather-circle.png');
 }
 
 .yes {
     background-image: url('./images/composition/green-circle.png');
 }
 
-.yes div {
-    margin: auto;
+.mer-noire {
+    background-image: url('./images/composition/palm-tree.png');
+    background-position: center;
 }
 
-.link.no div {
-    margin: auto;
+.kamoulox {
+    background-image: url('./images/composition/blue-hair.png');
+}
+
+.mer-noire a, .kamoulox a {
+    color:white;
+    text-decoration: none;
 }
 
 .link.no {
@@ -544,7 +556,7 @@ footer .date {
     }
 
     #contributions p {
-        padding: 0 40px;
+        padding: 0px;
     }
 
     #artworkAndContent {
