@@ -14,7 +14,8 @@ html, body {
 
 body {
     font-family: coucool, Josefin, arial, sans-serif;
-    color: rgb(66, 68, 66);
+    color: white;;
+    text-shadow: 1px 1px 1px rgb(147, 159, 137);
 }
 
 footer, #date, footer a {
@@ -286,6 +287,7 @@ section.active {
 
 .transparent-green {
     color: #93a69b;
+    text-shadow: none;
 }
 
 
@@ -330,7 +332,7 @@ p {
 }
 
 a {
-    color: rgb(66, 68, 66);
+    color: white; /*rgb(66, 68, 66);*/
     text-decoration: underline;
 }
 
@@ -469,7 +471,7 @@ li:before {
 
 .accordion {
     margin: 20px auto 20px auto;
-    border: solid 3px rgb(66, 68, 66);
+    border: solid 3px white;/*rgb(66, 68, 66);*/
     max-width: 750px;
     padding: 30px 20px 20px 20px;
 }
