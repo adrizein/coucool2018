@@ -87,24 +87,15 @@ class MovingImage {
     }
 
     createOverlay() {
-        this.overlay = document.createElement("div");
-        this.overlay.classList.add("overlay");
-        var overlayContent = document.createElement("span");
-        overlayContent.style.position = "absolute";
-        overlayContent.style.pointerEvents = "none";
-        overlayContent.style.top = "50%";
-        overlayContent.style.left = "50%";
+        this.overlay = document.createElement('div');
+        this.overlay.classList.add('overlay');
+        const overlayContent = document.createElement('span');
         overlayContent.innerHTML = this.title;
         this.overlay.appendChild(overlayContent);
-        this.overlay.style.textAlign = "center";
-        this.overlay.style.position = "absolute";
-        this.overlay.style.pointerEvents = "none";
-        this.overlay.style.zIndex = 1;
-        this.overlay.style.opacity = 0;
     }
 
 
-    resize(scale, t, offsetX, offsetY, portrait) {
+    resize(scale, t, offsetX, offsetY) {
         this.element.height = scale * this.height;
         this.element.width = scale * this.width;
         this._trajectory.offsetX = offsetX;
@@ -129,17 +120,10 @@ class MovingImage {
         }
 
         if (this.overlay) {
-            if(portrait){
-                this.overlay.style.height = `${this.element.width}px`;
-                this.overlay.style.width =  `${this.element.height}px`;
-                this.overlay.style.bottom = this.element.style.left;
-                this.overlay.style.left = this.element.style.top;
-            } else {
-                this.overlay.style.height = `${this.element.height}px`;
-                this.overlay.style.width =  `${this.element.width}px`;
-                this.overlay.style.top = this.element.style.top;
-                this.overlay.style.left = this.element.style.left;
-            }
+            this.overlay.style.height = `${this.element.height}px`;
+            this.overlay.style.width = `${this.element.width}px`;
+            this.overlay.style.top = this.element.style.top;
+            this.overlay.style.left = this.element.style.left;
         }
     }
 
@@ -173,13 +157,13 @@ class MovingImage {
         Velocity(this.element, 'stop');
     }
 
-    mouseOver(){
+    mouseOver() {
         this.element.style.zIndex = 14;
         this.overlay.style.zIndex = 20;
         this.overlay.style.opacity = 1;
     }
 
-    mouseOut(){
+    mouseOut() {
         this.element.style.zIndex = this.zIndex;
         this.overlay.style.zIndex = 1;
         this.overlay.style.opacity = 0;
@@ -251,12 +235,12 @@ class Composition {
     }
 
     async add(image) {
-        this._anchor.appendChild(image.element);
+        this._canvas.appendChild(image.element);
         if (image._map) {
-            this._anchor.appendChild(image._map);
+            this._canvas.appendChild(image._map);
         }
         if (image.overlay) {
-            this._anchor.appendChild(image.overlay);
+            this._canvas.appendChild(image.overlay);
         }
         this._canvas.appendChild(image.element);
         this.images.push(image);
@@ -316,7 +300,7 @@ class Composition {
         }
 
         this.images.forEach((image) => {
-            image.resize(this._scale, this._t, offsetX, offsetY, this._portrait);
+            image.resize(this._scale, this._t, offsetX, offsetY);
         });
     }
 

@@ -14,10 +14,6 @@ html, body {
 
 body {
     font-family: coucool, Josefin, arial, sans-serif;
-    color: rgb(66, 68, 66);
-}
-
-footer, #date, footer a {
     color: whitesmoke;
 }
 
@@ -168,6 +164,7 @@ area {
 }
 
 #artwork {
+    text-shadow: 1px 1px 1px rgba(60, 100, 160, 0.8);
     position: absolute;
     left: 0;
     right: 0;
@@ -186,14 +183,25 @@ area {
     bottom: 0;
 }
 
-#artwork.portrait span {
+#artwork.portrait .overlay span {
     transform: translateY(-50%) translateX(-50%) rotate(90deg);
+}
+
+#artwork .overlay span {
+    transform: translateY(-50%) translateX(-50%);
     position: absolute;
     pointer-events: none;
     top: 50%;
     left: 50%;
     font-size: 20px;
-    text-shadow: 1px 1px 1px rgba(60, 100, 160, 0.8);
+}
+
+#artwork .overlay {
+    text-align: center;
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
 }
 
 #chevron {
@@ -238,15 +246,16 @@ area {
 }
 
 #main {
+    text-shadow: 1px 1px 1px rgba(60, 100, 160, 0.8);
     position: absolute;
     z-index:3;
     font-size: 20px;
     top: 20px;
     bottom: 20px;
-    /*text-shadow: 1px 1px 1px rgba(60, 100, 160, 0.8);*/
     text-align: center;
     -ms-overflow-style: none;
     -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
     overflow-y: scroll; /* has to be scroll, not auto */
     overflow-x: hidden;
     width: 100%;
@@ -298,13 +307,24 @@ h1 {
 }
 
 h2 {
-    flex: 1 0 50px;
+    position: relative;
+    flex: 1 0 auto;
     margin: 0;
     padding-top: 5px;
     font-size: 20px;
-    text-decoration: line-through;
-    transition: text-decoration-color 500ms linear;
-    text-decoration-color: transparent;
+}
+
+h2 img {
+    position: absolute;
+    height: 2px;
+    top: 53%;
+    width: 100px;
+    opacity: 0;
+    transition: opacity 500ms linear;
+}
+
+h2.active img {
+    opacity: 1;
 }
 
 .link {
@@ -330,16 +350,16 @@ p {
 }
 
 a {
-    color: rgb(66, 68, 66);
+    color: whitesmoke;
     text-decoration: underline;
 }
 
 li {
-    list-style-type:none;/*"⇀";*/
+    list-style-type: none; /* TODO: ⇀ should be transformed in a picture and used as a list style */
     margin: 10px 0;
 }
 
-li:before {
+li::before {
     content:"⇀";
     margin-right: 12px;
 }
@@ -363,7 +383,6 @@ li:before {
     display: none;
 }
 
-
 .contribution-page:first-child {
     display: flex;
 }
@@ -377,11 +396,10 @@ li:before {
     max-width: 750px;
 }
 
-.yes, .no,.mer-noire, .kamoulox {
+.yes, .no, .mer-noire, .kamoulox {
     width: 100px;
     height: 100px;
     display: flex;
-    color: whitesmoke;
     cursor: pointer;
     margin: auto;
     background-size: contain;
@@ -411,7 +429,6 @@ li:before {
 }
 
 .mer-noire a, .kamoulox a {
-    color:white;
     text-decoration: none;
 }
 
@@ -464,7 +481,7 @@ li:before {
 
 .accordion {
     margin: 20px auto 20px auto;
-    border: solid 3px rgb(66, 68, 66);
+    border: solid 3px whitesmoke;
     max-width: 750px;
     padding: 30px 20px 20px 20px;
 }
@@ -586,7 +603,7 @@ footer .date {
 
     .accordion {
         padding: 10px;
-        border: solid 2px white;
+        border-width: 2px;
     }
 
     .accordion-item-content {
