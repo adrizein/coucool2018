@@ -91,10 +91,12 @@ window.onload = async () => {
             document.querySelectorAll('section'), (element, index) => {
                 const
                     name = element.id,
+                    hidden = element.classList.contains('hidden'),
                     title = document.querySelector(`nav h2.${name}`);
 
                 return {
                     index,
+                    hidden,
                     name,
                     element,
                     title,
@@ -131,10 +133,8 @@ window.onload = async () => {
     _.forEach(document.querySelectorAll('nav h2'), (element) => {
         const line = new Image();
         line.src = redLine;
-        const {height: eh} = element.getBoundingClientRect();
         element.appendChild(line);
         const w = parseInt(_.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().width)) + 6);
-        const h = parseInt(_.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().height)));
         const b = parseInt(_.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().bottom)));
         line.style.width = `${w}px`;
         line.style.top = `${b - 10}px`;
@@ -147,7 +147,12 @@ window.onload = async () => {
             main.classList.add('no-scroll');
             const section = _.find(sections, (s) => event.currentTarget.classList.contains(s.name));
             if (section) {
-                setActiveSection(section);
+                setActiveSection(
+                    section,
+                    true,
+                    document.documentElement.lang,
+                    element.classList.contains('link') ? 0 : 5000
+                );
             }
             else {
                 console.error('Should not happen, bad section name:', event.currentTarget.className);
@@ -211,7 +216,7 @@ window.onload = async () => {
             ({zIndex, startX, startY, endX, endY, eventGeneratingShape, title, onClick, section}, name) => {
                 if (section) {
                     const s = getSectionByName(section);
-                    onClick = () => setActiveSection(s, false);
+                    onClick = () => setActiveSection(s);
                 }
 
                 const image = new MovingImage(
@@ -273,7 +278,7 @@ window.onload = async () => {
         return _.find(sections, ({name}) => name === sectionName);
     }
 
-    async function setActiveSection(section, scroll = true, lang) {
+    async function setActiveSection(section, scroll = true, lang, delay = 5000) {
         onResize();
 
         lang = lang || document.documentElement.lang;
@@ -281,7 +286,6 @@ window.onload = async () => {
         const sectionChanged = !activeSection || section.name !== activeSection.name;
 
         if (!switching) {
-            let delayBeforeScrollingDown = 5000;
             switching = true;
             autoScroll = false;
             window.location.hash = `/${lang}/${section.name}`;
@@ -318,7 +322,12 @@ window.onload = async () => {
                     fadeOutTexts();
                 }
 
-                if (languageChanged || sectionChanged) {
+                if (sectionChanged && activeSection.name === 'curiosites') {
+                    delay = 0;
+                    activeSection.element.classList.remove('active');
+                    await frame();
+                }
+                else if (languageChanged || sectionChanged) {
                     const duration = 1000;
                     if (main.scrollTop > 0) {
                         // Implode if we changed the section or language
@@ -340,7 +349,7 @@ window.onload = async () => {
                 }
                 else {
                     // do not wait before scrolling
-                    delayBeforeScrollingDown = 0;
+                    delay = 0;
                 }
 
                 if (languageChanged) {
@@ -395,7 +404,7 @@ window.onload = async () => {
                 credit.style.display = null;
                 artwork.style.zIndex = '2';
                 if (scroll) {
-                    await pause(delayBeforeScrollingDown);
+                    await pause(delay);
 
                     if (autoScroll) {
                         return scrollToSection();

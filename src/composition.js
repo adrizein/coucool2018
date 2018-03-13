@@ -123,8 +123,8 @@ class MovingImage {
         if (this.overlay) {
             this.overlay.style.height = `${this.element.height}px`;
             this.overlay.style.width = `${this.element.width}px`;
-            this.overlay.style.top = this.element.style.top;
-            this.overlay.style.left = this.element.style.left;
+            this.overlay.style.top = `${this.element.offsetTop}px`;
+            this.overlay.style.left = `${this.element.offsetLeft}px`;
         }
     }
 
