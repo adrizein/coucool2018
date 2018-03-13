@@ -482,8 +482,8 @@ window.onload = async () => {
         //We append the weezevent div if the next page contains the weezevent-visble class
         //This is to avoid to have 2 weezevent div in the page which makes it blink
         var nextPageDisplay = 'flex';
-        if (nextPage.classList.contains('weezevent-visible')){
-            var weez = document.getElementById("weezevent")
+        if (nextPage.classList.contains('weezevent-visible')) {
+            var weez = document.getElementById('weezevent');
             nextPage.append(weez);
             nextPageDisplay = 'block';
         }
