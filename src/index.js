@@ -228,7 +228,7 @@ window.onload = async () => {
         await composition.runAnimation(2000, 0);
 
         if (initialSection.name === 'curiosites') {
-            setActiveSection(initialSection, false, language);
+            await setActiveSection(initialSection, false, language);
             container.classList.remove('loading');
             container.classList.add('loaded');
 
@@ -269,13 +269,11 @@ window.onload = async () => {
             await frame();
 
             if (sectionChanged) {
-                if (activeSection) {
-                    if (activeSection.name === 'curiosites') {
-                        artwork.classList.remove('curiosites');
-                    }
-                    else {
-                        artwork.classList.add('curiosites');
-                    }
+                if (section.name === 'curiosites') {
+                    artwork.classList.add('curiosites');
+                }
+                else {
+                    artwork.classList.remove('curiosites');
                 }
                 //highlight title
                 sections.forEach((s) => {
