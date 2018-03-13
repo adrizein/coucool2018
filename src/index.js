@@ -2,6 +2,7 @@
 
 import './style.css';
 import * as compositionImages from './images/composition';
+import redLine from './images/red-line.png';
 import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
@@ -92,6 +93,16 @@ window.onload = async () => {
 
     // Events selectors
     window.addEventListener('resize', () => onResize(), {passive: true});
+
+    if (/Firefox/i.test(navigator.userAgent)) {
+        main.style.overflowY = 'hidden';
+        window.addEventListener('DOMMouseScroll', (event) => {
+            if (manualScroll) {
+                main.scrollTop += event.detail * 15;
+            }
+        }, {passive: true});
+    }
+
     main.addEventListener('scroll', () => onScroll(), {passive: true});
     window.onhashchange = onHash;
     window.onorientationchange = async () => {
@@ -100,6 +111,15 @@ window.onload = async () => {
         await onScroll();
     };
     main.onblur = function onBlur() {this.focus();};
+
+    _.forEach(document.querySelectorAll('nav h2'), (element) => {
+        const line = new Image();
+        line.src = redLine;
+        element.appendChild(line);
+        const w = _.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().width)) * 1.1;
+        line.style.width = `${w}px`;
+        line.style.left = `calc(50% - ${w / 2}px)`;
+    });
 
     _.forEach(document.querySelectorAll('h2, .link'), (element) => {
         element.addEventListener('click', (event) => {
@@ -206,6 +226,15 @@ window.onload = async () => {
         container.classList.add('loading');
         container.classList.add('visible');
         await composition.runAnimation(2000, 0);
+
+        if (initialSection.name === 'curiosites') {
+            setActiveSection(initialSection, false, language);
+            container.classList.remove('loading');
+            container.classList.add('loaded');
+
+            return frame();
+        }
+
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
@@ -240,6 +269,14 @@ window.onload = async () => {
             await frame();
 
             if (sectionChanged) {
+                if (activeSection) {
+                    if (activeSection.name === 'curiosites') {
+                        artwork.classList.remove('curiosites');
+                    }
+                    else {
+                        artwork.classList.add('curiosites');
+                    }
+                }
                 //highlight title
                 sections.forEach((s) => {
                     if (s.title) {
@@ -278,6 +315,7 @@ window.onload = async () => {
                     else {
                         await composition.runAnimation(duration * 0.6, 0.6);
                         await composition.runAnimation(duration * 0.6, 0);
+                        onScroll();
                     }
 
                     activeSection.element.classList.remove('active');
@@ -326,6 +364,7 @@ window.onload = async () => {
             }
 
             if (activeSection.name === 'curiosites') {
+                manualScroll = false;
                 artwork.style.zIndex = '5';
                 chevron.style.display = 'none';
                 credit.style.display = 'none';
@@ -338,6 +377,7 @@ window.onload = async () => {
                 artwork.style.zIndex = '2';
                 if (scroll) {
                     await pause(delayBeforeScrollingDown);
+
                     if (autoScroll) {
                         return scrollToSection();
                     }
