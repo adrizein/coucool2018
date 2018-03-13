@@ -217,6 +217,11 @@ area {
     opacity: 0;
 }
 
+#artwork #wood-triangle_overlay span {
+    top: 70%;
+    left: 40%;
+}
+
 #chevron {
     position: absolute;
     left: 0;

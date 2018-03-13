@@ -89,6 +89,7 @@ class MovingImage {
     createOverlay() {
         this.overlay = document.createElement('div');
         this.overlay.classList.add('overlay');
+        this.overlay.id = this.element.id + "_overlay";
         const overlayContent = document.createElement('span');
         overlayContent.innerHTML = this.title;
         this.overlay.appendChild(overlayContent);
