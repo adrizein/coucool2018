@@ -333,7 +333,6 @@ h2 {
 h2 img {
     position: absolute;
     height: 2px;
-    top: 53%;
     width: 100px;
     opacity: 0;
     transition: opacity 500ms linear;
@@ -619,7 +618,7 @@ footer .date {
     }
 
     .content-container {
-        padding: 0 10px;
+        padding: 0 20px;
     }
 
     .accordion {
@@ -634,7 +633,7 @@ footer .date {
 
 @media (max-width: 380px) {
     p, h2, h3, h4, section, footer {
-        font-size: 15px;
+        font-size: 18px;
     }
 }
 

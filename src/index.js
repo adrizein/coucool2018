@@ -131,9 +131,13 @@ window.onload = async () => {
     _.forEach(document.querySelectorAll('nav h2'), (element) => {
         const line = new Image();
         line.src = redLine;
+        const {height: eh} = element.getBoundingClientRect();
         element.appendChild(line);
-        const w = _.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().width)) * 1.1;
+        const w = parseInt(_.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().width)) + 6);
+        const h = parseInt(_.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().height)));
+        const b = parseInt(_.max(_.map(element.querySelectorAll('span'), (e) => e.getBoundingClientRect().bottom)));
         line.style.width = `${w}px`;
+        line.style.top = `${b - 10}px`;
         line.style.left = `calc(50% - ${w / 2}px)`;
     });
 
@@ -254,9 +258,8 @@ window.onload = async () => {
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
-        await pause(7000);
+        await pause(12000);
         chevron.classList.remove('blink');
-        await pause(4000);
         container.classList.remove('loading');
         container.classList.add('loaded');
         await frame();
@@ -278,7 +281,7 @@ window.onload = async () => {
         const sectionChanged = !activeSection || section.name !== activeSection.name;
 
         if (!switching) {
-            let delayBeforeScrollingDown = 4000;
+            let delayBeforeScrollingDown = 6000;
             switching = true;
             autoScroll = false;
             window.location.hash = `/${lang}/${section.name}`;
@@ -389,13 +392,18 @@ window.onload = async () => {
                 chevron.style.display = null;
                 credit.style.display = null;
                 artwork.style.zIndex = '2';
+                let end;
                 if (scroll) {
                     await pause(delayBeforeScrollingDown);
 
                     if (autoScroll) {
-                        return scrollToSection();
+                        end = scrollToSection();
                     }
                 }
+
+                chevron.classList.remove('blink');
+
+                return end;
             }
         }
     }
@@ -408,7 +416,6 @@ window.onload = async () => {
         }
         else {
             chevron.classList.add('hidden');
-            chevron.classList.remove('blink');
             credit.classList.add('hidden');
         }
 
@@ -497,13 +504,12 @@ window.onload = async () => {
 
         //We append the weezevent div if the next page contains the weezevent-visble class
         //This is to avoid to have 2 weezevent div in the page which makes it blink
-        var nextPageDisplay = 'flex';
+        let nextPageDisplay = 'flex';
         if (nextPage.classList.contains('weezevent-visible')) {
-            var weez = document.getElementById('weezevent');
+            const weez = document.getElementById('weezevent');
             nextPage.append(weez);
             nextPageDisplay = 'block';
         }
-
 
         await Velocity(parentContributionPage, 'fadeOut', {
             duration: 200,
