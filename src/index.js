@@ -385,6 +385,8 @@ window.onload = async () => {
                 artwork.style.zIndex = '5';
                 chevron.style.display = 'none';
                 credit.style.display = 'none';
+                await frame();
+                onResize();
             }
             else {
                 // scroll automatically if nothing happens (no click, no manual scroll)

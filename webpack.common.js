@@ -17,7 +17,10 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
-        new FaviconsWebpackPlugin('./src/images/logo.png'),
+        new FaviconsWebpackPlugin({
+            logo: './src/images/logo.png',
+            persistentCache: false,
+        }),
         new ExtractTextPlugin('./bundle.css'),
         new HtmlWebpackPlugin({
             title: 'Coucool 2018',
