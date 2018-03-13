@@ -192,10 +192,6 @@ area {
     transform: translateY(-50%) translateX(-50%) rotate(90deg);
 }
 
-#artwork .overlay {
-    display: none;
-}
-
 #artwork.curiosites .overlay {
     display: block;
 }
@@ -210,6 +206,7 @@ area {
 }
 
 #artwork .overlay {
+    display: none;
     text-align: center;
     position: absolute;
     pointer-events: none;
