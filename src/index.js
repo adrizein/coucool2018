@@ -22,7 +22,7 @@ const movingImages = {
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
     fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900,
         eventGeneratingShape: 'circle',
-        title: 'Eros',
+        title: 'Éros',
         section: 'eros',
     },
     greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282,
