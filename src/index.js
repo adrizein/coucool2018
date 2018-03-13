@@ -97,7 +97,9 @@ window.onload = async () => {
     if (/Firefox/i.test(navigator.userAgent)) {
         main.style.overflowY = 'hidden';
         window.addEventListener('DOMMouseScroll', (event) => {
-            main.scrollTop += event.detail * 15;
+            if (manualScroll) {
+                main.scrollTop += event.detail * 15;
+            }
         }, {passive: true});
     }
 
@@ -224,6 +226,15 @@ window.onload = async () => {
         container.classList.add('loading');
         container.classList.add('visible');
         await composition.runAnimation(2000, 0);
+
+        if (initialSection.name === 'curiosites') {
+            setActiveSection(initialSection, false, language);
+            container.classList.remove('loading');
+            container.classList.add('loaded');
+
+            return frame();
+        }
+
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
@@ -258,6 +269,14 @@ window.onload = async () => {
             await frame();
 
             if (sectionChanged) {
+                if (activeSection) {
+                    if (activeSection.name === 'curiosites') {
+                        artwork.classList.remove('curiosites');
+                    }
+                    else {
+                        artwork.classList.add('curiosites');
+                    }
+                }
                 //highlight title
                 sections.forEach((s) => {
                     if (s.title) {
@@ -345,6 +364,7 @@ window.onload = async () => {
             }
 
             if (activeSection.name === 'curiosites') {
+                manualScroll = false;
                 artwork.style.zIndex = '5';
                 chevron.style.display = 'none';
                 credit.style.display = 'none';

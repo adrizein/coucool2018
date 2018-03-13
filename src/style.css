@@ -187,6 +187,14 @@ area {
     transform: translateY(-50%) translateX(-50%) rotate(90deg);
 }
 
+#artwork .overlay {
+    display: none;
+}
+
+#artwork.curiosites .overlay {
+    display: block;
+}
+
 #artwork .overlay span {
     transform: translateY(-50%) translateX(-50%);
     position: absolute;
