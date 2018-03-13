@@ -16,10 +16,8 @@ const movingImages = {
     blueRectangleTopLeft: {zIndex: 0, startX: 181, startY: 157, endX: 181, endY: -230},
     centerCircle: {zIndex: 4, startX: 545, startY: 127, endX: 0, endY: -350,
         eventGeneratingShape: 'circle',
-        title: 'Facebook',
-        onClick() {
-            window.open('http://www.facebook.com/coucoolcoucool', '_blank');
-        },
+        title: 'Définition',
+        section: 'definition',
     },
     featherCircle: {zIndex: 1, startX: 214, startY: 217, endX: -150, endY: -150},
     fingers: {zIndex: 1, startX: 191, startY: 482, endX: 191, endY: 900,
@@ -29,12 +27,24 @@ const movingImages = {
     },
     greenCircle: {zIndex: 1, startX: 589, startY: 282, endX: 1589, endY: 1282,
         eventGeneratingShape: 'circle',
-        title: 'Definitions',
-        section: 'definitions',
+        title: 'Facebook',
+        onClick() {
+            window.open('http://www.facebook.com/coucoolcoucool', '_blank');
+        },
     },
     greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
-    orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900},
-    palmTree: {zIndex: 0, startX: 416, startY: 542, endX: 417, endY: 1042},
+    orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900, 
+        eventGeneratingShape: 'rect',
+        title: '2016',
+        onClick() {
+            window.open('http://cou.cool/2016', '_blank');
+        },
+    },
+    palmTree: {zIndex: 0, startX: 416, startY: 542, endX: 417, endY: 1042,
+        eventGeneratingShape: 'rect',
+        title: 'Tarif Solidaire',
+        section: 'solidaire',
+    },
     photocopySmallLeft: {zIndex: 0, startX: 246, startY: 462, endX: -200, endY: 280},
     photocopyShapeTopRight: {zIndex: 2, startX: 627, startY: 238, endX: 100, endY: -200},
     pillCenterRight: {zIndex: 5, startX: 465, startY: 336, endX: -200, endY: 336},
@@ -43,20 +53,26 @@ const movingImages = {
     textureRectangleCenter: {zIndex: 2, startX: 417, startY: 301, endX: -360, endY: 100},
     woodTriangle: {zIndex: 2, startX: 245, startY: 423, endX: 775, endY: 853,
         eventGeneratingShape: 'poly',
-        title: 'Coucool 2016',
+        title: 'Statuts',
         onClick() {
-            window.open('http://cou.cool/2016', '_blank');
+            window.open('http://cou.cool/statuts', '_blank');
         },
     },
     yellowRectangleCenter: {zIndex: 1, startX: 685, startY: 357, endX: 1400, endY: 359,
         eventGeneratingShape: 'rect',
-        title: 'Coucool 2017',
+        title: '2017',
         onClick() {
             window.open('http://cou.cool/2017', '_blank');
         },
     },
     yellowRectangleCenterLeft: {zIndex: 1, startX: 92, startY: 422, endX: -900, endY: 422},
-    zebraPill: {zIndex: 2, startX: 695, startY: 116, endX: 1000, endY: -150},
+    zebraPill: {zIndex: 2, startX: 695, startY: 116, endX: 1000, endY: -150,
+        eventGeneratingShape: 'rect',
+        title: 'Bilan Financier 2017',
+        onClick() {
+            window.open('https://mailchi.mp/168c0330d2ba/coucool-dernires-participations-classiques-1266449', '_blank');
+        },
+    },
 };
 
 
