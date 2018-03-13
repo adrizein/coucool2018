@@ -15,7 +15,6 @@ html, body {
 body {
     font-family: coucool, Josefin, arial, sans-serif;
     color: whitesmoke;
-    text-shadow: 1px 1px 1px rgb(147, 159, 137);
 }
 
 footer, #date, footer a {
@@ -381,6 +380,9 @@ li::before {
     margin-bottom: 30px;
 }
 
+#benevoles .howto {
+    font-weight: bold;
+}
 
 #eros .strophe {
     margin: 15px 0;
