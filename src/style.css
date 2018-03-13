@@ -104,7 +104,7 @@ html:lang(fr) .en {
 }
 
 #chevron.blink {
-    animation: blink 2000ms 1000ms linear;
+    animation: blink 2000ms 1000ms linear infinite;
 }
 
 .loading #chevron.blink {
@@ -348,10 +348,6 @@ h2.active img {
 
 .link, h2 {
     cursor: pointer;
-}
-
-h2.active {
-    text-decoration-color: #cd6152
 }
 
 .strophe p {

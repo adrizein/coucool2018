@@ -33,7 +33,7 @@ const movingImages = {
         },
     },
     greenRectangleTopLeft: {zIndex: 1, startX: 243, startY: 129, endX: 1400, endY: 800},
-    orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900, 
+    orangeRectangleCenter: {zIndex: 1, startX: 245, startY: 422, endX: -400, endY: 900,
         eventGeneratingShape: 'rect',
         title: '2016',
         onClick() {
@@ -258,7 +258,7 @@ window.onload = async () => {
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
         await setActiveSection(initialSection, false, language);
-        await pause(12000);
+        await pause(11500);
         chevron.classList.remove('blink');
         container.classList.remove('loading');
         container.classList.add('loaded');
@@ -281,7 +281,7 @@ window.onload = async () => {
         const sectionChanged = !activeSection || section.name !== activeSection.name;
 
         if (!switching) {
-            let delayBeforeScrollingDown = 6000;
+            let delayBeforeScrollingDown = 5000;
             switching = true;
             autoScroll = false;
             window.location.hash = `/${lang}/${section.name}`;
@@ -392,18 +392,13 @@ window.onload = async () => {
                 chevron.style.display = null;
                 credit.style.display = null;
                 artwork.style.zIndex = '2';
-                let end;
                 if (scroll) {
                     await pause(delayBeforeScrollingDown);
 
                     if (autoScroll) {
-                        end = scrollToSection();
+                        return scrollToSection();
                     }
                 }
-
-                chevron.classList.remove('blink');
-
-                return end;
             }
         }
     }
@@ -417,6 +412,7 @@ window.onload = async () => {
         else {
             chevron.classList.add('hidden');
             credit.classList.add('hidden');
+            chevron.classList.remove('blink');
         }
 
         if (manualScroll) {
