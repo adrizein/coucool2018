@@ -480,7 +480,7 @@ window.onload = async () => {
         if (window.location.hash.length > 1) {
             const urlSection = window.location.hash.substr(1);
             if (urlSection) {
-                const parts = urlSection.split('/').splice(1);
+                const parts = urlSection.split('/').filter((s) => s);
                 let lang, section;
                 if (['fr', 'en'].includes(parts[0])) {
                     lang = parts[0];
