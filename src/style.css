@@ -14,11 +14,11 @@ html, body {
 
 body {
     font-family: coucool, Josefin, arial, sans-serif;
-    color: whitesmoke;
+    color: white;
 }
 
 footer, #date, footer a {
-    color: whitesmoke;
+    color: white;
 }
 
 html:lang(en) .fr {
@@ -360,7 +360,7 @@ p {
 }
 
 a {
-    color: whitesmoke; /*rgb(66, 68, 66);*/
+    color: white; /*rgb(66, 68, 66);*/
     text-decoration: underline;
 }
 
@@ -499,7 +499,7 @@ li::before {
 
 .accordion {
     margin: 20px auto 20px auto;
-    border: solid 3px whitesmoke;
+    border: solid 3px white;
     max-width: 750px;
     padding: 30px 20px 20px 20px;
 }
@@ -575,6 +575,14 @@ footer .date {
 
     h2.ethos {
         order: -1;
+    }
+
+    nav {
+        justify-content: space-between;
+    }
+
+    h2 {
+        flex: none;
     }
 
     nav, #artworkAndContent, footer {
