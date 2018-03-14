@@ -388,6 +388,17 @@ li::before {
     margin: 15px 0;
 }
 
+#eros .strophe:first-of-type {
+    margin-top: 0;
+}
+
+#eros .stars {
+    text-align: center;
+    font-size: 30px;
+    margin-bottom: 0;
+    padding-top: 10px;
+    line-height: 1em;
+}
 
 #contributions .content-container {
     height:100%;
@@ -557,24 +568,13 @@ footer .date {
     footer .date {
         display: block;
     }
-}
 
-
-@media (max-width: 640px) {
     p, h2, h3, h4, section {
         font-size: 19px;
     }
 
     p {
         text-align: justify;
-    }
-
-    h2:last-child {
-        display: none;
-    }
-
-    h2.ethos {
-        order: -1;
     }
 
     nav {
@@ -637,9 +637,20 @@ footer .date {
     }
 }
 
-@media (max-width: 380px) {
-    p, h2, h3, h4, section, footer {
-        font-size: 18px;
+@media (max-width: 560px) {
+    h2:last-child {
+        display: none;
+    }
+
+    h2.ethos {
+        order: -1;
+    }
+
+}
+
+@media (max-width: 350px) {
+    h2 {
+        font-size: 16px;
     }
 }
 
