@@ -252,17 +252,25 @@ window.onload = async () => {
         container.classList.add('visible');
         await composition.runAnimation(2000, 0);
 
-        if (initialSection.name === 'curiosites') {
-            await setActiveSection(initialSection, false, language);
-            container.classList.remove('loading');
-            container.classList.add('loaded');
+        if (initialSection) {
+            if (initialSection.name === 'curiosites') {
+                await setActiveSection(initialSection, false, language);
+                container.classList.remove('loading');
+                container.classList.add('loaded');
 
-            return frame();
+                return frame();
+            }
+            else {
+                container.classList.remove('loading');
+                container.classList.add('loaded');
+
+                return setActiveSection(initialSection, true, language, 0);
+            }
         }
 
         chevron.classList.remove('hidden');
         chevron.classList.add('blink');
-        await setActiveSection(initialSection, false, language);
+        await setActiveSection(getSectionByName('ethos'), false, language);
         await pause(11500);
         chevron.classList.remove('blink');
         container.classList.remove('loading');
@@ -484,17 +492,17 @@ window.onload = async () => {
                 let lang, section;
                 if (['fr', 'en'].includes(parts[0])) {
                     lang = parts[0];
-                    section = getSectionByName(parts[1]) || activeSection || getSectionByName('ethos');
+                    section = getSectionByName(parts[1]) || activeSection;
                 }
                 else {
                     section = getSectionByName(parts[0]);
                 }
 
-                return [section || activeSection || getSectionByName('ethos'), lang || document.documentElement.lang];
+                return [section || activeSection, lang || document.documentElement.lang];
             }
         }
 
-        return [activeSection || getSectionByName('ethos'), document.documentElement.lang];
+        return [activeSection, document.documentElement.lang];
     }
 
     async function fadeContributionPage(element) {
