@@ -152,7 +152,7 @@ footer div {
     position: relative;
     flex: 1 0 auto;
     z-index: 1;
-    background-image: url('./images/background.jpg');
+    background-image: url('./images/background.png');
     background-size: cover;
     margin-top: 0;
     margin-bottom:0;
@@ -176,6 +176,7 @@ area {
     bottom: 0;
     overflow: hidden;
     z-index: 2;
+    opacity: 0.5;
 }
 
 #artwork > div {
@@ -441,20 +442,20 @@ li::before {
 
 .no.non-clickable {
     cursor: inherit;
-    background-image: url('./images/composition/feather-circle.png');
+    background-image: url('./images/composition/cercle-rouge-haut-droite.png');
 }
 
 .yes {
-    background-image: url('./images/composition/green-circle.png');
+    background-image: url('./images/composition/cercle-vert-gauche.png');
 }
 
 .mer-noire {
-    background-image: url('./images/composition/palm-tree.png');
+    background-image: url('./images/composition/forme-eau-centre.png');
     background-position: center;
 }
 
 .kamoulox {
-    background-image: url('./images/composition/blue-hair.png');
+    background-image: url('./images/composition/moutons.png');
 }
 
 .mer-noire a, .kamoulox a {
@@ -462,7 +463,7 @@ li::before {
 }
 
 .link.no {
-    background-image: url('./images/composition/feather-circle.png');
+    background-image: url('./images/composition/cercle-rouge-haut-droite.png');
     text-decoration: none;
 }
 
