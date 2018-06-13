@@ -7,8 +7,8 @@ import {Composition, MovingImage, LinearTrajectory} from './composition';
 
 
 const movingImages = {
-    bleuCielGauche: {zIndex: 8, startX: 338, startY: 343, endX: 200, endY: 300},
-    cercleJauneCentre: {zIndex: 10, startX: 574, startY: 630, endX: 400, endY: 600},
+    bleuCielGauche: {zIndex: 8, startX: 338, startY: 343, endX: -200, endY: -100},
+    cercleJauneCentre: {zIndex: 10, startX: 574, startY: 630, endX: 400, endY: 900},
     cercleNoirHautGauche: {zIndex: 7, startX: 223, startY: 218, endX: 100, endY: 100},
     cercleRougeHauDroite: {zIndex: 7, startX: 988, startY: 208, endX: 400, endY: 600},
     cercleVertGauche: {zIndex: 4, startX: 135, startY: 650, endX: 100, endY: 700},
@@ -21,7 +21,7 @@ const movingImages = {
     fleurHautGauche: {zIndex: 6, startX: 87, startY: 159, endX: 100, endY: 100},
     formeBleuRougeGauche: {zIndex: 3, startX: 83, startY: 186, endX: 100, endY: 100},
     formeEauCentre: {zIndex: 8, startX: 555, startY: 359, endX: 518, endY: 500},
-    formeFleursBas: {zIndex: 2, startX: 268, startY: 766, endX: 600, endY: 600},
+    formeFleursBas: {zIndex: 2, startX: 268, startY: 767, endX: 600, endY: 600},
     formeJauneGauche: {zIndex: 5, startX: 1080, startY: 260, endX: 800, endY: 200},
     formeMarronGauche: {zIndex: 5, startX: 185, startY: 820, endX: 100, endY: 700},
     formeRose: {zIndex: 6, startX: 462, startY: 213, endX: 500, endY: 100},
