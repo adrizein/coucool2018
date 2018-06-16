@@ -180,11 +180,13 @@ area {
 
 #artwork > div {
     position: absolute;
+    margin-top: 30px;
 }
 
 #artwork.portrait > div {
     transform: rotate(-90deg);
     bottom: 0;
+    margin-left: 30px;
 }
 
 #artwork.portrait .overlay span {

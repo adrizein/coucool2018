@@ -288,7 +288,7 @@ class Composition {
     resize() {
         const {height, width} = this._anchor.getBoundingClientRect();
         const fixedOffsetX = 0;
-        const fixedOffsetY = 50;
+        const fixedOffsetY = 0;
         this._anchorHeight = height - fixedOffsetY * 2;
         this._anchorWidth = width - fixedOffsetX * 2;
         this._scale = Math.min(this.heightRatio, this.widthRatio);
