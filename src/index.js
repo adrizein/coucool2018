@@ -21,7 +21,7 @@ const movingImages = {
     fleurHautGauche: {zIndex: 6, startX: 87, startY: 159, endX: -100, endY: -100},
     formeBleuRougeGauche: {zIndex: 3, startX: 83, startY: 186, endX: -500, endY: 100},
     formeEauCentre: {zIndex: 8, startX: 555, startY: 359, endX: -518, endY: 800},
-    formeFleursBas: {zIndex: 2, startX: 268, startY: 767, endX: 600, endY: 600},
+    formeFleursBas: {zIndex: 2, startX: 268, startY: 767, endX: 600, endY: 900},
     formeJauneGauche: {zIndex: 5, startX: 1080, startY: 260, endX: 800, endY: -500},
     formeMarronGauche: {zIndex: 5, startX: 185, startY: 820, endX: 200, endY: 1000},
     formeRose: {zIndex: 6, startX: 462, startY: 213, endX: 1500, endY: -200},
