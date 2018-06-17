@@ -180,13 +180,14 @@ area {
 
 #artwork > div {
     position: absolute;
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 #artwork.portrait > div {
-    transform: rotate(-90deg);
-    bottom: 0;
-    margin-left: 30px;
+    transform: rotate(90deg);
+    top: 0;
+    right: 5%;
+    margin-top: 0;
 }
 
 #artwork.portrait .overlay span {
@@ -679,7 +680,7 @@ footer .date {
 }
 
 #loader circle {
-    fill: #e17533;
+    fill: #3B4598;
 }
 
 #loader.exit {
