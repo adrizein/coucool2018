@@ -13,23 +13,71 @@ const movingImages = {
     cercleRougeHauDroite: {zIndex: 7, startX: 988, startY: 208, endX: -700, endY: 600},
     cercleVertGauche: {zIndex: 4, startX: 135, startY: 650, endX: -100, endY: 400},
     cerleNatureDroite: {zIndex: 6, startX: 923, startY: 448, endX: 1000, endY: 500},
-    cielRoseGauche: {zIndex: 9, startX: 261, startY: 423, endX: 800, endY: 800},
+    cielRoseGauche: {
+        zIndex: 9, startX: 261, startY: 423, endX: 800, endY: 800,
+        eventGeneratingShape: 'rect',
+        title: 'Eros',
+        section: 'eros',
+    },
     degradeRoseOrangeMilieu: {zIndex: 5, startX: 336, startY: 263, endX: 1500, endY: 80},
     degradeRougeMilieu: {zIndex: 0, startX: 516, startY: 579, endX: 800, endY: 800},
     degradeVertBleuGauche: {zIndex: 0, startX: 1199, startY: 692, endX: -1000, endY: 500},
-    demiCercleRouge: {zIndex: 0, startX: 677, startY: -8, endX: 470, endY: -200},
-    fleurHautGauche: {zIndex: 6, startX: 87, startY: 159, endX: -100, endY: -100},
+    demiCercleRouge: {
+        zIndex: 0, startX: 677, startY: -8, endX: 470, endY: -200,
+        eventGeneratingShape: 'rect',
+        title: 'Tarif Solidaire',
+        section: 'solidaire',
+    },
+    fleurHautGauche: {
+        zIndex: 6, startX: 87, startY: 159, endX: -100, endY: -100,
+        eventGeneratingShape: 'rect',
+        title: '2016',
+        onClick() {
+            window.open('http://cou.cool/2016', '_blank');
+        },
+    },
     formeBleuRougeGauche: {zIndex: 3, startX: 83, startY: 186, endX: -500, endY: 100},
-    formeEauCentre: {zIndex: 8, startX: 555, startY: 359, endX: -518, endY: 800},
-    formeFleursBas: {zIndex: 2, startX: 268, startY: 767, endX: 600, endY: 900},
+    formeEauCentre: {
+        zIndex: 8, startX: 555, startY: 359, endX: -518, endY: 800,
+        eventGeneratingShape: 'rect',
+        title: 'Facebook',
+        onClick() {
+            window.open('http://www.facebook.com/coucoolcoucool', '_blank');
+        },
+    },
+    formeFleursBas: {
+        zIndex: 2, startX: 268, startY: 767, endX: 600, endY: 900,
+        eventGeneratingShape: 'rect',
+        title: '2017',
+        section: 'eros',
+    },
     formeJauneGauche: {zIndex: 5, startX: 1080, startY: 260, endX: 800, endY: -500},
     formeMarronGauche: {zIndex: 5, startX: 185, startY: 820, endX: 200, endY: 1000},
     formeRose: {zIndex: 6, startX: 462, startY: 213, endX: 1500, endY: -200},
-    formeRougeRoseGauche: {zIndex: 4, startX: 22, startY: 726, endX: -100, endY: 1000},
+    formeRougeRoseGauche: {
+        zIndex: 4, startX: 22, startY: 726, endX: -100, endY: 1000,
+        eventGeneratingShape: 'rect',
+        title: 'Mai 2018',
+        onClick() {
+            window.open('http://cou.cool/2018-1', '_blank');
+        },
+    },
     formeVerteGauche: {zIndex: 7, startX: 62, startY: 371, endX: 200, endY: -300},
-    montagneCielMilieu: {zIndex: 2, startX: 727, startY: 583, endX: -800, endY: -600},
+    montagneCielMilieu: {
+        zIndex: 2, startX: 727, startY: 583, endX: -800, endY: -600,
+        eventGeneratingShape: 'rect',
+        title: 'Statuts',
+        onClick() {
+            window.open('http://cou.cool/statuts', '_blank');
+        },
+    },
     montagneHaut: {zIndex: 1, startX: 463, startY: 138, endX: 100, endY: -300},
-    moutons: {zIndex: 3, startX: 958, startY: 73, endX: 1200, endY: 73},
+    moutons: {
+        zIndex: 3, startX: 958, startY: 73, endX: 1200, endY: 73,
+        eventGeneratingShape: 'rect',
+        title: 'Définition',
+        section: 'definition',
+    },
     peintureBleueCentreHaut: {zIndex: 7, startX: 633, startY: 159, endX: -600, endY: 200},
     petiteFleurDroite: {zIndex: 8, startX: 1123, startY: 278, endX: 1000, endY: 200},
     petiteFormeMarronDroite: {zIndex: 5, startX: 1015, startY: 290, endX: 1000, endY: 100},
