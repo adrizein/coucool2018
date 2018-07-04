@@ -5,7 +5,7 @@ const
 const
     common = require('./webpack.common');
 
-let httpsTunnels, publicUrl;
+let httpsTunnels, publicUrl, localPort = 8080;
 try {
     const
         res = request('GET', 'http://127.0.0.1:4040/api/tunnels'),
@@ -19,6 +19,7 @@ catch (err) {
 
 if (httpsTunnels && httpsTunnels.length) {
     publicUrl = httpsTunnels[0].public_url;
+    localPort = httpsTunnels[0].config.addr.split(':')[1];
 }
 
 
@@ -31,6 +32,7 @@ module.exports = merge(common, {
         allowedHosts: [
             '.ngrok.io',
         ],
-        public: publicUrl || 'http://localhost:8080',
+        port: localPort,
+        public: publicUrl || `http://localhost:${localPort}`,
     },
 });

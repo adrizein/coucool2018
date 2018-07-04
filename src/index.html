@@ -51,7 +51,8 @@
         </h2>
     </nav>
     <div id="date" class="text" style="position:absolute; right:0;  width:35px;text-align:center; font-size:20px;margin-top:50vh;transform: translateY(-50%);">
-        <a href='https://www.facebook.com/events/1307725472692281/' target='_blank' style="text-decoration:none">
+        <!-- TODO: link to current even-->
+        <a _href='https://www.facebook.com/events/1307725472692281/' _target='_blank' style="text-decoration:none">
             21<br/>
             /<br/>
             09<br/>
@@ -240,7 +241,7 @@
             <section id="infos">
                 <div class="content-container">
                     <p class="fr">
-                        La 6ème édition de <span class="definition link">Coucool</span> change de format, prends le temps de lire attentivement ces informations.
+                        La 6ème édition de <span class="definition link">Coucool</span> change de format. Prends le temps de lire attentivement ces informations.
                     </p>
 
                     <p class="en">
@@ -276,21 +277,25 @@
                         </div>
                         <div class="accordion-item">
                             <h4>Le lieu est à 40 minutes de Paris.</h4>
-                            <p class="accordion-item-content">Sa localisation exacte est précisée aux participant.e.s quelques jours avant l’événement.</br>Comment venir ?</p>
                             <ul class="accordion-item-content">
+                                <li>Sa localisation exacte est précisée aux participant.e.s quelques jours avant l’événement. Comment venir ?</li>
                                 <li>Cars payants directs depuis et vers Paris.</li>
                                 <li>40 minutes en voiture depuis Paris.</li>
                                 <li>40 minutes en transilien depuis Paris + 5 minutes de navette gratuite.</li>
+                                <li>Horaires des navettes gratuites : de 16h à 20h le vendredi 21 et de 10h à 14h le dimanche 23.</li>
                             </ul>
-                            <p class="accordion-item-content">Horaires des navettes gratuites : de 16h à 20h le vendredi 21 et de 10h à 14h le dimanche 23.</p>
                         </div>
                         <div class="accordion-item">
                             <h4>Nourritures et boissons sont incluses.</h4>
-                            <p class="accordion-item-content">Du vendredi soir au dimanche matin : en quantité, pour tous les goûts, toutes les religions et toutes les ascendances alimentaires.</p>
+                            <ul class="accordion-item-content">
+                                <li>Du vendredi soir au dimanche matin : en quantité, pour tous les goûts, toutes les religions et toutes les ascendances alimentaires.</li>
+                            </ul>
                         </div>
                         <div class="accordion-item">
                             <h4>Un espace de camping est à disposition.</h4>
-                            <p class="accordion-item-content">Tu pourras te reposer sur une mer de sable, sous les étoiles, entouré.e par les arbres.</p>
+                            <ul class="accordion-item-content">
+                                <li>Tu pourras te reposer sur une mer de sable, sous les étoiles, entouré.e par les arbres.</li>
+                            </ul>
                         </div>
                     </div>
 
@@ -319,18 +324,12 @@
                     <div id="page1" class="contribution-page">
                         <div class="contribution-page-container">
                             <div class="contribution-page-content">
-                                
-                                <p>
-                                Coucool,</br></br>
-                                Avant de payer ta contribution afin de participer à Coucool, j’ai quelques questions. Sauras-tu y répondre avec sincérité ?
-                                </br></br>
-                                Nous préférons parler de contributions plutôt que de billets, tickets ou de places : la contribution financière en étant une parmi d’autres.
-                                </br></br>
-                                Coucool se déroulera du vendredi 21 septembre 16h au dimanche 23 septembre 12h. Toute entrée sera refusée et il n'y aura plus de navette après 20h le vendredi 21 septembre. Aucune entrée ne sera possible le samedi.
-                                </p>
+                                <p>Coucool,</p>
+                                <p>Nous préférons parler de contributions plutôt que de billets, tickets ou de places : la contribution financière en étant une parmi d’autres.</p>
+                                <p>Avant de payer ta contribution afin de participer à Coucool, j’ai quelques questions. Sauras-tu y répondre avec sincérité ?</p>
                             </div>
-                            <div style="display: flex">
-                                <div class="yes"> <div style="font-size: 20px;">Coucoolons</div>
+                            <div class="qcm">
+                                <div class="choix yes"> <div style="font-size: 20px;">Coucoolons</div>
                                 </div>
                             </div>
                         </div>
@@ -338,17 +337,15 @@
                     <div id="page2" class="contribution-page">
                         <div class="contribution-page-container">
                             <div class="contribution-page-content">
-                                <p>
-                                Coucool est une association à but non lucratif. Elle a pour objet la production de manifestations artistiques, festives et bienveillantes.
-                                </br></br>
-                                Coucool repose sur un sens du dévouement collectif et sur des valeurs humaines fortes telles que la bienveillance, la collaboration et la générosité.
-                                </p>
+                                <p>Coucool se déroulera du vendredi 21 septembre 16h au dimanche 23 septembre 12h. Toute entrée sera refusée et il n'y aura plus de navette après 20h le vendredi 21 septembre. Aucune entrée ne sera possible le samedi.</p>
+                                <p>Coucool est une association à but non lucratif. Elle a pour objet la production de manifestations artistiques, festives et bienveillantes.</p>
+                                <p>Coucool repose sur un sens du dévouement collectif et sur des valeurs humaines fortes telles que la bienveillance, la collaboration et la générosité.</p>
                             </div>
-                            <div style="display:flex">
-                                <div class="no ethos link" >
+                            <div class="qcm">
+                                <div class="choix no ethos link" >
                                     <div>Dis-m'en plus</div>
                                 </div>
-                                <div class="yes" >
+                                <div class="choix yes" >
                                     <div>Bienveillons</div>
                                 </div>
                             </div>
@@ -361,33 +358,33 @@
                                 Connais-tu bien l’ethos de la communauté Coucool : lequel de ces principes n’en fait PAS partie ?
                                 </p>
                             </div>
-                            <div style="display:flex;flex-wrap: wrap">
-                                <div class="no ethos link" >
-                                    <div style="    font-size: 15px; padding-top: 8px; padding-left: 2px;">Coucooler l'autre, c'est l’inviter et le découvrir.
+                            <div class="qcm">
+                                <div class="choix bien ethos link" >
+                                    <div>Coucooler l'autre, c'est l’inviter et le découvrir.
                                         <ul>
                                             <li>Tout être bienveillant est bienvenu.</li>
                                             <li>Les coucools n’ont pas d’âge.</li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="yes" >
-                                    <div style="    font-size: 15px; padding-top: 8px; padding-left: 2px;">Coucoolons les barrières qui nous éloignent des autres et de nous-mêmes.
+                                <div class="choix lgbtq ethos link" >
+                                    <div>Coucoolons les barrières qui nous éloignent des autres et de nous-mêmes.
                                         <ul>
                                             <li>Coucool souhaite être un espace inclusif, LGBT & Queer friendly.</li>
                                             <li>Spontanéité et oubli de l’égo.</li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="no ethos link" >
-                                    <div style="    font-size: 15px; padding-top: 8px; padding-left: 2px;">Coucool se construit à plusieurs.
+                                <div class="choix plusieurs ethos link" >
+                                    <div>Coucool se construit à plusieurs.
                                         <ul>
                                             <li>Proposer un camp, une performance artistique, à manger, une exposition, un atelier, etc.</li>
                                             <li>Être bénévole ou rejoindre l’équipe organisatrice à mes côtés.</li>
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="no ethos link" >
-                                    <div style="    font-size: 15px; padding-top: 8px; padding-left: 2px;">Coucooler c’est profiter de chaque instant et ne se préoccuper de rien.
+                                <div class="choix instant yes" >
+                                    <div>Coucooler c’est profiter de chaque instant et ne se préoccuper de rien.
                                         <ul>
                                             <li>Retombons en enfance et laissons-nous dorloter.</li>
                                             <li>Le spectateur est roi et ses désirs deviennent réalité.</li>
@@ -401,18 +398,18 @@
                         <div class="contribution-page-container">
                             <div class="contribution-page-content">
                                  <p>
-                                    Chaque participant.e s’engage à contribuer humainement à cette oeuvre collective : 
+                                    Chaque participant.e s’engage à contribuer humainement à cette oeuvre collective :
                                 </p>
                                 <ul>
                                     <li>Soit en proposant bénévolement un projet artistique, une activité ou toute initiative Coucool.</li>
                                     <li>Soit en accordant 2h de son temps pour une mission bénévole de jour ou de nuit.</li>
                                 </ul>
                             </div>
-                            <div style="display:flex">
-                                <div class="mer-noire" >
-                                    <div style="    font-size: 15px; padding-top: 8px; padding-left: 2px;"><a href='https://youtu.be/4mNDYWhRSaw' target='_blank' >Je paie une contribution VIP pour coucooler tranquille</a></div>
+                            <div class="qcm">
+                                <div class="choix no" >
+                                    <div><a href='https://youtu.be/4mNDYWhRSaw' target='_blank' >Je paie une contribution VIP pour coucooler tranquille</a></div>
                                 </div>
-                                <div class="yes" >
+                                <div class="choix yes" >
                                     <div>Je contribue humainement</div>
                                 </div>
                             </div>
@@ -421,17 +418,14 @@
                     <div id="page5" class="contribution-page">
                         <div class="contribution-page-container">
                             <div class="contribution-page-content">
-                                <p>
-                                Dans le respect de ses principes Coucool reverse 50% de ses bénéfices à des organisations caritatives, l’autre moitié étant réinvestie dans le projet lui-même.
-                                </br></br>
-                                Chaque participant.e contribue individuellement au principe de don en venant avec des petits présents à offrir, à la volée, à une âme sœur ou à un.e inconnu.e.
-                                </p>
+                                <p>Dans le respect de ses principes Coucool reverse 50% de ses bénéfices à des organisations caritatives, l’autre moitié étant réinvestie dans le projet lui-même.</p>
+                                <p>Chaque participant.e contribue individuellement au principe de don en venant avec des petits présents à offrir, à la volée, à une âme sœur ou à un.e inconnu.e.</p>
                             </div>
-                            <div style="display:flex">
-                                <div class="mer-noire" >
-                                    <div><a href='https://youtu.be/4mNDYWhRSaw' target='_blank' >Je paie une contribution VIP pour coucooler tranquille</a></div>
+                            <div class="qcm">
+                                <div class="choix no" >
+                                    <div><a href='https://youtu.be/cMAr1flCdQ8' target='_blank' >C’est pas sérieux</a></div>
                                 </div>
-                                <div class="yes" >
+                                <div class="choix yes" >
                                     <div>Oui</div>
                                 </div>
                             </div>
@@ -441,16 +435,18 @@
                         <div class="contribution-page-container">
                             <div class="contribution-page-content">
                                 <p>
-                                 Quelle que soit la forme de ton implication, tu t’engages à préserver la nature, un principe fondamental de Coucool : </br>
-                                 • Tout au long de l’événement en ne jetant rien au sol et en ramassant ce que tu vois.</br>
-                                 • Ponctuellement lors des 2 sessions de nettoyage collectif organisées (samedi et dimanche).
+                                    Quelle que soit la forme de ton implication, tu t’engages à préserver la nature, un principe fondamental de Coucool :
+                                <ul>
+                                    <li>Tout au long de l’événement en ne jetant rien au sol et en ramassant ce que tu vois.</li>
+                                    <li>Ponctuellement lors des 2 sessions de nettoyage collectif organisées (samedi et dimanche).</li>
+                                </ul>
                                 </p>
                             </div>
-                            <div style="display:flex">
-                                <div class="mer-noire" >
-                                    <div><a href='https://youtu.be/4mNDYWhRSaw' target='_blank' >Le plastique c'est fantastique</a></div>
+                            <div class="qcm">
+                                <div class="choix no" >
+                                    <div><a href='https://youtu.be/4xstc5o2wRM' target='_blank' >Le plastique c’est fantastique</a></div>
                                 </div>
-                                <div class="yes" >
+                                <div class="choix yes" >
                                     <div>Je participerai aux nettoyages</div>
                                 </div>
                             </div>
@@ -464,8 +460,8 @@
                                  Une contribution comprend les repas du vendredi soir au dimanche matin, les boissons ainsi que les trajets en navette depuis et vers la gare la plus proche le vendredi soir et le dimanche matin.
                                 </p>
                             </div>
-                            <div style="display:flex">
-                                <div class="yes" >
+                            <div class="qcm">
+                                <div class="choix yes">
                                     <div>Je contribue financièrement</div>
                                 </div>
                             </div>
@@ -695,7 +691,7 @@
 
     <footer class="text">
         <div class="tagline fr">Coucool est un rassemblement artistique et bienveillant, mis en fête par Éros Sélavy - <a href="mailto:eros@cou.cool"> Lui écrire </a></div>
-        <div class="date"><a href='https://www.facebook.com/events/1307725472692281/' target='_blank' >21/09/18</a></div>
+        <div class="date"><a _href='https://www.facebook.com/events/1307725472692281/' _target='_blank' >21/09/18</a></div>
         <div class="tagline en">Coucool is an artistic and benevolent celebration, hosted by Éros Sélavy - <a href="mailto:eros@cou.cool"> Write to him </a></div>
         <div id="language">
             <span id="fr">Fr</span>

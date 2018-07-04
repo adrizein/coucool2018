@@ -49,7 +49,9 @@ const movingImages = {
         zIndex: 2, startX: 268, startY: 767, endX: 600, endY: 900,
         eventGeneratingShape: 'rect',
         title: '2017',
-        section: 'eros',
+        onClick() {
+            window.open('http://cou.cool/2017', '_blank');
+        },
     },
     formeJauneGauche: {zIndex: 5, startX: 1080, startY: 260, endX: 800, endY: -500},
     formeMarronGauche: {zIndex: 5, startX: 185, startY: 820, endX: 200, endY: 1000},
