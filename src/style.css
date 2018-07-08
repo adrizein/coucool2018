@@ -495,7 +495,7 @@ li::before {
     text-decoration: none;
 }
 
-#page3 .choix {
+#page3 .choix, #en_page3 .choix {
     font-size: 18px;
     width: auto;
     height: auto;
@@ -507,19 +507,19 @@ li::before {
     transition: box-shadow 300ms 0ms linear;
 }
 
-#page3 .choix:hover {
+#page3 .choix:hover, #en_page3 .choix:hover {
     box-shadow: 0 0 10px 0px black;
 }
 
-#page3 .choix div {
+#page3 .choix div, #en_page3 .choix div {
     margin: initial;
 }
 
-#page3 .qcm {
+#page3 .qcm, #en_page3 .qcm {
     margin: 0 20px;
     display: block;
 }
-#page3 .choix ul, #page3 .choix li {
+#page3 .choix ul, #page3 .choix li, #en_page3 .choix ul, #en_page3 .choix li {
     margin: 5px 0;
 }
 
