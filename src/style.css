@@ -423,7 +423,6 @@ li::before {
 
 .contribution-page {
     position: absolute;
-    height: 100%;
     left: 0;
     right: 0;
     display: none;
@@ -438,8 +437,7 @@ li::before {
 }
 
 .contribution-page-container {
-    margin:auto;
-    min-height: 60%;
+    margin: 100px auto;
     max-width: 750px;
 }
 
@@ -448,21 +446,24 @@ li::before {
 }
 
 .choix {
-    width: 150px;
-    height: 150px;
+    width: 140px;
+    height: 140px;
     display: flex;
     cursor: pointer;
     margin: auto;
     background-size: contain;
     background-repeat: no-repeat;
+    align-items: center;
 }
 
-.choix a {
+a.choix {
     text-decoration: none;
+    display: flex;
 }
 
 .choix div {
     margin: auto;
+    padding: 10px;
 }
 
 .no.non-clickable {
@@ -470,25 +471,24 @@ li::before {
     background-image: url('./images/composition/cercle-rouge-haut-droite.png');
 }
 
-.yes {
+.yellow-disk {
     background-image: url('./images/composition/cercle-jaune-centre.png');
 }
 
-.mer-noire {
-    background-image: url('./images/composition/forme-eau-centre.png');
-    background-position: center;
-}
-
-.kamoulox {
-    background-image: url('./images/composition/moutons.png');
-}
-
-.mer-noire a, .kamoulox a {
-    text-decoration: none;
-}
-
-.no {
+.red-disk {
     background-image: url('./images/composition/cercle-rouge-haut-droite.png');
+}
+
+.orange-disk {
+    background-image: url('./images/composition/cercle-jaune-orange.png');
+}
+
+.banana-disk {
+    background-image: url('./images/composition/cercle-banane.png');
+}
+
+.water-disk {
+    background-image: url('./images/composition/cercle-eau.png');
 }
 
 .choix.link {
@@ -523,11 +523,12 @@ li::before {
     margin: 5px 0;
 }
 
-#weezevent {
-    display: none;
+#weezevent div {
+    width: 100%;
+    margin: 0;
 }
 
-.weezevent-visible #weezevent {
+#weezevent.visible div {
     display: block;
 }
 
@@ -604,11 +605,6 @@ ul {
     padding: 0 10px;
 }
 
-#weezevent {
-    width: 100%;
-    margin: 0;
-}
-
 .tagline, footer .date {
     text-align: left;
 }
@@ -644,7 +640,7 @@ footer .date {
 
     nav, #artworkAndContent, footer {
         margin-left: 15px;
-        margin-right:15px;
+        margin-right: 15px;
     }
 
     #contributions {
@@ -694,7 +690,7 @@ footer .date {
     }
 
     .choix {
-        font-size: 15px;
+        font-size: 15px!important;
         height: 100px;
         width: 100px;
     }

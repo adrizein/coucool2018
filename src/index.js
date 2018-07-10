@@ -128,19 +128,11 @@ window.onload = async () => {
         switching = false,
         activeSection = null,
         autoScroll = true,
-        manualScroll = false;
+        manualScroll = false,
+        iframe;
 
     // Events selectors
     window.addEventListener('resize', () => onResize(), {passive: true});
-
-    if (/Firefox/i.test(navigator.userAgent)) {
-        main.style.overflowY = 'hidden';
-        window.addEventListener('DOMMouseScroll', (event) => {
-            if (manualScroll) {
-                main.scrollTop += event.detail * 15;
-            }
-        }, {passive: true});
-    }
 
     main.addEventListener('scroll', () => onScroll(), {passive: true});
     window.onhashchange = onHash;
@@ -264,7 +256,7 @@ window.onload = async () => {
         await frame();
         loader.remove();
         await frame();
-        main.scrollTo = 0; // remove the slight offset when the loader is removed
+        main.scrollTop = 0; // remove the slight offset when the loader is removed
 
         // initialize the composition in its exploded form
         composition.animate(1);
@@ -325,8 +317,35 @@ window.onload = async () => {
                     artwork.classList.add('curiosites');
                 }
                 else {
+                    if (section.name === 'weezevent') {
+                        await Promise.all([
+                            composition.runAnimation(1000, 1),
+                            Velocity(artwork, {opacity: 0}, {duration: 1000, queue: false}),
+                        ]);
+                        chevron.style.display = 'none';
+                        credit.style.display = 'none';
+                        artwork.style.visibility = 'hidden';
+                        await frame();
+
+                        if (!iframe) {
+                            iframe = section.element.getElementsByTagName('iframe').item(0);
+                            iframe.onload = () => {
+                                main.scrollTop = 0;
+                            };
+
+                            iframe.scrolling = 'no';
+                        }
+                    }
                     artwork.classList.remove('curiosites');
                 }
+
+                if (activeSection && activeSection.name === 'weezevent') {
+                    await Velocity(activeSection.element, {opacity: 0}, {duration: 1000, queue: false});
+                    artwork.style.opacity = 0;
+                    artwork.style.visibility = null;
+                    await frame();
+                }
+
                 //highlight title
                 sections.forEach((s) => {
                     if (s.title) {
@@ -344,6 +363,7 @@ window.onload = async () => {
             if (activeSection) {
                 chevron.classList.add('hidden');
                 credit.classList.add('hidden');
+                await frame();
 
                 if (languageChanged) {
                     container.classList.add('loading');
@@ -358,7 +378,13 @@ window.onload = async () => {
                 }
                 else if (languageChanged || sectionChanged) {
                     const duration = 1000;
-                    if (main.scrollTop > 0) {
+                    if (activeSection.name === 'weezevent') {
+                        await Promise.all([
+                            composition.runAnimation(duration, 0),
+                            Velocity(artwork, {opacity: 1}, {duration, queue: false}),
+                        ]);
+                    }
+                    else if (main.scrollTop > 0) {
                         // Implode if we changed the section or language
                         await Promise.all([
                             composition.runAnimation(duration, 0),
@@ -426,12 +452,21 @@ window.onload = async () => {
                 await frame();
                 onResize();
             }
+            else if (activeSection.name === 'weezevent') {
+                chevron.style.display = 'none';
+                credit.style.display = 'none';
+                await Promise.all([
+                    Velocity(activeSection.element, {opacity: 1}, {duration: 1000, queue: false}),
+                    Velocity(artwork, {opacity: 1}, {duration: 1000, queue: false}),
+                ]);
+            }
             else {
                 // scroll automatically if nothing happens (no click, no manual scroll)
                 autoScroll = true;
                 chevron.style.display = null;
                 credit.style.display = null;
                 artwork.style.zIndex = '2';
+                await frame();
                 if (scroll) {
                     await pause(delay);
 
@@ -459,6 +494,7 @@ window.onload = async () => {
             autoScroll = false;
             container.classList.remove('loading');
             container.classList.add('loaded');
+
             if (!composition.running) {
                 const
                     s = main.scrollTop / main.scrollHeight,
@@ -466,8 +502,10 @@ window.onload = async () => {
 
                 await frame();
                 composition.animate(t);
-                artwork.style.opacity = Math.clamp(1 - main.scrollTop / composition.scaledHeight, 0.3, 1);
-                activeSection.element.style.opacity = Math.clamp(s * 10, 0, 1);
+                if (activeSection.name !== 'weezevent') {
+                    artwork.style.opacity = Math.clamp(1 - main.scrollTop / composition.scaledHeight, 0.3, 1);
+                    activeSection.element.style.opacity = Math.clamp(s * 10, 0, 1);
+                }
             }
         }
     }
@@ -491,8 +529,13 @@ window.onload = async () => {
             composition.landscape(0);
         }
 
-        sections.forEach(({element}) => {
-            element.style.paddingTop = `${composition.scaledHeight}px`;
+        sections.forEach(({element, name}) => {
+            if (name === 'weezevent') {
+                element.style.paddingTop = '0px';
+            }
+            else {
+                element.style.paddingTop = `${composition.scaledHeight}px`;
+            }
         });
     }
 
@@ -534,31 +577,28 @@ window.onload = async () => {
             }
             parentContributionPage = parentContributionPage.parentNode;
         }
+
         const nextPageNumber = parseInt(parentContributionPage.id.slice(-1)) + 1;
-        const nextId = parentContributionPage.id.slice(0, -1) + nextPageNumber;
-        const nextPage = document.getElementById(nextId);
+        if (nextPageNumber < 8) {
+            const nextId = parentContributionPage.id.slice(0, -1) + nextPageNumber;
+            const nextPage = document.getElementById(nextId);
 
-        //We append the weezevent div if the next page contains the weezevent-visble class
-        //This is to avoid to have 2 weezevent div in the page which makes it blink
-        let nextPageDisplay = 'flex';
-        if (nextPage.classList.contains('weezevent-visible')) {
-            const weez = document.getElementById('weezevent');
-            nextPage.append(weez);
-            nextPageDisplay = 'block';
+            await Velocity(parentContributionPage, 'fadeOut', {
+                duration: 200,
+                easing: 'ease-in',
+                queue: false,
+            });
+
+            await Velocity(nextPage, 'fadeIn', {
+                display: 'flex',
+                duration: 200,
+                easing: 'ease-in',
+                queue: false,
+            });
         }
-
-        await Velocity(parentContributionPage, 'fadeOut', {
-            duration: 200,
-            easing: 'ease-in',
-            queue: false,
-        });
-
-        await Velocity(nextPage, 'fadeIn', {
-            display: nextPageDisplay,
-            duration: 200,
-            easing: 'ease-in',
-            queue: false,
-        });
+        else {
+            return setActiveSection(getSectionByName('weezevent'), false, document.documentElement.lang, 0);
+        }
     }
 
     async function scrollToSection() {
