@@ -324,7 +324,7 @@ window.onload = async () => {
                         ]);
                         chevron.style.display = 'none';
                         credit.style.display = 'none';
-                        artwork.style.visibility = 'hidden';
+                        artwork.style.display = 'none';
                         await frame();
 
                         if (!iframe) {
@@ -342,7 +342,7 @@ window.onload = async () => {
                 if (activeSection && activeSection.name === 'weezevent') {
                     await Velocity(activeSection.element, {opacity: 0}, {duration: 1000, queue: false});
                     artwork.style.opacity = 0;
-                    artwork.style.visibility = null;
+                    artwork.style.display = null;
                     await frame();
                 }
 
