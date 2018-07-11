@@ -90,7 +90,13 @@ const movingImages = {
     rectangleVerticalBleuBasDroite: {zIndex: 6, startX: 1182, startY: 640, endX: 1200, endY: 550},
     rectangleVerticalMarronDroite: {zIndex: 7, startX: 1151, startY: 539, endX: 1200, endY: 550},
     tachePeintureDroite: {zIndex: 8, startX: 1074, startY: 533, endX: -1120, endY: 500},
-    transparenceDroite: {zIndex: 9, startX: 1033, startY: 500, endX: 200, endY: 1000},
+    transparenceDroite: {zIndex: 9, startX: 1033, startY: 500, endX: 200, endY: 1000,
+        eventGeneratingShape: 'rect',
+        title: 'Bilan Financier 2017',
+        onClick() {
+            window.open('http://cou.cool/comptes/2017', '_blank');
+        },
+    },
     triangleBasGauche: {zIndex: 6, startX: 131, startY: 595, endX: 100, endY: -800},
     triangleCentre: {zIndex: 10, startX: 451, startY: 517, endX: 1000, endY: 300},
     triangleHautDroite: {zIndex: 6, startX: 618, startY: 159, endX: 800, endY: 800},
