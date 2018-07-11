@@ -565,7 +565,7 @@ window.onload = async () => {
                     section = getSectionByName(parts[1]) || activeSection;
                 }
                 else {
-                    section = getSectionByName(parts[0]);
+                    section = getSectionByName(parts[0].toLowerCase());
                 }
 
                 return [section || activeSection, lang || document.documentElement.lang];
