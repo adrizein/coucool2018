@@ -491,9 +491,9 @@ window.onload = async () => {
             chevron.classList.add('blink');
         }
         else {
+            chevron.classList.remove('blink');
             chevron.classList.add('hidden');
             credit.classList.add('hidden');
-            chevron.classList.remove('blink');
         }
 
         if (manualScroll) {

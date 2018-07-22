@@ -72,16 +72,8 @@ html:lang(fr) .en {
     opacity: 1;
 }
 
-.loaded .hidden {
-    opacity: 0;
-    transition-duration: 0ms !important;
-    transition-delay: 0ms !important;
-}
-
-.visible #credit.hidden {
-    opacity: 0;
-    transition-duration: 0ms;
-    transition-delay: 0ms;
+.visible #credit.hidden, .loaded #chevron.hidden {
+    visibility: hidden;
 }
 
 #credit {
